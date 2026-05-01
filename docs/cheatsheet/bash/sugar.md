@@ -8,6 +8,7 @@
   - [backup multiple files](#backup-multiple-files)
   - [ssh](#ssh)
   - [find and tar](#find-and-tar)
+  - [tar and split](#tar-and-split)
   - [find and rename](#find-and-rename)
   - [find and sort](#find-and-sort)
   - [find and copy](#find-and-copy)
@@ -245,6 +246,65 @@ $ tar cf - . | ssh -C otherhost "cd /mydir; tar xvf -"
   ```bash
   $ find . -name '*.rar' -execdir unrar e {} \;
   ```
+
+### tar and split
+
+> [!NOTE|label:references:]
+> - [* iMarslo: split](../cmd.md#split)
+
+```bash
+# ------ tar ------
+$ ls
+200m.bin
+
+# tar + split
+$ tar cjf - folder/ | split -b $(( $(du -sb folder | cut -f1) / 2 )) -d --numeric-suffixes=1 --suffix-length=1 - name.tar.bz2.
+# -- or --
+$ tar cjf - folder/ | split -b $(echo "$(du -sb folder | cut -f1) / 1.9" | bc) -d --numeric-suffixes=1 --suffix-length=1 - name.tar.bz2.
+
+$ ls
+folder  name.tar.bz2.1  name.tar.bz2.2
+
+# merge
+$ command cat name.tar.bz2.* > name.tar.bz2
+$ tar tjf name.tar.bz2
+folder/
+folder/200m.bin
+```
+
+```bash
+# ------ 7zz ------
+$ brew install sevenzip
+
+$ ls folder/
+200m.bin
+
+# compress and split
+$ 7zz a -v105m name.zip folder
+
+# merge and extract - just use the fist one filename
+$ 7zz x name.zip.001
+```
+
+```bash
+# ------ zip && unzip ------
+$ ls
+200m.bin
+
+# zip and split
+$ zip -s 100m -r name.zip 200m.bin
+
+$ ls
+200m.bin  name.z01  name.z02  name.zip
+
+# extract with unzip
+$ zip -s 0 name.zip --out name_full.zip
+ copying: 200m.bin
+$ unzip name_full.zip
+
+# extract with 7zz ( $ brew install sevenzip ) -- highly recommendation
+$ 7zz x name.zip
+```
 
 ### find and rename
 ```bash

@@ -14,6 +14,7 @@
   - [check file text or binary](#check-file-text-or-binary)
 - [system](#system)
   - [shasum](#shasum)
+  - [split](#split)
 - [clock/time/date](#clocktimedate)
 - [download](#download)
 - [backup](#backup)
@@ -337,7 +338,7 @@ $ find . -type f -print0 | perl -0nE 'say if -f and -s _ and -T _' | grep -a -E 
 
 ## system
 
-- [execute commnd at a specific time](https://www.commandlinefu.com/commands/view/7/execute-a-command-at-a-given-time)
+- [execute command at a specific time](https://www.commandlinefu.com/commands/view/7/execute-a-command-at-a-given-time)
   ```bash
   $ echo "ls -l" | at midnight
   # or
@@ -367,7 +368,7 @@ $ find . -type f -print0 | perl -0nE 'say if -f and -s _ and -T _' | grep -a -E 
   64
   ```
 
-- [list most offen used command](https://www.commandlinefu.com/commands/view/604/list-of-commands-you-use-most-often)
+- [list most often used command](https://www.commandlinefu.com/commands/view/604/list-of-commands-you-use-most-often)
   ```bash
   $ history | awk '{a[$2]++}END{for(i in a){print a[i] " " i}}' | sort -rn | head
   ```
@@ -454,9 +455,36 @@ $ find . -type f -print0 | perl -0nE 'say if -f and -s _ and -T _' | grep -a -E 
   $ grep 'file.txt$' shasum.txt | sha256sum -c -
   ```
 
+### split
+
+> [!NOTE|label:references:]
+> - for macos, install gnu coreutils to get `gsplit` :
+>   ```bash
+>   $ brew install coreutils
+>   ```
+
+```bash
+# create file with 200M size
+$ dd if=/dev/zero of=200m.bin bs=1M count=200
+
+# split into 2 files
+$ split --verbose -b 100M -d --suffix-length=1 --numeric-suffixes=1 200m.bin 200m.bin.split.
+creating file '200m.bin.split.1'
+creating file '200m.bin.split.2'
+
+# verify
+$ ls -1 200m*
+200m.bin
+200m.bin.split.1
+200m.bin.split.2
+
+# merge back
+$ cat 200m.bin.split.* > 200m.bin
+```
+
 ## clock/time/date
 
-> [!TIP|lavel:see also:]
+> [!TIP|reference:see also:]
 > - [* iMarslo: date](../linux/util/date.md)
 
 - get how many days left this years
@@ -622,7 +650,7 @@ $ find . -type f -print0 | perl -0nE 'say if -f and -s _ and -T _' | grep -a -E 
 
 - [retry until succeed](https://www.commandlinefu.com/commands/view/14300/keep-trying-a-command-until-it-is-successful)
   ```bash
-  $ util <command>; do echo "retyring"; sleep 1; done
+  $ util <command>; do echo "retrying"; sleep 1; done
   ```
 
 - [check unread Gmail from the command line](https://www.commandlinefu.com/commands/view/3380/check-your-unread-gmail-from-the-command-line)
