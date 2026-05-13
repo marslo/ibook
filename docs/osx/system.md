@@ -25,6 +25,8 @@
   - [show resolution](#show-resolution)
   - [list printer status](#list-printer-status)
   - [plist file](#plist-file)
+- [show app info](#show-app-info)
+  - [version](#version)
 - [osx installation](#osx-installation)
   - [download older version](#download-older-version)
   - [create osx installer usb](#create-osx-installer-usb)
@@ -50,7 +52,6 @@
   - [`SUPreferenceManager: Failed to set object of class: __NSCFString`](#supreferencemanager-failed-to-set-object-of-class-__nscfstring)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 
 ## account
 ### mark account to admin
@@ -552,6 +553,41 @@ printer-01 accepting requests since Wed Feb  3 16:40:50 2021
   # i.e.:
   $ /usr/libexec/PlistBuddy -c print /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Info.plist
   ```
+
+## show app info
+
+### version
+```bash
+# mdls
+$ mdls -name kMDItemVersion /Applications/iTerm.app
+kMDItemVersion = "3.6.10"
+$ mdls -name kMDItemVersion ~/Applications/iTerm.app
+kMDItemVersion = "3.7.20260512-nightly"
+
+# CFBundleShortVersionString
+$ defaults read ~/Applications/iTerm.app/Contents/Info.plist CFBundleShortVersionString
+3.7.20260512-nightly
+$ defaults read /Applications/iTerm.app/Contents/Info.plist CFBundleShortVersionString
+3.6.10
+
+# lsappinfo - current running app
+$ lsappinfo info com.googlecode.iterm2
+"iTerm2" ASN:0x0-0xa30a3: (in front)
+    bundleID="com.googlecode.iterm2"
+    bundle path="/Users/marslo/Applications/iTerm.app"
+    executable path="/Users/marslo/Applications/iTerm.app/Contents/MacOS/iTerm2"
+    pid = 5064 type="Foreground" flavor=3 Version="3.7.20260511-nightly" fileType="APPL" creator="ITRM" Arch=ARM64
+    childASNs: ASN:0x0-0xa90a9:
+    coalition: 1682
+    parentASN="Alfred" ASN:0x0-0x84084:
+    launch time =  2026/05/12 15:10:18 ( 2 hours, 50 minutes, 38.7915 seconds ago )
+    checkin time = 2026/05/12 15:10:18 ( 2 hours, 50 minutes, 38.4025 seconds ago )
+    launch to checkin time: 0.389042 seconds
+
+# osascript - current
+$ osascript -e 'get version of application id "com.googlecode.iterm2"'
+3.7.20260512-nightly
+```
 
 ## osx installation
 ### [download older version](https://512pixels.net/2019/10/download-macos-installers-with-terminal/)
