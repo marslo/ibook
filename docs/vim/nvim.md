@@ -30,6 +30,8 @@
   - [config path](#config-path)
     - [tips](#tips)
 - [various commands](#various-commands)
+- [tricky](#tricky)
+  - [show treesitter syntax](#show-treesitter-syntax)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -193,7 +195,7 @@ $ cmake -S . \
 ```
 <!--endsec-->
 
-<!--sec data-title="neovim-nighly: install via cc" data-id="section1" data-show=true data-collapse=true ces-->
+<!--sec data-title="neovim-nightly: install via cc" data-id="section1" data-show=true data-collapse=true ces-->
 ```bash
 $ /Applications/Xcode_14.2.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc \
     -O2 -g -Og -g -flto=thin \
@@ -306,7 +308,7 @@ $ cmake --install build
 
 <!--sec data-title="full steps" data-id="section2" data-show=true data-collapse=true ces-->
 ```bash
-# -- package downlaod --
+# -- package download --
 # downloading https://ghcr.io/v2/homebrew/core/lpeg/manifests/1.1.0-1
 $ /usr/bin/env /usr/local/Homebrew/Library/Homebrew/shims/shared/curl --disable --cookie /dev/null --globoff --show-error --user-agent Homebrew/4.4.19-77-g7ce65c2\ \(Macintosh\;\ Intel\ Mac\ OS\ X\ 15.1.1\)\ curl/8.7.1 --header Accept-Language:\ en --fail --retry 3 --header Accept:\ application/vnd.oci.image.index.v1+json --header Authorization:\ Bearer\ QQ== --remote-time --output /Users/marslo/Library/Caches/Homebrew/downloads/5906a2786f22dd74352335366e9b152ed78248ffa0b9aefb61209bbcdfb96581--lpeg-1.1.0-1.bottle_manifest.json.incomplete --location https://ghcr.io/v2/homebrew/core/lpeg/manifests/1.1.0-1
 
@@ -583,7 +585,7 @@ $ sudo dpkg -i neovim_0.9.5-6ubuntu2_amd64.deb
     - mingw
 
       > [!TIP|label:packages:]
-      > - [mingw 64 bit: x86_64-13.2.0-release-posix-seh-ucrt-rt_v11-rev0.7z](https://github.com/niXman/mingw-builds-binaries/releases/download/13.2.0-rt_v11-rev0/x86_64-13.2.0-release-posix-seh-ucrt-rt_v11-rev0.7z)
+      > - [mingw 64 bit: x86_64-13.2.0-release-posix-she-ucrt-rt_v11-rev0.7z](https://github.com/niXman/mingw-builds-binaries/releases/download/13.2.0-rt_v11-rev0/x86_64-13.2.0-release-posix-seh-ucrt-rt_v11-rev0.7z)
 
       ```powershell
       # C:\ProgramData\mingw64\mingw64
@@ -693,7 +695,7 @@ $ npm install -g neovim
 - for venv
   ```bash
   $ python3 -m pip install --upgrade pynvim
-  # if necesssary
+  # if necessary
   $ python3 -m pip  install --upgrade greenlet
 
   # verify
@@ -827,7 +829,7 @@ lua require('config')
 :echo &packpath
 :set packpath?
 
-" rumtime
+" runtime
 :lua print(vim.env.VIMRUNTIME)
 :echo $VIMRUNTIME
 
@@ -1080,3 +1082,18 @@ $ NVIM_LOG_FILE=/dev/null nvim -n -i NONE
 ```
 
 # [various commands](https://neovim.io/doc/user/various.html#various-cmds)
+
+# tricky
+## show treesitter syntax
+```bash
+$ nvim --headless -c 'lua local q = vim.treesitter.query.get("json", "highlights"); if q then print("FOUND") else print("NO QUERY") end' -c 'q' 2>&1
+FOUND
+
+# find path
+$ nvim --headless -c 'lua local files = vim.api.nvim_get_runtime_file("queries/json/highlights.scm", true); for _, f in ipairs(files) do print(f) end' -c 'q'
+/Users/marslo/.local/share/nvim/site/queries/json/highlights.scm
+/Users/marslo/.config/nvim/after/queries/json/highlights.scm
+
+$ nvim --headless -c 'lua local files = vim.api.nvim_get_runtime_file("queries/vim/highlights.scm", true); for _, f in ipairs(files) do print(f) end' -c 'q'
+/opt/homebrew/Cellar/neovim/0.12.2/share/nvim/runtime/queries/vim/highlights.scm
+```

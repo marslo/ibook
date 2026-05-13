@@ -35,6 +35,7 @@
   - [print path](#print-path)
   - [encryption with Vim](#encryption-with-vim)
   - [open vim with specific commands](#open-vim-with-specific-commands)
+  - [show sign list](#show-sign-list)
 - [config](#config)
   - [get platform](#get-platform)
   - [disable vim beep](#disable-vim-beep)
@@ -949,6 +950,31 @@ $ vim -c "set ft=gitcommit" \
       -c 'silent execute "%s/\x1b\[[0-9;]*r//g"' \
       -c 'silent execute "%s/\x1b\[[0-9;]*m//g"' \
       "${files}"
+```
+
+### show sign list
+```bash
+:sign list
+sign GitGutterLineAdded text=+  linehl=NONE texthl=GitGutterAdd numhl=NONE
+sign GitGutterLineModified text=~  linehl=NONE texthl=GitGutterChange numhl=NONE
+sign GitGutterLineRemoved text=_  linehl=NONE texthl=GitGutterDelete numhl=NONE
+sign GitGutterLineRemovedFirstLine text=‾  linehl=NONE texthl=GitGutterDelete numhl=NONE
+sign GitGutterLineRemovedAboveAndBelow text=_¯ linehl=NONE texthl=GitGutterDelete numhl=NONE
+sign GitGutterLineModifiedRemoved text=~_ linehl=NONE texthl=GitGutterChangeDelete numhl=NONE
+sign CocCurrentLine linehl=CocMenuSel
+sign CocListCurrent linehl=CocListLine
+sign CocTreeSelected linehl=CocTreeSelected
+sign CocSelected text=*  linehl=CocSelectedLine texthl=CocSelectedText
+sign CocError text=✘  linehl=CocErrorLine texthl=CocErrorSign numhl=CocErrorSign
+sign CocWarning text=  linehl=CocWarningLine texthl=CocWarningSign numhl=CocWarningSign
+sign CocInfo text=ϊ  linehl=CocInfoLine texthl=CocInfoSign numhl=CocInfoSign
+sign CocHint text=󰷞  linehl=CocHintLine texthl=CocHintSign numhl=CocHintSign
+sign ALEErrorSign text=✗  linehl=ALEErrorLine texthl=ALEErrorSign
+sign ALEStyleErrorSign text=⍥  linehl=ALEErrorLine texthl=ALEStyleErrorSign
+sign ALEWarningSign text=ఠ  linehl=ALEWarningLine texthl=ALEWarningSign
+sign ALEStyleWarningSign text=⍨  linehl=ALEWarningLine texthl=ALEStyleWarningSign
+sign ALEInfoSign text=ᓆ  linehl=ALEInfoLine texthl=ALEInfoSign
+sign ALEDummySign text=   texthl=SignColumn
 ```
 
 ## config

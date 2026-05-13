@@ -30,7 +30,7 @@
   - [hook](#hook)
 - [filter-repo](#filter-repo)
   - [change commit email](#change-commit-email)
-  - [seperate folder into new repo](#seperate-folder-into-new-repo)
+  - [separate folder into new repo](#separate-folder-into-new-repo)
   - [rewrite the commit history](#rewrite-the-commit-history)
   - [replace sensitive words in all files](#replace-sensitive-words-in-all-files)
   - [cleanup repo](#cleanup-repo)
@@ -900,6 +900,9 @@ $ git log --pretty=format:"%b" | command grep -E "^(Signed-off-by|Co-authored-by
 >  $ git log --all --format='%h %D %ad %ae %ce %s' --date=short | grep -Fi '<KEYWORD>'
 >  $ git log --all --format='%ae%n%ce' | grep -i '<KEYWORD>'
 >  $ git log --format='%H %ad %cd %ae' --date=iso-strict | grep -i '<KEYWORD>'
+>
+>  # check tags
+>  $ git for-each-ref refs/tags --format='%(refname:short) %(taggername) %(taggeremail)'
 >  ```
 
 ### change commit email
@@ -909,13 +912,31 @@ $ cd /path/to/repo
 
 # update email in history
 $ GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_SYSTEM=/dev/null git filter-repo --force --commit-callback '
-old = b"<OLD@DOMAIN.COM>"
-new = b"<NEW@EMAIL.COM>"
+old = b"OLD@DOMAIN.COM"
+new = b"NAME@EMAIL.COM"
 if commit.author_email == old:
     commit.author_email = new
 if commit.committer_email == old:
     commit.committer_email = new
 '
+# update email, name and tags
+$ GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_SYSTEM=/dev/null git filter-repo --force \
+    --email-callback '
+        return b"NAME@EMAIL.COM" if email in [
+            b"OLD@DOMAIN.COM",
+            b"WRONG@DOMAIN.COM"
+        ] else email
+    ' \
+    --name-callback '
+        return b"NAME" if name in [b"OLD", b"WRONG NAME"] else name
+    ' \
+    --tag-callback '
+        if tag.tagger_email in [b"OLD@DOMAIN.COM", b"WRONG@DOMAIN.COM"]:
+            tag.tagger_email = b"NAME@EMAIL.COM"
+        if tag.tagger_name in [b"OLD", b"WRONG NAME"]:
+            tag.tagger_name  = b"NAME"
+        return tag
+    '
 
 # re-add the origin
 $ git remote add origin <remote-url>
@@ -927,8 +948,8 @@ $ git push origin --tags --force
 ```bash
 # or with case-insensitive match
 $ GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_SYSTEM=/dev/null git filter-repo --force --commit-callback '
-keyword = b"<KEYWORD>"
-new = b"<NEW@EMAIL.COM>"
+keyword = b"KEYWORD"
+new = b"NAME@EMAIL.COM"
 if keyword in commit.author_email.lower():
     commit.author_email = new
 if keyword in commit.committer_email.lower():
@@ -937,10 +958,10 @@ if keyword in commit.committer_email.lower():
 ```
 
 ```bash
-# or with message repalace
+# or with message replace
 $ GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_SYSTEM=/dev/null git filter-repo --force --commit-callback '
-keyword = b"<KEYWORD>"
-mail = b"<NEW@EMAIL>COM"
+keyword = b"KEYWORD"
+mail = b"NAME@EMAIL.COM"
 
 if keyword in commit.author_email.lower():
     commit.author_email = mail
@@ -948,14 +969,14 @@ if keyword in commit.committer_email.lower():
     commit.committer_email = mail
 ' \
   --message-callback '
-mail = b"<NEW@EMAIL.COM>"
+mail = b"<NAME@EMAIL.COM>"
 msg = message.replace(b"<old@domain.com>", mail)
-msg = msg.replace(b"<OLD@DOMAMIN.COM>", mail)
+msg = msg.replace(b"<OLD@DOMAIN.COM>", mail)
 return msg
 '
 ```
 
-### seperate folder into new repo
+### separate folder into new repo
 
 1. create new repo
 
