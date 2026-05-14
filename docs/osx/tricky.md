@@ -274,7 +274,7 @@ $ brew tap riodelphino/tap
 $ brew install macime
 ```
 
-```bashaw
+```bash
 # list all input method
 $ macime list
 com.apple.keylayout.US
@@ -291,7 +291,7 @@ com.sogou.inputmethod.sogou.pinyin
 $ macime set com.apple.keylayout.US
 ```
 
-```viml
+```vim
 " autocmd for force change input method
 if executable('macime')
   let g:ime_en = 'com.apple.keylayout.US'

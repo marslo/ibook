@@ -15,6 +15,7 @@
   - [show with particular columns](#show-with-particular-columns)
   - [show only scheduled nodes](#show-only-scheduled-nodes)
   - [show common/diff images between nodes](#show-commondiff-images-between-nodes)
+  - [show with IP address](#show-with-ip-address)
 - [delete node](#delete-node)
   - [re-join](#re-join)
 - [label](#label)
@@ -278,7 +279,7 @@ $ kubectl get nodes -o jsonpath='{range .items[*]} {.metadata.name} {"\t"} {.sta
 
 ## list node with label
 ```bash
-$ kubectl get node -l <LABLE>=<value>
+$ kubectl get node -l <LABEL>=<value>
 ```
 
 ### [list node with multiple labels](https://stackoverflow.com/a/68479227/2940319)
@@ -287,23 +288,23 @@ $ kubectl get node -l <LABLE>=<value>
 > - [* LIST and WATCH filtering](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#list-and-watch-filtering)
 
 ```bash
-$ kubectl get node --selector <LABLE>=<value>,<LABLE>=<value>
+$ kubectl get node --selector <LABEL>=<value>,<LABEL>=<value>
 
 # or
-$ kubectl get node -l '<LABLE> in (<value>), <LABLE> in (<value>)'
+$ kubectl get node -l '<LABEL> in (<value>), <LABEL> in (<value>)'
 
 # or for same label, different values
-$ kubectl get node -l '<LABLE> in (<value_1>, <value_2>)'
+$ kubectl get node -l '<LABEL> in (<value_1>, <value_2>)'
 # i.e.:
 $ kubectl get pods -l 'environment in (production, qa)'
 
 # or `notin`
-$ kubectl get node -l '<LABLE> notin (<value>)'
+$ kubectl get node -l '<LABEL> notin (<value>)'
 ```
 
 ### update label of node
 ```bash
-$ kubectl label node <name> <LABLE>=<value> [--overwrite]
+$ kubectl label node <name> <LABEL>=<value> [--overwrite]
 ```
 
 ## show
@@ -316,20 +317,31 @@ $ kubectl get node --show-labels
 - `--label-columns`
   ```bash
   $ kubectl get node --label-columns <label-name>
+
+  # or
+  $ kubectl get nodes --selector node-role.kubernetes.io/worker=worker \
+            --label-columns label-1 \
+            --label-columns label-2 \
+            --label-columns server \
+            --label-columns distro
+  NAME     STATUS   ROLES    AGE    VERSION   LABEL-1   LABEL-2   SERVER    DISTRO
+  node-1   Ready    worker   197d   v1.28.8   true                release   ubuntu
+  node-2   Ready    worker   202d   v1.28.8   true      true      release   ubuntu
+  node-3   Ready    worker   202d   v1.28.8   true                devel     ubuntu
   ```
 
   - e.g.:
     ```bash
     $ kubectl get nodes --label-columns jenkins
-    NAME          STATUS    ROLES    AGE     VERSION   JENKINS
-    k8s-node01    Ready     worker   545d    v1.12.3
-    k8s-node02    Ready     worker   597d    v1.12.3
-    k8s-node03    Ready     worker   217d    v1.12.3
-    k8s-node04    Ready     worker   52d     v1.12.3
-    k8s-node05    Ready     worker   589d    v1.12.3
-    k8s-node06    Ready     master   2y33d   v1.12.3   controller
-    k8s-node07    Ready     master   589d    v1.12.3
-    k8s-node08    Ready     worker   535d    v1.12.3
+    NAME       STATUS    ROLES    AGE     VERSION   JENKINS
+    node-01    Ready     worker   545d    v1.12.3
+    node-02    Ready     worker   597d    v1.12.3
+    node-03    Ready     worker   217d    v1.12.3
+    node-04    Ready     worker   52d     v1.12.3
+    node-05    Ready     worker   589d    v1.12.3
+    node-06    Ready     master   2y33d   v1.12.3   controller
+    node-07    Ready     master   589d    v1.12.3
+    node-08    Ready     worker   535d    v1.12.3
     ```
 
 - with multiple label-columns
@@ -340,15 +352,15 @@ $ kubectl get node --show-labels
                       --label-columns devops/jenkins |
             grep -v -E 'SchedulingDisabled|NotReady'
 
-  NAME          STATUS   STATUS    ROLES    VERSION   OS      ARCH    JENKINS
-  k8s-node01    Ready    Ready     worker   v1.19.6   linux   amd64
-  k8s-node02    Ready    Ready     worker   v1.19.6   linux   amd64
-  k8s-node03    Ready    Ready     worker   v1.19.6   linux   amd64   controller
-  k8s-node04    Ready    Ready     worker   v1.19.6   linux   amd64
-  k8s-node05    Ready    Ready     worker   v1.19.6   linux   amd64
-  k8s-node06    Ready    Ready     master   v1.19.6   linux   amd64
-  k8s-node07    Ready    Ready     master   v1.19.6   linux   amd64
-  k8s-node08    Ready    Ready     worker   v1.19.6   linux   amd64
+  NAME       STATUS   STATUS    ROLES    VERSION   OS      ARCH    JENKINS
+  node-01    Ready    Ready     worker   v1.19.6   linux   amd64
+  node-02    Ready    Ready     worker   v1.19.6   linux   amd64
+  node-03    Ready    Ready     worker   v1.19.6   linux   amd64   controller
+  node-04    Ready    Ready     worker   v1.19.6   linux   amd64
+  node-05    Ready    Ready     worker   v1.19.6   linux   amd64
+  node-06    Ready    Ready     master   v1.19.6   linux   amd64
+  node-07    Ready    Ready     master   v1.19.6   linux   amd64
+  node-08    Ready    Ready     worker   v1.19.6   linux   amd64
   ```
 
 - `-l`
@@ -393,6 +405,31 @@ $ kubectl get node \
          <(kubectl get node node-02 -o json | jq -re '.status.images[] | select(.names[1]) | .names[1]' | sort)
   ```
 
+### show with IP address
+```bash
+$ kubectl get nodes -o custom-columns='NAME:.metadata.name,HOSTNAME:.metadata.labels.kubernetes\.io/hostname,INTERNAL-IP:.status.addresses[?(@.type=="InternalIP")].address'
+# NAME            HOSTNAME        INTERNAL-IP
+# node-1          node-1          192.168.1.236
+# node-2          node-2          192.168.1.63
+# node-3          node-3          192.168.1.200
+
+# or
+$ kubectl get nodes \
+          -o jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.status.addresses[?(@.type=="InternalIP")].address}{"\t"}{.status.addresses[?(@.type=="Hostname")].address}{"\n"}{end}' |
+  column -t
+# node-1  192.168.1.236  node-1
+# node-2  192.168.1.63   node-2
+# node-3  192.168.1.200  node-3
+
+# or
+$ kubectl get nodes \
+          -o jsonpath='{range .items[*]} {.metadata.name} {"\t"} {.status.addresses[].address} {"\n"} {end}' |
+  sort -k1 -V |
+  column -t
+# node-1  192.168.1.236
+# node-2  192.168.1.63
+# node-3  192.168.1.200
+```
 
 ## delete node
 
@@ -449,7 +486,7 @@ $ kubectl delete node <NODE_NAME>
 ## label
 ### cleanup label
 ```bash
-$ kubectl label node <NODE_NAME> <LABLE>-
+$ kubectl label node <NODE_NAME> <LABEL>-
 ```
 - example
   ```bash

@@ -169,7 +169,7 @@ else
   # execute specified the functions
   else
     for func do
-      [ "$(type -t -- "$func")" = function ] && "$func"
+      [ "$(type -t -- "${func}")" = function ] && "${func}"
     done
   fi
 fi
