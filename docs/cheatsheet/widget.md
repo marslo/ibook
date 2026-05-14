@@ -1101,6 +1101,10 @@ mist='''
 
 ### toilet
 
+> [!NOTE|label:references:]
+> - [cacalabs/toilet](https://github.com/cacalabs/toilet)
+> - install from source for extra fonts - [* iMarslo: devenv/toilet](../linux/devenv.md#toilet)
+
 - fonts
   ```bash
   $ ls $(brew --prefix toilet)/share/figlet

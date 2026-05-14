@@ -52,6 +52,7 @@
     - [install from apt repo](#install-from-apt-repo)
   - [mysql-connector (jdbc)](#mysql-connector-jdbc)
   - [vncserver](#vncserver)
+  - [toilet](#toilet)
 - [compiler environment](#compiler-environment)
   - [pkg-config](#pkg-config)
   - [ldconfig](#ldconfig)
@@ -213,7 +214,7 @@ $ copilot review --pr ${{ github.event.pull_request.number }} --repo ${{ github.
   ```
 
 ## groovy
-* download groovy binary pakcage
+* download groovy binary package
   ```bash
   $ mkdir -p /opt/groovy && cd /opt/groovy
   $ wget --no-check-certificate -c https://akamai.bintray.com/1c/1c4dff3b6edf9a8ced3bca658ee1857cee90cfed1ee3474a2790045033c317a9?__gda__=exp=1490346679~hmac=6d64a1c3596da50e470fb6a46b182ba2cacab553c66843c8ea292e1e70e4e243&response-content-disposition=attachment%3Bfilename%3D%22apache-groovy-binary-2.4.10.zip%22&response-content-type=application%2Foctet-stream&requestInfo=U2FsdGVkX19cWhR3RJcR6SCy74HUcDg470ifD-nH2EiE5uxtdI5EbUiW_jGoHgZZTVR3qgks9tiU5441axygT9z3ykqpL45d_-9oyTlOp8Gild5Z7iGRzCiwf0kba9uza8iWDxnIxgnUIg5tDe6N8ZQ3R0yFCY4c4w7czwBGyK0
@@ -753,7 +754,7 @@ $ sudo update-alternatives --auto gofmt
 $ go version
 go version go1.21.5 linux/amd64
 
-# standalone pacakge
+# standalone package
 $ mkdir -p /opt/go
 $ curl -fsSL https://dl.google.com/go/go1.21.5.linux-amd64.tar.gz | tar xzf - -C /opt/go
 
@@ -1248,6 +1249,41 @@ $ sudo apt install vnc4server
 $ sudo apt install gnome-panel gnome-settings-daemon metacity nautilus gnome-terminal
 ```
 
+## toilet
+
+> [!NOTE|label:references:]
+> - [cacalabs/toilet](https://github.com/cacalabs/toilet)
+> - [* iMarslo: toilet usage](../cheatsheet/widget.md#toilet)
+
+```bash
+# debian/ubuntu
+$ sudo apt install git build-essential autoconf automake libtool pkg-config libcaca-dev
+# rhel/centos/fedora
+$ sudo dnf install git gcc make autoconf automake libtool pkg-config libcaca-devel
+
+$ git clone https://github.com/cacalabs/toilet.git && cd toilet
+$ bash bootstrap
+$ bash configure --prefix=/usr/local
+
+$ make
+$ sudo make install
+
+# optional
+$ autoreconf -i
+
+# verify
+$ toilet -f bfraktur "Hello"
+𝕳𝖊𝖑𝖑𝖔
+
+$ ls /usr/local/share/figlet
+ascii12.tlf   bigascii12.tlf  bigmono9.tlf  emboss.tlf        future.tlf  mono9.tlf      smascii9.tlf   smmono12.tlf
+ascii9.tlf    bigascii9.tlf   circle.tlf    fauxcyrillic.tlf  letter.tlf  pagga.tlf      smblock.tlf    smmono9.tlf
+bfraktur.tlf  bigmono12.tlf   emboss2.tlf   fullcyrillic.tlf  mono12.tlf  smascii12.tlf  smbraille.tlf  wideterm.tlf
+
+$ ls /usr/local/share/figlet/ | wc -l
+24
+```
+
 # compiler environment
 ## pkg-config
 
@@ -1631,7 +1667,7 @@ fi
 
 - gpg
   ```bash
-  # the latest gpg completion has issue with multipe `--` options, using v2.11 instead of
+  # the latest gpg completion has issue with multiple `--` options, using v2.11 instead of
   $ curl -fsSL --create-dirs -O ~/.marslo/.completion/gpg.v2.11 \
          https://github.com/scop/bash-completion/raw/2.11/completions/gpg
   $ ln -sf ~/.marslo/.completion/gpg.v2.11 "${HOMEBREW_PREFIX}/etc/bash_completion.d/gpg"
