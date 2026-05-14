@@ -36,6 +36,7 @@
   - [encryption with Vim](#encryption-with-vim)
   - [open vim with specific commands](#open-vim-with-specific-commands)
   - [show sign list](#show-sign-list)
+  - [get info](#get-info)
 - [config](#config)
   - [get platform](#get-platform)
   - [disable vim beep](#disable-vim-beep)
@@ -977,10 +978,43 @@ sign ALEInfoSign text=ᓆ  linehl=ALEInfoLine texthl=ALEInfoSign
 sign ALEDummySign text=   texthl=SignColumn
 ```
 
+### get info
+
+> [!NOTE|label:references:]
+> Vim
+>  └── Tab page         ( :tabs, gt/gT switch                   | gettabinfo() )
+>       └── Window      ( :wincmd / Ctrl+W switch == split      | getwininfo() )
+>            └── Buffer ( :ls/:buffers/:files, :bp/:bn switch   | getbufinfo() )
+
+- `getwininfo()` - get info of current window
+  ```vim
+  :echo getwininfo()
+  [{'winnr': 1, 'variables': {'last_changedtick': 123, 'airline_lastmode': 'commandline spell', 'm1': 1000, 'cchat_cwd': '/Users/marslo/.marslo/vimrc.d', 'indentLine_inde
+  ntLineId': [1169, 1170, 1171, 1172, 1173, 1174, 1175, 1176, 1177, 1178, 1179, 1180, 1181, 1182, 1183, 1184, 1185, 1186, 1187, 1188, 1189], 'last_cursor': [0, 327, 4, 0,
+   4], 'airline_active': 1, 'last_pos': [0, 327, 4], 'matchup_need_clear': 0, 'airline_current_mode': 'COMMAND', 'tcommentPos': [0, 327, 4, 0]}, 'botline': 345, 'height':
+   39, 'bufnr': 1, 'winbar': 0, 'width': 168, 'leftcol': 0, 'tabnr': 1, 'quickfix': 0, 'topline': 307, 'loclist': 0, 'wincol': 1, 'status_height': 1, 'winrow': 2, 'textof
+  f': 5, 'winid': 1000, 'terminal': 0}]
+  Press ENTER or type command to continue
+  ```
+
+- `gettabinfo()` - get info of current tab
+  ```vim
+  :echo gettabinfo()
+  [{'windows': [1037, 1000], 'variables': {}, 'tabnr': 1}, {'windows': [1049], 'variables': {'gitgutter_didtabenter': 0}, 'tabnr': 2}]
+  ```
+
+- `getbufinfo()` - get info of current buffer
+  ```vim
+  :echo getbufinfo()
+  [{'lnum': 325, 'bufnr': 1, 'variables': {...}, ..., 'hidden': 1, 'listed': 1, 'changedtick': 2, 'linecount': 4}]
+  ....
+  ```
+
 ## config
 ### get platform
 
 > [!NOTE|label:references:]
+> - [* iMarslo: vimrc.d/os](https://github.com/marslo/dotfiles/blob/main/.marslo/vimrc.d/os)
 > - [How to detect the OS from a Vim script?](https://stackoverflow.com/a/57015339/2940319)
 > - [zeorin/dotfiles/.vimrc](https://github.com/zeorin/dotfiles/blob/e5400e2d14b97d6073842f605370f5cf57722fca/.vimrc#L84-L92)
 
@@ -1012,6 +1046,11 @@ endfunction
 
 function! IsMac()
   return has('macunix')
+endfunction
+
+" vscode or cursor
+function! IsVscodeOrCursor()
+  return exists('g:vscode')
 endfunction
 ```
 
@@ -1108,23 +1147,25 @@ nnoremap <leader>e :set iskeyword-=_<cr>diw:set iskeyword+=_<cr>i
 ## run vim commands in terminal
 
 > [!NOTE|label:manual:]
-> ```vim
-> $ man vim
-> ...
-> OPTIONS
->   +{command}
->   -c {command}
->              {command} will be executed after the first file has been read.  {command} is interpreted
->              as an Ex command.  If the {command} contains spaces it must be enclosed in double quotes
->              (this depends on the shell that is used).  Example: Vim "+set si" main.c
->              Note: You can use up to 10 "+" or "-c" commands.
+> - [* iMarslo: nvim show treesitter config](./nvim.md#show-treesitter-syntax)
+> - help info:
+>   ```vim
+>   $ man vim
+>   ...
+>   OPTIONS
+>     +{command}
+>     -c {command}
+>                {command} will be executed after the first file has been read.  {command} is interpreted
+>                as an Ex command.  If the {command} contains spaces it must be enclosed in double quotes
+>                (this depends on the shell that is used).  Example: Vim "+set si" main.c
+>                Note: You can use up to 10 "+" or "-c" commands.
 >
->   --cmd {command}
->              Like using "-c", but the command is executed just before processing any vimrc file.  You
->              can use up to 10 of these commands, independently from "-c" commands.
-> ```
+>     --cmd {command}
+>                Like using "-c", but the command is executed just before processing any vimrc file.  You
+>                can use up to 10 of these commands, independently from "-c" commands.
+>   ```
 
-```vim
+```bash
 $ vim -es -c "set ff? | q"
   fileformat=unix
 ```
@@ -1153,30 +1194,29 @@ export PAGER="/bin/sh -c \"unset PAGER;col -b -x | \
 - additional highlight
   ```vim
   " DrChip's additional man.vim stuff
-  syn match manSectionHeading "^\s\+[0-9]\+\.[0-9.]*\s\+[A-Z].*$" contains=manSectionNumber
-  syn match manSectionNumber "^\s\+[0-9]\+\.[0-9]*" contained
-  syn region manDQString start='[^a-zA-Z"]"[^", )]'lc=1 end='"' contains=manSQString
-  syn region manSQString start="[ \t]'[^', )]"lc=1 end="'"
-  syn region manSQString start="^'[^', )]"lc=1 end="'"
-  syn region manBQString start="[^a-zA-Z`]`[^`, )]"lc=1 end="[`']"
-  syn region manBQSQString start="``[^),']" end="''"
-  syn match manBulletZone transparent "^\s\+o\s" contains=manBullet
+  syn match   manSectionHeading "^\s\+[0-9]\+\.[0-9.]*\s\+[A-Z].*$" contains=manSectionNumber
+  syn match   manSectionNumber "^\s\+[0-9]\+\.[0-9]*" contained
+  syn region  manDQString start='[^a-zA-Z"]"[^", )]'lc=1 end='"' contains=manSQString
+  syn region  manSQString start="[ \t]'[^', )]"lc=1 end="'"
+  syn region  manSQString start="^'[^', )]"lc=1 end="'"
+  syn region  manBQString start="[^a-zA-Z`]`[^`, )]"lc=1 end="[`']"
+  syn region  manBQSQString start="``[^),']" end="''"
+  syn match   manBulletZone transparent "^\s\+o\s" contains=manBullet
   syn case match
   syn keyword manBullet contained o
-  syn match manBullet contained "\[+*]"
-  syn match manSubSectionStart "^\*" skipwhite nextgroup=manSubSection
-  syn match manSubSection ".*$" contained
+  syn match   manBullet contained "\[+*]"
+  syn match   manSubSectionStart "^\*" skipwhite nextgroup=manSubSection
+  syn match   manSubSection ".*$" contained
 
   hi link manSectionNumber Number
-  hi link manDQString String
-  hi link manSQString String
-  hi link manBQString String
-  hi link manBQSQString String
-  hi link manBullet Special
-  hi manSubSectionStart term=NONE cterm=NONE gui=NONE ctermfg=black ctermbg=black guifg=navyblue guibg=navyblue
-  hi manSubSection term=underline cterm=underline gui=underline ctermfg=green guifg=green
+  hi link manDQString      String
+  hi link manSQString      String
+  hi link manBQString      String
+  hi link manBQSQString    String
+  hi link manBullet        Special
+  hi manSubSectionStart term=NONE      cterm=NONE      gui=NONE      ctermfg=black ctermbg=black guifg=navyblue guibg=navyblue
+  hi manSubSection      term=underline cterm=underline gui=underline ctermfg=green guifg=green
   ```
-
 
 ## [vim regex](http://vimregex.com/)
 
@@ -1266,7 +1306,7 @@ NOTICE: after using `\v` the `=` should using `\=` instead
 
 - [:help i_CTRL-V_digit](https://vimhelp.org/insert.txt.html#i_CTRL-V_digit)
 
-| first      | char        | mode | max nr of chars |   max value  |
+| FIRST      | CHAR        | MODE | MAX NR OF CHARS |   MAX VALUE  |
 |------------|-------------|:----:|:---------------:|:------------:|
 | (none)     | decimal     |   3  |       255       |       -      |
 | `o` or `O` | octal       |   3  |       377       |     (255)    |
