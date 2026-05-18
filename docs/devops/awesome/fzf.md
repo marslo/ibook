@@ -123,6 +123,13 @@ $ rm -rf /tmp/fzf.tar.gz
 ```
 
 ```bash
+# build from source
+$ git clone https://github.com/junegunn/fzf.git && cd fzf
+$ make
+GOARCH=arm64 go build -a -ldflags "-s -w -X main.version=0.72.0 -X main.revision=e0d08190" -tags "" -trimpath -o target/fzf-darwin_arm8
+```
+
+```bash
 # config
 FZF_DEFAULT_OPTS="${FZF_DEFAULT_OPTS:+$FZF_DEFAULT_OPTS} "
 FZF_DEFAULT_OPTS+="--height 35% --min-height 8+ "             # https://github.com/junegunn/fzf/issues/4226

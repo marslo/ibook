@@ -24,16 +24,18 @@
     - [hex to rgba](#hex-to-rgba)
     - [hex to ansicolor](#hex-to-ansicolor)
     - [hex to rgb](#hex-to-rgb)
+  - [others](#others)
+    - [bash-colors `c()`](#bash-colors-c)
+    - [`say()`](#say)
+    - [RGBcolor](#rgbcolor)
 - [tools](#tools)
   - [fidian/ansi](#fidianansi)
-  - [bash-colors `c()`](#bash-colors-c)
-  - [`say()`](#say)
-  - [RGBcolor](#rgbcolor)
   - [terminal-colors](#terminal-colors)
-  - [colored - python libs](#colored---python-libs)
-  - [topic: ansi-colors](#topic-ansi-colors)
+  - [pastel](#pastel)
+  - [colored](#colored)
   - [color picker](#color-picker)
     - [iterm2-tab-set](#iterm2-tab-set)
+    - [color panel (macOS)](#color-panel-macos)
   - [other scripts](#other-scripts)
     - [256 color table](#256-color-table)
 - [color names](#color-names)
@@ -43,7 +45,7 @@
   - [settings](#settings)
   - [using vim as man pager](#using-vim-as-man-pager)
   - [ansicolor issues in man page](#ansicolor-issues-in-man-page)
-- [others](#others)
+- [others](#others-1)
   - [grep colors](#grep-colors)
   - [generate color randomly](#generate-color-randomly)
   - [decolorize](#decolorize)
@@ -460,7 +462,7 @@ $ tput setaf 30 | command cat -A
 > - [Using ANSI Color Codes to Colorize Your Bash Prompt on Linux](https://web.archive.org/web/20131009193526/http://bitmote.com/index.php?post/2012/11/19/Using-ANSI-Color-Codes-to-Colorize-Your-Bash-Prompt-on-Linux)
 
 ```bash
-# additioanl \[ and \] for PS1 only
+# additional \[ and \] for PS1 only
 #  ^                     ^
 #  --                    --
 R='\[\e[38;2;255;100;100m\]'
@@ -1337,23 +1339,9 @@ function hextorgb () {
 }
 ```
 
-# tools
-## [fidian/ansi](https://github.com/fidian/ansi/blob/master/ansi)
+## others
 
-![ansi color codes](../screenshot/colors/ansi/ansi-color-codes.png)
-
-```bash
-# install
-$ [[ ! -f /opt/ansi ]] && curl -sL git.io/ansi -o /opt/ansi
-$ chmod +x /opt/ansi
-$ ln -sf /opt/ansi /usr/local/bin/ansi
-
-# usage
-$ ansi --color-table
-$ ansi --color-codes
-```
-
-## [bash-colors `c()`](https://github.com/ppo/bash-colors)
+### [bash-colors `c()`](https://github.com/ppo/bash-colors)
 
 [![bash-colors c() for help info](../screenshot/colors/ansi/bash-colors-c.png)](../screenshot/colors/ansi/bash-colors-c.png)
 
@@ -1372,7 +1360,7 @@ cecho() { echo -e "$(c $1)${2}\e[0m"; }
 $ echo -e "$(c Gs)bold green$(c) and $(c i)Italic$(c) and normal"
 ```
 
-## [`say()`](https://stackoverflow.com/a/46331700/2940319)
+### [`say()`](https://stackoverflow.com/a/46331700/2940319)
 
 [![say()](../screenshot/colors/ansi/ansi-color-say.png)](./ansi/ansi-color-say.png)
 
@@ -1396,7 +1384,7 @@ $ say @b@green[[Success]]
 $ say @b@yellowWARNING @red..message..
 ```
 
-## [RGBcolor](https://unix.stackexchange.com/a/124409/29178)
+### [RGBcolor](https://unix.stackexchange.com/a/124409/29178)
 
 ```bash
 function RGBcolor {
@@ -1407,6 +1395,28 @@ fg=$(RGBcolor 1 0 2)  # Violet
 bg=$(RGBcolor 5 3 0)  # Bright orange.
 
 echo -e "\\033[1;38;5;$fg;48;5;${bg}mviolet on tangerine\\033[0m"
+```
+
+# tools
+
+> [!NOTE|label:references:]
+> - [topic: ansi-colors](https://github.com/topics/ansi-colors)
+>   - [trapd00r/colorcoke](https://github.com/trapd00r/colorcoke)
+>   - [shakibamoshiri/bline](https://github.com/shakibamoshiri/bline)
+
+## [fidian/ansi](https://github.com/fidian/ansi/blob/master/ansi)
+
+![ansi color codes](../screenshot/colors/ansi/ansi-color-codes.png)
+
+```bash
+# install
+$ [[ ! -f /opt/ansi ]] && curl -sL git.io/ansi -o /opt/ansi
+$ chmod +x /opt/ansi
+$ ln -sf /opt/ansi /usr/local/bin/ansi
+
+# usage
+$ ansi --color-table
+$ ansi --color-codes
 ```
 
 ## [terminal-colors](https://pypi.org/project/terminal-colors/)
@@ -1425,9 +1435,61 @@ $ python3 -m pip install terminal-colors
 $ terminal-colors -l
 $ terminal-colors -n
 $ terminal-colors -n -p
+
+# show rgb color preview
+$ terminal-colors --rgb
 ```
 
-## [colored - python libs](https://pypi.org/project/colored/)
+## [pastel](https://github.com/sharkdp/pastel)
+
+> [!NOTE]
+> - [sharkdp/pastel](https://github.com/sharkdp/pastel)
+
+```bash
+# list color names
+$ pastel list
+```
+
+```bash
+# format
+$ pastel format hsl ff8000
+
+# mix
+$ pastel color gold | pastel mix - red
+```
+
+![pastel format and mix](../screenshot/colors/pastel/pastel-mix.png)
+
+```bash
+$ pastel color 556270 4ecdc4 c7f484 ff6b6b c44d58 | pastel lighten 0.2 | pastel --color-mode 24bit format rgb | tr '\n' ' '
+rgb(135, 149, 164) rgb(158, 227, 223) rgb(242, 252, 226) rgb(255, 209, 209) rgb(221, 154, 160)
+
+$ pastel color 556270 4ecdc4 c7f484 ff6b6b c44d58 | pastel lighten 0   | pastel --color-mode 24bit format hex | tr '\n' ' '
+#556270 #4ecdc4 #c7f484 #ff6b6b #c44d59
+
+$ pastel color 556270 4ecdc4 c7f484 ff6b6b c44d58 | pastel lighten 0.1 | pastel --color-mode 24bit format hsl | tr '\n' ' '
+hsl(211, 13.7%, 48.6%) hsl(176, 55.9%, 65.5%) hsl(84, 83.6%, 83.7%) hsl(0, 100.0%, 81.0%) hsl(354, 50.2%, 63.5%)
+```
+
+![pastel color format](../screenshot/colors/pastel/pastel-color-format.png)
+
+```bash
+# gradient
+# #555ee4 → #4aff80 → #d84341
+$ pastel -m 24bit gradient 555ee4 4aff80 d84341 -n 15 | pastel --color-mode 24bit format hex | tr '\n' ' '
+# #555ee4 → white → 93b26f
+$ pastel -m 24bit gradient 555ee4 white 93b26f -n 15 | pastel --color-mode 24bit format hex | tr '\n' ' '
+# with color pick
+$ pastel gradient pick pick -n 15 | pastel --color-mode 24bit format rgb | tr '\n' ' '
+```
+
+![pastel gradient](../screenshot/colors/pastel/pastel-gradient.png)
+
+## [colored](https://pypi.org/project/colored/)
+
+> [!NOTE]
+> - python libs
+
 ```bash
 # install
 $ python3 -m pip install colored
@@ -1436,10 +1498,6 @@ $ python3 -m pip install colored
 $ colored --help
 $ colored --color-codes
 ```
-
-## [topic: ansi-colors](https://github.com/topics/ansi-colors)
-- [trapd00r/colorcoke](https://github.com/trapd00r/colorcoke)
-- [shakibamoshiri/bline](https://github.com/shakibamoshiri/bline)
 
 ## color picker
 
@@ -1477,6 +1535,24 @@ $ colored --color-codes
   $ cpick
     125,199,53 ~~> 7dc735
   ```
+
+### color panel (macOS)
+
+```bash
+# using osascript
+$ osascript -e 'choose color' | awk '{printf "#%02x%02x%02x\n", $1/256, $2/256, $3/256}'
+
+# or using python version
+$ python3 -c "
+    import tkinter
+    from tkinter import colorchooser
+    root = tkinter.Tk(); root.withdraw()
+    color = colorchooser.askcolor()
+    print(color[1])
+  "
+```
+
+![macOS color panel](../screenshot/colors/macos-color-panel.png)
 
 ## other scripts
 ### 256 color table

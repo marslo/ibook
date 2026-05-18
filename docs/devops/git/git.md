@@ -1513,6 +1513,11 @@ The length of the abbreviation scales as the repository grows, using the approxi
 {% endhint %}
 
 ```bash
+$ git describe --abbrev=0 [--tags]
+# v2.5
+# ^
+# '---------- last tag name
+
 $ git describe --tags --long <revision>
 # v2.5-0-gdeadbee
 # ^    ^ ^^
