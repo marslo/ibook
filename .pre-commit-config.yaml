@@ -25,15 +25,8 @@ repos:
         name: Mixed Line Ending
         args: ["--fix=lf"]
 
-  - repo: https://github.com/psf/black
-    rev: 26.3.1
-    hooks:
-      - id: black
-        name: Python Black
-        language_version: python3
-
   - repo: https://github.com/crate-ci/typos
-    rev: v1.46.1
+    rev: v1.46.2
     hooks:
       - id: typos
         name: Typos
