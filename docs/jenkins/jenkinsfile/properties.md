@@ -7,7 +7,7 @@
   - [Active Choices Reactive Parameter](#active-choices-reactive-parameter)
   - [Active Choices Reactive Reference](#active-choices-reactive-reference)
   - [Jenkins 2.0 pipeline: Scripting active parameters for SCM](#jenkins-20-pipeline-scripting-active-parameters-for-scm)
-- [file paramter](#file-paramter)
+- [file parameter](#file-parameter)
   - [create file parameter](#create-file-parameter)
   - [use file parameter](#use-file-parameter)
 - [hidden parameter](#hidden-parameter)
@@ -628,7 +628,7 @@ void setNewProps() {
 }
 ```
 
-## file paramter
+## file parameter
 
 > [!NOTE|label:references]
 > - [* jenkinsci/file-parameters-plugin](https://github.com/jenkinsci/file-parameters-plugin)
@@ -717,4 +717,3 @@ Boolean unstashFile( String name ) {
 > ** END OF LIFE **
 > - [How to do a multiselect input in a pipeline](https://docs.cloudbees.com/docs/cloudbees-ci-kb/latest/client-and-managed-controllers/how-to-do-a-multiselect-input-in-a-pipeline)
 > - [Pipeline Snippet Generator return the name of the object instead of the object with the parameters](https://docs.cloudbees.com/docs/cloudbees-ci-kb/latest/client-and-managed-controllers/pipeline-snipper-return-the-name-of-the-object-instead-of-the-object-with-the-paremeter)
-

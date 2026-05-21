@@ -3,7 +3,7 @@
 
 - [CRI-O](#cri-o)
 - [kubeadm](#kubeadm)
-  - [install kuberentes](#install-kuberentes)
+  - [install kubernetes](#install-kubernetes)
   - [show default kubeadm-config.yaml](#show-default-kubeadm-configyaml)
 - [init](#init)
   - [init first control plane](#init-first-control-plane)
@@ -37,7 +37,7 @@
 >   - [Container Runtimes](https://kubernetes.io/docs/setup/production-environment/container-runtimes/)
 > - others:
 >   - [K8S集群搭建——cri-dockerd版（包含问题解决方案）](https://blog.csdn.net/qq_61468858/article/details/139063860)
->   - [ubernetes那些事 —— 使用cri-o作为容器运行时](https://zhuanlan.zhihu.com/p/334766611)
+>   - [kubernetes那些事 —— 使用cri-o作为容器运行时](https://zhuanlan.zhihu.com/p/334766611)
 >   - [* Kubernetes provisioning with CRI-O as container runtime](https://github.com/justmeandopensource/kubernetes/tree/master/misc/kubernetes-with-crio)
 >   - [kubeadm keepalived haproxy containerd部署高可用k8s集群](https://blog.csdn.net/shoujiyanzhen/article/details/120673624)
 >   - [* kubeadm-conf.yaml: 1、Kubernetes核心技术 - 高可用集群搭建（kubeadm+keepalived+haproxy）](https://blog.csdn.net/Weixiaohuai/article/details/135478349)
@@ -77,7 +77,7 @@ $ sudo systemctl status crio
 > - [Bootstrapping clusters with kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/)
 > - [Troubleshooting kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/troubleshooting-kubeadm/)
 
-### install kuberentes
+### install kubernetes
 ```bash
 $ cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
@@ -645,4 +645,3 @@ EOF
   volumeStatsAggPeriod: 0s
   ```
   <!--endsec-->
-

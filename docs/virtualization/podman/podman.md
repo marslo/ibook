@@ -176,7 +176,7 @@ $ podman system migrate
   $ sudo loginctl enable-linger $(whoami)
   ```
 
-  - infomation check
+  - information check
     ```bash
     $ loginctl
     SESSION   UID USER   SEAT  TTY
@@ -192,5 +192,3 @@ $ podman system migrate
 ```bash
 $ sudo echo +cpu +cpuset +io +memory +pids > /sys/fs/cgroup/cgroup.subtree_control
 ```
-
-

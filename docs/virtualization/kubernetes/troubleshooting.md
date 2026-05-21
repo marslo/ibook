@@ -141,4 +141,3 @@ $ sudo systemctl status <service> -l --no-pager
 ```bash
 $ kubectl logs pod <pod_name> --all-containers
 ```
-

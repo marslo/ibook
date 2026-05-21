@@ -3,7 +3,7 @@
 ci:
   autofix_prs: false
 
-exclude: '^(.*/etc-shadowsocks.json|.*/shadowsocks-all.sh|.*/etcd.yaml)$'
+exclude: '^(.*/etc-shadowsocks.json|.*/shadowsocks-all.sh|.*/etcd.yaml|.*/buildinfo.delete.sh)$'
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks

@@ -37,4 +37,3 @@
 | TIME                    | The current time using same format as TIME.                                                                                                                                                   |
 | USERPROFILE             | `%SystemDrive%`\Users\{username}. This is equivalent to the $HOME environment variable in Unix/Linux                                                                                          |
 | WINDIR                  | `%windir%` is a regular User variable and can be changed, which makes it less robust than `%SystemRoot%`; Set by default as windir=`%SystemRoot%`                                             |
-

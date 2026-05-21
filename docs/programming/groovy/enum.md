@@ -143,4 +143,3 @@ enum Direction {
 
 println Direction.North.getOpposite()
 ```
-

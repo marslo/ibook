@@ -197,4 +197,3 @@ Helper GUID                             DLL Filename  Command
 {0BFDC146-56A3-4311-A7D5-7D9953F8326E}  WHHELPER.DLL  winhttp
 {B2C0EEF4-CCE5-4F55-934E-ABF60F3DCF56}  WSHELPER.DLL  winsock
 ```
-

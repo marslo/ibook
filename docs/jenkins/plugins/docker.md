@@ -69,4 +69,3 @@ if __name__ == '__main__':
 ```bash
 $ items.find({“name”:{“$eq”:”manifest.json”},”stat.downloaded”:{“$before”:”4w”}})
 ```
-

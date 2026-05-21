@@ -99,4 +99,3 @@ $ grep -nH alias ~/.tmux.conf
 > - [#754 invalid or unknown command: bind-key -t vi-copy ....](https://github.com/tmux/tmux/issues/754)
 > - [#1688 Some options no longer work in 2.9](https://github.com/tmux/tmux/issues/1688)
 > - [#1691 tmux not supporting options that worked previously](https://github.com/tmux/tmux/issues/1691)
-

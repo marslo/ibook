@@ -76,4 +76,3 @@ timestamps { ansiColor('xterm') {
   println "done !"
 }} // ansiColor | timestamps
 ```
-

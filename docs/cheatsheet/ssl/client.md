@@ -141,7 +141,7 @@ If you enter '.', the field will be left blank.
 Country Name (2 letter code) [AU]:CN
 State or Province Name (full name) [Some-State]:Sichuan
 Locality Name (eg, city) []:Chengdu
-Organization Name (eg, company) [Internet Widgits Pty Ltd]:mycompany
+Organization Name (eg, company) [Internet Widgets Pty Ltd]:mycompany
 Organizational Unit Name (eg, section) []:mycompany
 Common Name (e.g. server FQDN or YOUR name) []:docker-2.artifactory
 Email Address []:marslo.jiao@mycompany.com
@@ -217,13 +217,13 @@ Getting Private key
   Country Name (2 letter code) [AU]:CN
   State or Province Name (full name) [Some-State]:Sichuan
   Locality Name (eg, city) []:Chengdu
-  Organization Name (eg, company) [Internet Widgits Pty Ltd]:mycompany
+  Organization Name (eg, company) [Internet Widgets Pty Ltd]:mycompany
   Organizational Unit Name (eg, section) []:mycompany
   Common Name (e.g. server FQDN or YOUR name) []:sample.artifactory.com
   Email Address []:marslo.jiao@mycompany.com
   ```
 
-- [3rd: genreate key and cert by one command](https://www.digicert.com/easy-csr/openssl.htm)
+- [3rd: generate key and cert by one command](https://www.digicert.com/easy-csr/openssl.htm)
   ```bash
   $ openssl req -new \
                 -newkey rsa:2048 \
@@ -258,4 +258,3 @@ Getting Private key
   $ sudo update-ca-certificates --fresh
   $ sudo systemctl restart docker.service
   ```
-
