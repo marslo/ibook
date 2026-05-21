@@ -310,7 +310,7 @@ $ lock=true  # or false
 # read current settings
 $ base=$(gh api -H "Accept: application/vnd.github+json" "repos/${OWNER}/${REPO}/branches/${BRANCH}/protection")
 
-# update lock_branch and enforce_admins only, and keep other settings unchanged ( dyanamically get keys and values )
+# update lock_branch and enforce_admins only, and keep other settings unchanged ( dynamically get keys and values )
 $ jq -n \
      --argjson base "$base" \
      --argjson lock "$lock" '

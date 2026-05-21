@@ -4,7 +4,7 @@
 - [upload via api](#upload-via-api)
 - [plugins](#plugins)
   - [recommended plugins](#recommended-plugins)
-  - [optinal](#optinal)
+  - [optional](#optional)
   - [CloudBees](#cloudbees)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -79,7 +79,7 @@ $ java -jar jenkins-plugin-manager-$version.jar \
 - [Strict Crumb Issuer Plugin](https://plugins.jenkins.io/strict-crumb-issuer/)
   - due to [SECURITY-626](../plugins/crumbIssuer.html#improved-csrf-protection)
 
-### optinal
+### optional
 - [JobFanIn](https://plugins.jenkins.io/job-fan-in/)
 - [Pipeline Aggregator](https://plugins.jenkins.io/pipeline-aggregator-view/)
 - [Active Directory plugin](https://plugins.jenkins.io/active-directory/)

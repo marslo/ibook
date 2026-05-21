@@ -101,7 +101,7 @@ $ ansible-playbook -i inventory/${INVENTORY_DIR}/hosts.yaml \
 
   # install requirements
   $ python3 -m pip install -U -r requirements.txt
-  $ python3 -m pip isntall -U -r contrib/inventory_builder/requirements.txt
+  $ python3 -m pip install -U -r contrib/inventory_builder/requirements.txt
   $ python3 -m pip install selinux
   ```
 

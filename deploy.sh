@@ -86,7 +86,7 @@ function rebuiltToc() {
   # xargs doctoc --github --notitle --update-only --maxlevel 3 >/dev/null \
   #        < <( fd . "$(git rev-parse --show-toplevel)"/docs --type f --extension md --exclude SUMMARY.md --exclude README.md )
   xargs doctoc --github --notitle --update-only --maxlevel 3 >/dev/null \
-        < <(git diff --name-only HEAD..HEAD^)
+        < <(git diff --name-only --diff-filter=AMCT 'HEAD..HEAD^')
 }
 
 function rePush(){

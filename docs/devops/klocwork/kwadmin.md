@@ -150,7 +150,7 @@ $ kwadmin rename-build <project_name> <build_name> <new_build_name>
 
 ### keep <numbers> builds by default
 ```bash
-$ kwadmin set-project-property <project_name> auto_delete_threshold <nubmers>
+$ kwadmin set-project-property <project_name> auto_delete_threshold <numbers>
 ```
 
 

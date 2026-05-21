@@ -24,7 +24,7 @@
   - [nerd-fonts](#nerd-fonts)
     - [pixel](#pixel)
     - [hand-writing](#hand-writing)
-    - [symbole](#symbole)
+    - [symbol](#symbol)
     - [others](#others)
   - [powerline fonts](#powerline-fonts)
   - [google fonts](#google-fonts)
@@ -663,7 +663,7 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 
 ## nerd-fonts
 
-> [!NOTE|label:refereces:]
+> [!NOTE|label:references:]
 > - [download](https://www.nerdfonts.com/font-downloads)
 > - [Karmenzind/monaco-nerd-fonts](https://github.com/Karmenzind/monaco-nerd-fonts)
 > - [xtevenx/ComicMonoNF](https://github.com/xtevenx/ComicMonoNF)
@@ -737,7 +737,7 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
     fc-cache -f -v
   ```
 
-### symbole
+### symbol
 - [NerdFontsSymbolsOnly](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/NerdFontsSymbolsOnly)
   ```bash
   $ curl --create-dirs -O --output-dir "${fontsPath}" \

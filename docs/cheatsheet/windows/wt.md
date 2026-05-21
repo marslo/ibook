@@ -85,7 +85,7 @@
     Add-AppxPackage Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle
     ```
 
-- list upgarde
+- list upgrade
   ```powershell
   > winget upgrade
   Name                                                       Id                                Version          Available        Source
@@ -159,7 +159,7 @@
   1.12.10334.0
   ...
   ```
-- show available pacakges
+- show available packages
   ```powershell
   > winget search windowsterminal
   Name                     Id                                Version      Source

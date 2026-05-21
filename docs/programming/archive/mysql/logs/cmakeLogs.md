@@ -326,8 +326,8 @@ $ cmake . -DCMAKE_INSTALL_PREFIX=/usr/local/mysql \
 -- Looking for strsep - found
 -- Looking for tell
 -- Looking for tell - not found
--- Looking for thr_yield
--- Looking for thr_yield - not found
+-- Looking for the_yield
+-- Looking for the_yield - not found
 -- Looking for vasprintf
 -- Looking for vasprintf - found
 -- Looking for memalign

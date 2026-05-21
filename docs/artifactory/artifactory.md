@@ -91,7 +91,7 @@ $ echo -n |
 ```
 
 > [!NOTE]
-> if `issue (i:)` is the same as `subject (s:)`. Therefore, this is the root certificat.
+> if `issue (i:)` is the same as `subject (s:)`. Therefore, this is the root certificate.
 > i.e. :
 >
 > ```bash

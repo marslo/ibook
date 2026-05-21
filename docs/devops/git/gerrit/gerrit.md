@@ -767,7 +767,7 @@ gr-linked-text[class*="pre"] {
 
   ![gruvbox code block](../../screenshot/gerrit/gerrit-code-block-gruvbox.png)
 
-- ubunut
+- ubuntu
   - background : `#3a122e`
   - front-color: `#eee`
 

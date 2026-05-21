@@ -357,7 +357,7 @@ $ sudo pip install genpac
           "server_port": 1111,
           "password":"mypassword",
           "timeout":300,
-          "user":"nobody",                  // optinal
+          "user":"nobody",                  // optional
           "method":"aes-256-cfb",
           "fast_open":false,
           "nameserver":"1.0.0.1",           // be careful for dns resolve in private network

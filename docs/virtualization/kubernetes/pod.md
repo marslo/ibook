@@ -42,7 +42,7 @@
   - [execute in pod](#execute-in-pod)
   - [restart po](#restart-po)
 - [upgrade and rollback](#upgrade-and-rollback)
-- [resource managemenet](#resource-managemenet)
+- [resource management](#resource-management)
   - [resource management for pods and containers](#resource-management-for-pods-and-containers)
   - [assign cpu resources to containers and pods](#assign-cpu-resources-to-containers-and-pods)
   - [managing kubernetes resource limits](#managing-kubernetes-resource-limits)
@@ -159,7 +159,7 @@ $ kubectl -n <namespace> get po \
 {% endhint %}
 
 ```bash
-$ kubectl -n <namepsace> get pods \
+$ kubectl -n <namespace> get pods \
     --sort-by=.metadata.creationTimestamp \
     -o jsonpath='{.items[-1:].metadata.name}'
 ```
@@ -746,7 +746,7 @@ $ kubectl -n <namespace> get po <po-name> -o yaml | kubectl replace --force -f -
 > [!NOTE|label:references:]
 > - [* iMarslo: upgrade and rollback](./kubectl.md#upgrade-and-rollback)
 
-## resource managemenet
+## resource management
 
 ### [resource management for pods and containers](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
 ### [assign cpu resources to containers and pods](https://kubernetes.io/docs/tasks/configure-pod-container/assign-cpu-resource/)

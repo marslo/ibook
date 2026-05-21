@@ -71,7 +71,7 @@
 > [!NOTE]
 > references:
 > - [* Install Docker Engine - Enterprise on Windows Servers](http://man.hubwiz.com/docset/Docker.docset/Contents/Resources/Documents/docs.docker.com/install/windows/docker-ee.html)
-> - [Docker-EE installtion in windows server](https://computingforgeeks.com/how-to-run-docker-containers-on-windows-server-2019/)
+> - [Docker-EE installation in windows server](https://computingforgeeks.com/how-to-run-docker-containers-on-windows-server-2019/)
 > - [Get started: Prep Windows for containers](https://docs.microsoft.com/en-us/virtualization/windowscontainers/quick-start/set-up-environment?tabs=Windows-Server)
 > - [Install Docker Enterprise Edition for Windows Server](https://docker-docs.netlify.app/install/windows/docker-ee/)
 > - [basic settings: Docker Linux Container running on Windows Server 2019](https://mountainss.wordpress.com/2020/03/31/docker-linux-container-running-on-windows-server-2019-winserv-docker-containers/)
@@ -92,7 +92,7 @@
 > - [* How to install Docker on Windows 10 without Hyper-V](https://www.kauffmann.nl/2019/03/04/how-to-install-docker-on-windows-10-without-hyper-v/)
 
 ```powershell
-# optioinal: https://github.com/OneGet/MicrosoftDockerProvider/issues/65#issuecomment-734284852
+# optional: https://github.com/OneGet/MicrosoftDockerProvider/issues/65#issuecomment-734284852
 > [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 > Install-PackageProvider -Name NuGet
 > Install-Module DockerMsftProvider -Force
@@ -235,7 +235,7 @@
   # On an online machine, download the zip file.
   > Invoke-WebRequest -UseBasicParsing -OutFile docker-19.03.3.zip https://download.docker.com/components/engine/windows-server/19.03/docker-19.03.3.zip
 
-  # Stop Docker service if eralier version of Docker is already installed
+  # Stop Docker service if earlier version of Docker is already installed
   > Stop-Service docker
 
   # Extract the archive.
@@ -599,7 +599,7 @@ Labels:
 
 - install
   ```powershell
-  # Stop Docker service if eralier version of Docker is already installed
+  # Stop Docker service if earlier version of Docker is already installed
   > Stop-Service docker
 
   # Extract the archive.

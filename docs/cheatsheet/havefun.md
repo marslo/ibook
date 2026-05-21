@@ -5,7 +5,7 @@
 - [labyrinth pattern](#labyrinth-pattern)
 - [press any key to continue](#press-any-key-to-continue)
 - [fortune](#fortune)
-- [simulate type mechine (super cool!!)](#simulate-type-mechine-super-cool)
+- [simulate type machine (super cool!!)](#simulate-type-machine-super-cool)
 - [set volume by command](#set-volume-by-command)
 - [cat and tac](#cat-and-tac)
 - [ASCII chart](#ascii-chart)
@@ -52,14 +52,14 @@ Press any key to continue...\n
   $ for i in {1..20}; do fortune -w ; sleep 3; clear; done
   ```
 
-### simulate type mechine (super cool!!)
+### simulate type machine (super cool!!)
 
 > [!NOTE|label:references:]
 > - [Simulate typing](https://www.commandlinefu.com/commands/matching/pv/cHY=/sort-by-votes)
 > - [Simulate typing](https://www.commandlinefu.com/commands/view/7899/simulate-typing)
 
 ```bash
-$ sudo apt-get intall pv
+$ sudo apt-get install pv
 $ echo "Very very very very very long words" | pv -qL $[10+(-2 + RANDOM%5)]
 $ echo "You can simulate on-screen typing just like in the movies" | pv -qL 10
 

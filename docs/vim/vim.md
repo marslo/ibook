@@ -99,7 +99,7 @@ set cursorcolumn
 autocmd InsertEnter * highlight CursorColumn ctermfg=White ctermbg=Yellow cterm=bold guifg=white guibg=yellow gui=bold
 autocmd InsertLeave * highlight CursorColumn ctermfg=Black ctermbg=Yellow cterm=bold guifg=Black guibg=yellow gui=NONE
 
-" or simplely via
+" or simply via
 set cursorcolumn
 highlight CursorColumn ctermfg=White ctermbg=gray cterm=bold guifg=white guibg=gray gui=bold
 ```

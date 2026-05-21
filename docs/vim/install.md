@@ -247,7 +247,7 @@ $ sudo make install
 # or uninstall if necessary
 $ sudo make uninstall && sudo make install
 
-# if /usr/local/vim/bin/vim is not updated, manaual copy src/vim to /usr/local/vim/bin/vim
+# if /usr/local/vim/bin/vim is not updated, manual copy src/vim to /usr/local/vim/bin/vim
 $ [[ 1 -ne $(md5sum src/vim /usr/local/vim/bin/vim | awk '{print $1}' | uniq | wc -l) ]] && sudo command cp -fv src/vim /usr/local/vim/bin/vim
 
 ## ... validate ...
@@ -322,7 +322,7 @@ Linking: gcc -L/usr/local/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/ope
 ```
 <!--endsec-->
 
-- additonal options
+- additional options
   - `--enable-fontset           # no GUI selected; xim has been disabled`
   - `--enable-xim               # no GUI selected; xim has been disabled`
   - `--enable-perlinterp`

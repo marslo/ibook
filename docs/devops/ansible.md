@@ -549,7 +549,7 @@ email                     account@sample.com
 password                  eW7[xRF(rgA@x)n£LN75?R5b.k2z1+
 username                  account
 
-# with json foramt
+# with json format
 $ vault kv get -format=json -mount=project service-account/account
 ```
 
@@ -563,7 +563,7 @@ account
 
 ## [ansible-config](https://docs.ansible.com/ansible/latest/reference_appendices/config.html#inventory-unparsed-warning)
 
-> [!NOTE|label:referencs:]
+> [!NOTE|label:references:]
 > - [v2.4 Configuration file](https://docs.ansible.com/archive/ansible/2.4/intro_configuration.html)
 > - [Ansible Configuration Settings](https://docs.ansible.com/ansible/latest/reference_appendices/config.html#envvar-ANSIBLE_VAULT_PAS)
 
@@ -581,7 +581,7 @@ $ ansible-config init --disabled -t all
 
 ## ansible-lint
 
-> [!NOET|label:references:]
+> [!NOTE|label:references:]
 > - [Yamllint Indentation Warning on Valid Ansible code](https://stackoverflow.com/q/47417743/2940319) | [`indent-sequences: false`](http://yamllint.readthedocs.io/en/latest/rules.html#module-yamllint.rules.indentation)
 > - [ansible-lint - Installing](https://ansible.readthedocs.io/projects/lint/installing/)
 > - vim/nvim plugins

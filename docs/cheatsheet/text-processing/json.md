@@ -59,7 +59,7 @@
 |   `[]`   | array construction                                                     |
 |   `{}`   | object construction                                                    |
 |    `+`   | concatenate or Add                                                     |
-|    `-`   | difference of sets or Substract                                        |
+|    `-`   | difference of sets or Subtract                                         |
 | `length` | size of selected element                                               |
 |    `⎮`   | pipes are used to chain commands in a similar fashion than bash        |
 
@@ -103,7 +103,7 @@
 | sort an array of basic type          | `jq 'sort'`                                                                 |
 | sort an array of objects             | `jq 'sort_by(.foo)'`                                                        |
 | group by a key - opposite to flatten | `jq 'group_by(.foo)'`                                                       |
-| minimun value of an array            | `jq 'min'`<br>See also  min, max, min_by(path_exp), max_by(path_exp)        |
+| minimum value of an array            | `jq 'min'`<br>See also  min, max, min_by(path_exp), max_by(path_exp)        |
 | remove duplicates                    | `jq 'unique'` <br>or `jq 'unique_by(.foo)'` <br>or `jq 'unique_by(length)'` |
 | reverse an array                     | `jq 'reverse'`                                                              |
 
@@ -173,7 +173,7 @@ thing:like
 ### join with getOrDefault
 
 > [!TIP|label:references:]
-> - orignal wihtout `getOrDefault`
+> - original without `getOrDefault`
 >   ```bash
 >   $ echo '[
 >             {"id": "1", "version": "v1"},
@@ -390,10 +390,10 @@ $ echo '[{"uri" : "/1" }, {"uri" : "/2"}, {"uri" : "/3"}]' |
 
 ### select
 
-> [!NOTE|label:refrences:]
+> [!NOTE|label:references:]
 > - [imarslo: example on jenkins api analysis](../../jenkins/script/api.html#get-all-parameters-via-json-format)
 > - [imarslo: example on gerrit api analysis](../../devops/git/gerrit.html#get-all-vote-cr-2)
-> - [jq tips : remove emtpy line](https://stackoverflow.com/a/44289083/2940319)
+> - [jq tips : remove empty line](https://stackoverflow.com/a/44289083/2940319)
 > - [Remove all null values](https://stackoverflow.com/a/39501001/2940319)
 > - [Filter empty and/or null values with jq](https://stackoverflow.com/a/56694468/2940319)
 >   ```jq
@@ -623,7 +623,7 @@ $ echo '{"a": 1, "b": 2}' | jq -r to_entries
 
 - to_entries and select
   ```bash
-  # orignal
+  # original
   $ echo '{ "name/" : "marslo", "age/" : "18", "citizenship" : "china" }' | jq -r
   {
     "name/": "marslo",                 # wants value if key ends with '/'

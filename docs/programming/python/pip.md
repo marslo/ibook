@@ -24,7 +24,7 @@
 - [pipx](#pipx)
   - [setup pipx](#setup-pipx)
   - [show info](#show-info)
-  - [examles](#examles)
+  - [examples](#examples)
 - [troubleshooting](#troubleshooting)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -111,7 +111,7 @@ $ sudo python -m pip install <package-name>
 
 # or
 # CANNOT load the user's $HOME/.pip/pip.conf
-$ sudo -H pip install <pacakge-name>
+$ sudo -H pip install <package-name>
 ```
 
 ### [re-install package in `site.USER_BASE`](https://docs.python.org/3/using/cmdline.html#envvar-PYTHONUSERBASE)
@@ -537,7 +537,7 @@ $ python3 -m pip install --user --upgrade pipx
 $ pipx environment
 ```
 
-### [examles](https://pipx.pypa.io/stable/examples/)
+### [examples](https://pipx.pypa.io/stable/examples/)
 - [pipx install](https://pipx.pypa.io/stable/examples/#pipx-install-examples)
   ```bash
   $ pipx install pycowsay
@@ -674,7 +674,7 @@ $ pipx environment
     $ python3 -m pip install --upgrade pip --system-site-packages
     ```
 
-  - solution: via environment vaiable
+  - solution: via environment variable
     ```bash
     $ export PIP_BREAK_SYSTEM_PACKAGES=true
     $ python3 -m pip install --upgrade pip
@@ -702,7 +702,7 @@ $ pipx environment
     $ pip list
     WARNING: Skipping /usr/local/lib/python3.12/site-packages/six-1.16.0-py3.12.egg-info due to invalid metadata entry 'name'
 
-    $ pip unisntall six
+    $ pip uninstall six
     $ rm -rf /usr/local/lib/python3.12/site-packages/six-1.16.0-py3.12.egg-info
     # if necessary
     $ rm -rf /usr/local/lib/python3.12/site-packages/six-1.16.0-py3.12.dist-info

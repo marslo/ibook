@@ -18,7 +18,7 @@
   - [`PYTHONPATH`](#pythonpath)
 - [extension](#extension)
   - [clear windows](#clear-windows)
-- [python IDLE in MacOS Big Sur](#python-idle-in-macos-big-sur)
+- [python IDLE in MacOS Big Sure](#python-idle-in-macos-big-sure)
   - [`IDLE quit unexpectedly`](#idle-quit-unexpectedly)
   - [Python may not be configured for Tk](#python-may-not-be-configured-for-tk)
   - [init and setup](#init-and-setup)
@@ -98,7 +98,7 @@ $ pyenv versions
   $ ln -sf /bin/python3.11 ~/.pyenv/versions/system-3.11/bin/python3
   $ ln -sf /bin/python3.11 ~/.pyenv/versions/system-3.11/bin/python3.11
 
-  # swith to system python
+  # switch to system python
   $ pyenv rehash
   $ pyenv global system-3.11
 
@@ -571,7 +571,7 @@ $ export PYTHONPATH="/usr/local/lib/python3.10/site-packages"
   EOF
   ```
 
-## python IDLE in MacOS Big Sur
+## python IDLE in MacOS Big Sure
 ### `IDLE quit unexpectedly`
 ```bash
 Process:               Python [53851]
@@ -620,7 +620,7 @@ abort() called
   8.6.8
   ```
 
-  ![idle in mac big sur](../../screenshot/python/idle-mac-bigsur.png)
+  ![idle in mac big sure](../../screenshot/python/idle-mac-bigsur.png)
 
 - [more on tkinter](https://stackoverflow.com/a/60469203/2940319)
   ```bash

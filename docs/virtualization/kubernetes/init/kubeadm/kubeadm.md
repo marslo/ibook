@@ -169,7 +169,7 @@ ok
   ```
   <!--endsec-->
 
-- extenal etcd
+- external etcd
 
   <!--sec data-title="v.1.15.3" data-id="section2" data-show=true data-collapse=true ces-->
   ```bash
@@ -210,7 +210,7 @@ ok
   ```
   <!--endsec-->
 
-- full kubeadm from kubespray ( extenal etcd )
+- full kubeadm from kubespray ( external etcd )
 
   <!--sec data-title="v1.30.4 from kubespray" data-id="section3" data-show=true data-collapse=true ces-->
   ```bash
@@ -814,7 +814,7 @@ $ sudo kubeadm token list
     $ kubeadm join --discovery-token abcdef.1234567890abcdef --discovery-token-ca-cert-hash sha256:1234..cdef --control-plane 1.2.3.4:6443
     ```
 
-## [retrive join command](https://stackoverflow.com/q/51126164/2940319)
+## [retrieve join command](https://stackoverflow.com/q/51126164/2940319)
 
 - token ca hash
   ```bash
@@ -892,7 +892,7 @@ $ kubectl uncordon <node-to-uncordon>
 
 > [!NOTE|label:references:]
 > - [Reconfiguring a kubeadm cluster](https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-reconfigure/)
-> - recommanded commands: `KUBECONFIG=/etc/kubernetes/admin.conf KUBE_EDITOR=nano kubectl edit <parameters>`
+> - recommended commands: `KUBECONFIG=/etc/kubernetes/admin.conf KUBE_EDITOR=nano kubectl edit <parameters>`
 > - components-name:
 >   - `apiServer`
 >   - `controllerManager`

@@ -193,7 +193,7 @@ recordCoverage checksAnnotationScope: 'ALL_LINES',
     22:37:44
     22:37:45  [Cobertura] Code coverage enforcement failed for the following metrics:
     22:37:45
-    22:37:45  [Cobertura]     Conditionals's stability is 41.83 and set mininum stability is 41.85.
+    22:37:45  [Cobertura]     Conditionals's stability is 41.83 and set minimum stability is 41.85.
     22:37:45
     22:37:45  [Cobertura] Setting Build to unstable.
     22:37:45
@@ -347,7 +347,7 @@ def showCoverageReport( String xmlPath, String sourcePath = '**/src', Map target
     )
     ```
 
-  - [jenkins declerative pipeline - fail build when coverage drops](https://stackoverflow.com/a/76436571/2940319)
+  - [jenkins declarative pipeline - fail build when coverage drops](https://stackoverflow.com/a/76436571/2940319)
     ```groovy
     def coverage = [
       'applyThresholdRecursively':true,

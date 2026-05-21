@@ -5,7 +5,7 @@
   - [install](#install)
   - [install behind a proxy](#install-behind-a-proxy)
   - [Non-Administrative install](#non-administrative-install)
-  - [unisntall](#unisntall)
+  - [uninstall](#uninstall)
 - [packages](#packages)
   - [install](#install-1)
   - [upgrade](#upgrade)
@@ -60,7 +60,7 @@ Set-ExecutionPolicy Bypass -Scope Process -Force;
 iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
 ```
 
-### [unisntall](https://docs.chocolatey.org/en-us/choco/uninstallation/)
+### [uninstall](https://docs.chocolatey.org/en-us/choco/uninstallation/)
 
 <!--sec data-title="powershell script" data-id="section0" data-show=true data-collapse=true ces-->
 ```powershell
@@ -353,7 +353,7 @@ webRequestTimeoutSeconds = 30 | Default timeout for web requests.
   ```powershell
   > choco config set --name="'proxy'" --value="'http://ipamunix.sample.com:8080'"
 
-  # optioanl
+  # optional
   > choco config set --name="'proxyUser'"          --value="'<USERNAME>'"
   > choco config set --name="'proxyPassword'"      --value="'<PASSWORD>'"
   > choco config set --name="'proxyBypassList'"    --value="'http://localhost,http://this.location/'"

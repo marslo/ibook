@@ -3,7 +3,7 @@
 
 - [environment](#environment)
   - [install](#install)
-  - [compltion](#compltion)
+  - [completion](#completion)
   - [status](#status)
 - [get info](#get-info)
   - [auth](#auth)
@@ -44,7 +44,7 @@
 > [!NOTE|label:references]
 > - [vault CLI](https://developer.hashicorp.com/vault/docs/commands)
 > - [Integrate HashiCorp Vault with CICD tool(Jenkins)](https://medium.com/geekculture/integrate-hashicorp-vault-with-cicd-tool-jenkins-4bf712ad3f45)
-> - [How To Read Vault’s Secrets from Jenkin’s Declarative Pipeline](https://codeburst.io/read-vaults-secrets-from-jenkin-s-declarative-pipeline-50a690659d6)
+> - [How To Read Vault’s Secrets from Jenkins’s Declarative Pipeline](https://codeburst.io/read-vaults-secrets-from-jenkin-s-declarative-pipeline-50a690659d6)
 > - [Hashicorp vault how to list all roles](https://stackoverflow.com/a/60870106/2940319)
 > - [AppRole auth method](https://developer.hashicorp.com/vault/docs/auth/approle)
 
@@ -71,7 +71,7 @@
   $ sudo yum -y install vault
   ```
 
-## compltion
+## completion
 ```bash
 $ vault -autocomplete-install
 ```

@@ -78,7 +78,7 @@ hi SignColumn guibg=NONE ctermbg=NONE  " sign column transparent
 
 - customrized colors
   ```vim
-  highlight clear SpellBad Conceal PmenuSel SpecialKey Exception Folded TabLineSel Search CorsorLine
+  highlight clear SpellBad Conceal PmenuSel SpecialKey Exception Folded TabLineSel Search CursorLine
   highlight SpellBad       term=underline   cterm=underline     ctermbg=NONE    ctermfg=160
   highlight Conceal        term=NONE        cterm=NONE          ctermbg=NONE    ctermfg=239
   highlight SpecialKey     term=NONE        cterm=NONE          ctermfg=130
@@ -122,7 +122,7 @@ hi SignColumn guibg=NONE ctermbg=NONE  " sign column transparent
 
   highlight PreProc        term=NONE        cterm=NONE          ctermfg=166     ctermbg=NONE
   highlight ColorColumn    cterm=NONE       ctermfg=244         ctermbg=NONE
-  highlight CollumnLimit   cterm=NONE       ctermfg=244         ctermbg=NONE
+  highlight ColumnLimit   cterm=NONE       ctermfg=244         ctermbg=NONE
   highlight VertSplit      ctermfg=235      gui=reverse
   highlight IncSearch      term=standout    cterm=standout      ctermfg=148     ctermbg=238
   highlight Search         cterm=NONE       ctermfg=64          ctermbg=238     guifg=Black     guibg=Yellow

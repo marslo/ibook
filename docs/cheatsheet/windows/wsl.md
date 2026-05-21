@@ -700,7 +700,7 @@ sudo update-binfmts --disable cli
 > set "PATH=%ConEmuBaseDirShort%\wsl;%PATH%" & %ConEmuBaseDirShort%\conemu-cyg-64.exe --wsl -cur_console:pm:/mnt
 ```
 
-- enable windows programe in wsl
+- enable windows programme in wsl
   ```bash
   $ cat /etc/wsl.conf
   [interop]
@@ -864,7 +864,7 @@ $ sudo apt install vim
 - setup default bash
 
   > [!NOTE|label:references:]
-  > - [How to change default shell for Linux susbsystem for Windows](https://superuser.com/a/1264333/112396)
+  > - [How to change default shell for Linux subsystem for Windows](https://superuser.com/a/1264333/112396)
 
   ```bash
   $ echo $SHELL

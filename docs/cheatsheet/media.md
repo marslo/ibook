@@ -1,7 +1,7 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [highly recommanded](#highly-recommanded)
+- [highly recommended](#highly-recommended)
 - [video](#video)
   - [get audio from video](#get-audio-from-video)
   - [download video](#download-video)
@@ -31,7 +31,7 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## highly recommanded
+## highly recommended
 [cmd.to](https://cmd.to/fm)
 
 ## video
@@ -53,7 +53,7 @@ $ ffmpeg -i file.video file.audio
 ```
 
 ### download video
-- [download video and extract with sepcific time](https://www.commandlinefu.com/commands/view/32814/download-video-extract-only-a-specific-time-of-it)
+- [download video and extract with specific time](https://www.commandlinefu.com/commands/view/32814/download-video-extract-only-a-specific-time-of-it)
   ```bash
   $ yt-dlp --external-downloader ffmpeg --external-downloader-args "-ss 00:05:00 -t 00:01:00" "https://www.youtube.com/watch?v=Y6DGABIcB3w"
   ```

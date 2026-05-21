@@ -167,7 +167,7 @@ $ journalctl --user --unit=docker-desktop
     $ rm -rf ~/.docker
     ```
 
-  - re-intall docker desktop
+  - re-install docker desktop
     ```bash
     $ sudo hdiutil attach Docker.dmg
     $ sudo /Volumes/Docker/Docker.app/Contents/MacOS/install

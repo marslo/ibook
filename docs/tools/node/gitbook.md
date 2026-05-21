@@ -306,7 +306,7 @@ warning
 > [!TIP|style:flat|icon:fa fa-bullhorn]
 > this function only for native [gitbook.io](https://www.gitbook.com/) <br>
 > example:
-> - [imarslo: kubernetes certicates](../../virtualization/kubernetes/certificates.html#check-info)
+> - [imarslo: kubernetes certificates](../../virtualization/kubernetes/certificates.html#check-info)
 > <br>
 > <br>
 > reference:
@@ -557,7 +557,7 @@ warning
 
   1. temporary modify global node/npm/npx to v12
     ```bash
-    # backup current latst node/npm/npx
+    # backup current latest node/npm/npx
     $ sudo mv /usr/local/bin/node{,21}
     $ sudo mv /usr/local/bin/npm{,21}
     $ sudo mv /usr/local/bin/npx{,21}

@@ -75,7 +75,7 @@ $ sudo sysctl --system
 ```
 - or
   ```bash
-  $ [ -f /etc/sysctl.conf ] && sudo mv /etc/sysctl.conf{,.bak.${TIMESTAMPE}}
+  $ [ -f /etc/sysctl.conf ] && sudo mv /etc/sysctl.conf{,.bak.${TIMESTAMP}}
 
   $ sudo bash -c "cat >> /etc/sysctl.conf" << EOF
   net.ipv4.ip_forward=1
@@ -272,7 +272,7 @@ Processing triggers for ureadahead (0.100.0-20) ...
 ```
 <!--endsec-->
 
-- vesion lock
+- version lock
   ```bash
   $ sudo apt-mark hold kubeadm
   $ sudo apt-mark hold kubelet
@@ -483,9 +483,9 @@ exclude=kubelet kubeadm kubectl kubernetes-cni cri-tools
 
 | Node   | IP Address  | Hostname | Role          |
 |--------|-------------|----------|---------------|
-| k8s-01 | 10.69.78.40 | k8s-01   | contrl pannel |
-| k8s-02 | 10.69.78.41 | k8s-02   | contrl pannel |
-| k8s-03 | 10.69.78.42 | k8s-03   | contrl pannel |
+| k8s-01 | 10.69.78.40 | k8s-01   | control panel |
+| k8s-02 | 10.69.78.41 | k8s-02   | control panel |
+| k8s-03 | 10.69.78.42 | k8s-03   | control panel |
 | -      | 10.69.78.15 | lb-01    | load balancer |
 
 ## keepalived
@@ -743,11 +743,11 @@ exclude=kubelet kubeadm kubectl kubernetes-cni cri-tools
 
 > [!NOTE]
 > - API service: `16443`
-> - control pannel API service: `6443`
+> - control panel API service: `6443`
 > - HAProxy stats: `8000`
 > - references:
->   - [Eine Tomcat 9 / ORDS 23 / APEX 23 Umgebung unter Oracle Linux mit dem HAProxy betreiben](https://www.pipperr.de/dokuwiki/doku.php?id=prog:oracle_apex_haproxy)
->     - santiy check for config: `haproxy -f /etc/haproxy/haproxy.cfg -c`
+>   - [Eine Tomcat 9 / ORDS 23 / APEX 23 Umgebung under Oracle Linux mit dem HAProxy betreiben](https://www.pipperr.de/dokuwiki/doku.php?id=prog:oracle_apex_haproxy)
+>     - sanity check for config: `haproxy -f /etc/haproxy/haproxy.cfg -c`
 >   - [How to Install and Configure HAProxy on CentOS 8 / RHEL 8](https://www.linuxtechi.com/install-configure-haproxy-centos-8-rhel-8/)
 
 ```bash

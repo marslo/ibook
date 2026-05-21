@@ -239,7 +239,7 @@ $ openssl pkcs12 -export \
 >   - by default: `http://<service-name>.<namespace>.svc.cluster.local:8080`
 
 * `Manage Jenkins` -> `Configure System` or `Manage Jenkins` -> `Manage Nodes and Clouds` -> `Configure Clouds`
-* `Add a new Cloud` -> `Kuberentes`
+* `Add a new Cloud` -> `Kubernetes`
   * `Name`: <Anything you want>
   * `Kubernetes URL`:
     * get from `$ kubectl cluster-info`
@@ -423,7 +423,7 @@ $ kubectl -n jenkins get secret \
 
 
 > [!TIP]
-> simplely it can be executed via commands:
+> simply it can be executed via commands:
 > ```bash
 > $ kubectl -n kube-system create sa <service-account>
 > $ kubectl create clusterrolebinding <role-binding-name> --clusterrole cluster-admin --serviceaccount=<namespace>:<service-account>

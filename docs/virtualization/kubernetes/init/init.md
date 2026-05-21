@@ -136,8 +136,8 @@ addon                        Install required addons for passing conformance tes
 1. High Availability
   * [keepalived](./kubeadm/env.md#keepalived)
   * [haproxy](./kubeadm/env.md#haproxy)
-  * [extenal etcd](./etcd.md#extenal-etcd)
-1. [kuberentes packates](./kubeadm/kubeadm.md#kubernetes-packages)
+  * [external etcd](./etcd.md#external-etcd)
+1. [kubernetes packates](./kubeadm/kubeadm.md#kubernetes-packages)
 1. [init first control plane](./kubeadm/kubeadm.md#init-first-control-plane-node)
 1. [join peer control planes](./kubeadm/kubeadm.md#join-as-control-plane-node)
 1. [join work nodes](./kubeadm/kubeadm.md#join-as-worker-node)

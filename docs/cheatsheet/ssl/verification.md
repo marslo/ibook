@@ -21,7 +21,7 @@
 
 
 {% hint style='tip' %}
-> check in [kubernetes certifactes as well](../../virtualization/kubernetes/certificates.html)
+> check in [kubernetes certificates as well](../../virtualization/kubernetes/certificates.html)
 
 {% endhint %}
 

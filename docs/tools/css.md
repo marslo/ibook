@@ -6,7 +6,7 @@
   - [using bas64 string for svg](#using-bas64-string-for-svg)
   - [system font stack](#system-font-stack)
 - [bootstrap](#bootstrap)
-  - [using boostrap sytles](#using-boostrap-sytles)
+  - [using bootstrap styles](#using-bootstrap-styles)
 - [alert](#alert)
   - [bootstrap alert](#bootstrap-alert)
   - [callout](#callout)
@@ -188,7 +188,7 @@ body {
 > - [Jekyll Doc Theme 6.0: Alert](https://idratherbewriting.com/documentation-theme-jekyll/mydoc_alerts.html)
 {% endhint %}
 
-### using boostrap sytles
+### using bootstrap styles
 
 > [!NOTE|style:callout]
 > - bootstrap 4.x
@@ -201,7 +201,7 @@ body {
 >   </head>
 >   ```
 >
-> - [bootstap 5.x](https://www.tutorialrepublic.com/twitter-bootstrap-tutorial/bootstrap-get-started.php)
+> - [bootstrap 5.x](https://www.tutorialrepublic.com/twitter-bootstrap-tutorial/bootstrap-get-started.php)
 >   ```html
 >   <head>
 >       <meta charset="utf-8">

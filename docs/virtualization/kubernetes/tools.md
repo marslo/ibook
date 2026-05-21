@@ -7,7 +7,7 @@
 - [network](#network)
   - [ingress](#ingress)
 - [jobs](#jobs)
-- [valut](#valut)
+- [vault](#vault)
 - [eks](#eks)
 - [prometheus](#prometheus)
 - [others](#others)
@@ -86,7 +86,7 @@ $ etcdctl --ca-file /etc/kubernetes/pki/etcd/ca.crt \
 > - [How To Create Kubernetes Jobs and Cronjobs – Getting Started Guide](https://devopscube.com/create-kubernetes-jobs-cron-jobs/)
 
 
-## valut
+## vault
 
 > [!NOTE|label:references:]
 > - [How to Setup Vault in Kubernetes- Beginners Tutorial](https://devopscube.com/vault-in-kubernetes/)

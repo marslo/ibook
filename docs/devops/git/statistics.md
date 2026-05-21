@@ -9,7 +9,7 @@
   - [total changes](#total-changes)
   - [user changes](#user-changes)
   - [file changes](#file-changes)
-- [comamnds](#comamnds)
+- [commands](#commands)
   - [`--stat`](#--stat)
   - [`--numstat`](#--numstat)
   - [`--shortstat`](#--shortstat)
@@ -176,7 +176,7 @@ $ git log --pretty=format: --name-only | sed '/^\s*$/d' | sort | uniq -c | sort 
 $ git log --pretty=format: --name-only | sort | uniq -c | sort /R | head -100
 ```
 
-## comamnds
+## commands
 
 ### `--stat`
 ```bash

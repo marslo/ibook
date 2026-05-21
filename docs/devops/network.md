@@ -553,7 +553,7 @@ $ bc <<< 'ibase=16;FF;FF;EE;0A' | paste -sd. -
   = `0x8x3` + `1x8` bit <br>
   = `2^8 - 1` <br>
   = `255` <br>
-  = support 255 IPs maximum including boardcast <br>
+  = support 255 IPs maximum including broadcast <br>
   = support `255-1` regular IPs <br>
 
 ==>
@@ -561,7 +561,7 @@ $ bc <<< 'ibase=16;FF;FF;EE;0A' | paste -sd. -
 - network   : `10.0.0.0/24`
 - hostMin   : `10.0.0.1`
 - hostMax   : `10.0.0.254`
-- boardcast : `10.0.0.254`
+- broadcast : `10.0.0.254`
 - host/net  : `254`
 
 ### example
@@ -569,7 +569,7 @@ $ bc <<< 'ibase=16;FF;FF;EE;0A' | paste -sd. -
 - netmask : `27`
 - supported IPs : `2^(32-27) - 1 - 1` = `2^5 - 1 - 1` = `32 - 2` = `30`
 - IP ranges : `10.0.0.1 ~ 10.0.0.30`
-- boardcast : `10.0.0.31`
+- broadcast : `10.0.0.31`
 
 #### if netmask using `255.255.x.x`
 1. convert netmask decimal to binary, and get bit and then get wildcard. i.e.:
@@ -597,7 +597,7 @@ $ bc <<< 'ibase=16;FF;FF;EE;0A' | paste -sd. -
     = `0x3x8` + `0x2` + `1x6` = `6` === `32 - 26` = `6`
   - IPs : `2^6 - 1 - 1` = `64 - 2` = `62`
     = `10.0.0.1 ~ 10.0.0.62`
-  - boardcast : `10.0.0.63`
+  - broadcast : `10.0.0.63`
 1. `255.255.255.255 - <netmask>`, and then convert decimal to binary
   - netmask : `255.255.240.0`
   - wildcard :
@@ -614,7 +614,7 @@ $ bc <<< 'ibase=16;FF;FF;EE;0A' | paste -sd. -
     <pre><font color="black">    0    .    0   .</font><font color="red">    15  <font color="black">.</font>  255</font> <br> <font color="black">00000000 00000000 0000</font><font color="red">1111 11111111</font><br>                       |-----------|<br>                           12-bit</pre>
   - IPs : `2^12 - 1 - 1` = `4094` =
     <pre><font color="black">10.0.0.1 ~ 10.0.0.</font><font color="red">15</font><font color="black">.254</font> <br>                  <font color="red">--</font> <br>              <font color="gray">0.0.</font><font color="red">15</font><font color="gray">.255    # 255.255.255.255 - 255.255.240.0 = 0.0.</font><font color="red">15</font><font color="gray">.255</font> </pre>
-  - boardcast : `10.0.15.255`
+  - broadcast : `10.0.15.255`
 
 
 ### [netmask quick reference](http://www.unixwiz.net/techtips/netmask-ref.html)
@@ -659,7 +659,7 @@ $ bc <<< 'ibase=16;FF;FF;EE;0A' | paste -sd. -
 
 - basic usage
 
-  ![network detials](../screenshot/linux/admin/ipcalc-network-details.png)
+  ![network details](../screenshot/linux/admin/ipcalc-network-details.png)
 
 - split network to subnets
 

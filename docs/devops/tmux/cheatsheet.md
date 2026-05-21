@@ -156,7 +156,7 @@
 | <kbd>ctrl</kbd> + <kbd>b</kbd> <kbd>q</kbd>                   | show pane numbers            |
 | <kbd>ctrl</kbd> + <kbd>b</kbd> <kbd>q</kbd> <kbd>0..9</kbd>   | swith/select the pane number |
 | <kbd>ctrl</kbd> + <kbd>b</kbd> <kbd>z</kbd>                   | toggle pane zoom             |
-| <kbd>ctrl</kbd> + <kbd>b</kbd> <kbd>!</kbd>                   | convert pannel into a window |
+| <kbd>ctrl</kbd> + <kbd>b</kbd> <kbd>!</kbd>                   | convert panel into a window  |
 | <kbd>ctrl</kbd> + <kbd>b</kbd> + <kbd>→</kbd>                 | resize current pane width    |
 | <kbd>ctrl</kbd> + <kbd>b</kbd> <kbd>ctrl</kbd> + <kbd>→</kbd> | resize current pane width    |
 | <kbd>ctrl</kbd> + <kbd>b</kbd> + <kbd>←</kbd>                 | resize current pane width    |

@@ -98,7 +98,7 @@ $ sudo usermod -aG docker "$(whoami)"
 $ grep 'nrconf{restart}' /etc/needrestart/needrestart.conf
 #$nrconf{restart} = 'i';
 
-# set off - (a)utomatically
+# set off - (a)automatically
 $ sudo sed 's/^#\?\$nrconf{restart}.*/$nrconf{restart} = "a";/' -i /etc/needrestart/needrestart.conf
 
 # check

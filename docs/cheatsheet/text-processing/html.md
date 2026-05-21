@@ -3,7 +3,7 @@
 
 - [useful html snippets](#useful-html-snippets)
   - [checkbox](#checkbox)
-- [warnning box](#warnning-box)
+- [warning box](#warning-box)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -18,13 +18,13 @@
   ```
   - example: <input type="checkbox" checked="true" onclick="return false">
 
-- non-editable non-chekced checkbox
+- non-editable non-checked checkbox
 ```html
 <input type="checkbox" onclick="return false">
 ```
   - example: <input type="checkbox" onclick="return false">
 
-## warnning box
+## warning box
 
 > [!TIP]
 > references:

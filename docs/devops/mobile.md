@@ -7,7 +7,7 @@
   - [list apps](#list-apps)
   - [install app](#install-app)
   - [idevicediagnostics](#idevicediagnostics)
-- [andriod](#andriod)
+- [android](#android)
   - [environment](#environment)
   - [get info](#get-info-1)
   - [show list](#show-list)
@@ -219,7 +219,7 @@ b84ef185-a387-4a1d-8a41-3230708c6b31 - iOS Team Provisioning Profile: com.mycomp
 83d90272-79fe-4f8f-8ea5-8f18f60b5683 - myappDemoDev
 ```
 
-## [andriod](https://gist.github.com/Pulimet/5013acf2cd5b28e55036c82c91bd56d8)
+## [android](https://gist.github.com/Pulimet/5013acf2cd5b28e55036c82c91bd56d8)
 ### environment
 ```bash
 $ ln -sf /opt/android/platform-tools/adb /usr/local/bin/adb
@@ -270,7 +270,7 @@ $ echo "[device.imei]: [$(adb shell service call iphonesubinfo 1 | awk -F "'" '{
 [serialno]: [fac7ea46]
 ```
 
-#### get andriod version
+#### get android version
 ```bash
 $ adb shell getprop ro.build.version.release
 6.0.1

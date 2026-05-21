@@ -37,8 +37,8 @@
 >
 > [closure.call()](https://wizardforcel.gitbooks.io/ibm-j-pg/content/9.html)
 > ```groovy
-> Closure clos = { println "Hello World" }
-> assert clos.call() == clos()
+> Closure close = { println "Hello World" }
+> assert close.call() == close()
 >            |           + implicit call
 >            + explicit call
 > ```

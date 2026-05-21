@@ -65,7 +65,7 @@ $ curl -skg \
 
 - [via api](https://stackoverflow.com/a/28774031/2940319)
   ```bash
-  $ curl --data "action=builds&user=<user_account>&ltoken=<ltoken>&project=<projct_name>" http://sample.klocwork.com/review/api
+  $ curl --data "action=builds&user=<user_account>&ltoken=<ltoken>&project=<project_name>" http://sample.klocwork.com/review/api
   ```
   - i.e.:
     ```bash

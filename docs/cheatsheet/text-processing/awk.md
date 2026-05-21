@@ -884,7 +884,7 @@ $ awk '{ for(i=1; i<=NF; i++) { print $i, length($i) } }' sample.txt
 > - [Summing values of a column using awk command](https://stackoverflow.com/a/28445186/2940319)
 > - [Using awk to sum the values of a column, based on the values of another column](https://stackoverflow.com/a/55028307/2940319)
 > - [Using awk to sum the values of a column, based on the values of another column](https://unix.stackexchange.com/a/242972/29178)
-> - [Using awk to sum the values of a column, based on the emptyness or not of another column](https://unix.stackexchange.com/a/569364/29178)
+> - [Using awk to sum the values of a column, based on the emptiness or not of another column](https://unix.stackexchange.com/a/569364/29178)
 
 ### base on other column
 
@@ -1305,7 +1305,7 @@ $ < sample.txt \
   > - example target : set both `:` (colon) and ` `(space/blank) as separators
 
   ```bash
-  # orignal contents
+  # original contents
   > git config --list --show-origin --name-only | head -3
   file:C:/Users/marslo/AppData/Local/Programs/Git/etc/gitconfig   diff.astextplain.textconv
   file:C:/Users/marslo/AppData/Local/Programs/Git/etc/gitconfig   filter.lfs.clean

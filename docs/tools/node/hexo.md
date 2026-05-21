@@ -5,7 +5,7 @@
 - [init](#init)
   - [install plugin](#install-plugin)
   - [generate new pages](#generate-new-pages)
-  - [diable the default highlight settings](#diable-the-default-highlight-settings)
+  - [disable the default highlight settings](#disable-the-default-highlight-settings)
 - [theme](#theme)
   - [snark](#snark)
   - [fix unreadable link](#fix-unreadable-link)
@@ -87,7 +87,7 @@ $ hexo new page about
   $ hexo new page --path about/me "About me"
   ```
 
-### diable the default highlight settings
+### disable the default highlight settings
 
 > [!NOTE]
 > default settings in `_config.xml`
@@ -153,7 +153,7 @@ $ sed 's/^theme: landscape/theme: snark/' -i _config.xml
 - font-awesome.min.css
 
   > [!TIP|label:references:]
-  > - deactive link:
+  > - deactivate link:
   >   - `https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css`
   > - [workable link](https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css):
   >   - 4.7.0:

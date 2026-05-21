@@ -20,7 +20,7 @@ life is hard, make it easier
   - [FATAL_ERROR: No valid sound driver!](https://github.com/marslo/moc-cmus#fatal_error-no-valid-sound-driver)
 
 ### goagent configuration
-- [Offical Website](https://github.com/marslo/myGoagent#offical-webiste)
+- [Official Website](https://github.com/marslo/myGoagent#offical-webiste)
 - [Latest Version](https://github.com/marslo/myGoagent#download-and-installation)
   - [Install](https://github.com/marslo/myGoagent#gevent-installation)
   - [Configuration](https://github.com/marslo/myGoagent#configuration)

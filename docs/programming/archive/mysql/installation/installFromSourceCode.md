@@ -2,7 +2,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [Install MySQL from Source code](#install-mysql-from-source-code)
-  - [Usefull Links](#usefull-links)
+  - [Useful Links](#useful-links)
   - [Compile and Install](#compile-and-install)
   - [Configuration and Initial](#configuration-and-initial)
   - [Set Environment](#set-environment)
@@ -13,7 +13,7 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Install MySQL from Source code
-### Usefull Links
+### Useful Links
 - Community Server
     - [5.7 MySQL Community Server](http://dev.mysql.com/downloads/mysql/)
     - [5.6 MySQL Community Server](http://dev.mysql.com/downloads/mysql/5.6.html)

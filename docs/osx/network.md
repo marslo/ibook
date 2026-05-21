@@ -11,7 +11,7 @@
   - [show network information](#show-network-information)
   - [change order of networks](#change-order-of-networks)
   - [list hardware](#list-hardware)
-  - [list localtion](#list-localtion)
+  - [list location](#list-location)
 - [wifi](#wifi)
   - [scan available wifi network](#scan-available-wifi-network)
   - [disable ipv6](#disable-ipv6)
@@ -195,7 +195,7 @@ Wi-Fi:
       ...
 ```
 
-### list localtion
+### list location
 ```bash
 $ networksetup -listlocations
 work
@@ -211,7 +211,7 @@ $ networksetup -createlocation <name>
 # delete
 $ networksetup -deletelocation <name>
 
-# switch localtion
+# switch location
 $ networksetup -switchtolocation <name>
 ```
 

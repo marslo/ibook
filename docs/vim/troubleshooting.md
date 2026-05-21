@@ -12,7 +12,7 @@
 - [chars](#chars)
   - [`listchars` shows `▯` ( unknown character )](#listchars-shows-%E2%96%AF--unknown-character-)
 - [python](#python)
-  - [`MatchTagAlways unavaiable: requries python`](#matchtagalways-unavaiable-requries-python)
+  - [`MatchTagAlways unavailable: requires python`](#matchtagalways-unavailable-requires-python)
   - [`vim: error while loading shared libraries: libpython3.11.so.1.0`](#vim-error-while-loading-shared-libraries-libpython311so10)
   - [`E370: Could not load library "msys-python3.11.dll"`](#e370-could-not-load-library-msys-python311dll)
   - [windows app settings](#windows-app-settings)
@@ -122,7 +122,7 @@ iTerm.app
 
 ## python
 
-> [!NOTE|label:referenes:]
+> [!NOTE|label:references:]
 > - python arch version should be exact same with gvim arch version
 >   - python x64 <-> gvim x64
 >   - python x86 <-> gvim x86
@@ -164,7 +164,7 @@ iTerm.app
   set pythonthreehome=c:\path\to\python
   ```
 
-### `MatchTagAlways unavaiable: requries python`
+### `MatchTagAlways unavailable: requires python`
 
 > [!TIP]
 > - the python issue might caused by 32bit vim not match with 64bit python, in this case, install macvim via
@@ -172,7 +172,7 @@ iTerm.app
 >   # if necessary
 >   $ sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
 >
->   $ brew intall --HEAD macvim
+>   $ brew install --HEAD macvim
 >   $ sudo ln -sf /opt/homebrew/Cellar/macvim/HEAD-45c5509/MacVim.app /Application/MacVim.app
 >   ```
 > - [xcode-select: error: tool 'xcodebuild' requires Xcode](https://github.com/nodejs/node-gyp/issues/569#issuecomment-94917337)
@@ -180,7 +180,7 @@ iTerm.app
 - issue
   ```vim
   $ vim
-  MatchTagAlways unavaiable: requires python
+  MatchTagAlways unavailable: requires python
 
   :py3 print('hello')
   the Python library could not be load
@@ -191,7 +191,7 @@ iTerm.app
   let g:python3_host_prog = '/path/to/python3'
 
   # in linux/osx
-  let g:python3_host_prog = expand(trim( system('comamnd -v python3') ))
+  let g:python3_host_prog = expand(trim( system('command -v python3') ))
   ```
 
 - environment

@@ -236,7 +236,7 @@
   ```vim
   "                + cursor
   "                v
-  :echo charcol('.')
+  :echo charcoal('.')
   22
   :echo col('.')
   22
@@ -244,7 +244,7 @@
 
 - line length
   ```vim
-  " corsor can be anywhere of following line
+  " cursor can be anywhere of following line
   :echo col("$")
   17
   ```
@@ -399,7 +399,7 @@
 - [blacklist](https://stackoverflow.com/a/10410590/2940319)
   ```vim
   let blacklist = ['rb', 'js', 'pl']
-  autocmd BufWritePre  *  if index(blacklist, &ft) < 0 | do somthing you like | endif
+  autocmd BufWritePre  *  if index(blacklist, &ft) < 0 | do something you like | endif
   ```
 
 - [`@<!`](https://stackoverflow.com/a/67463224/2940319)
@@ -450,8 +450,8 @@ augroup numbertoggle
 autocmd BufWritePre              *                      :%s/\s\+$//e | %s/\r$//e   " automatic remove trailing space
 
 # others
-autocmd FileType                 sh,bash,shell  slient  :redraw
-autocmd BufWritePre,BufWritePost *.sh           slient  :redraw                    " for shellcheck lint
+autocmd FileType                 sh,bash,shell  silent  :redraw
+autocmd BufWritePre,BufWritePost *.sh           silent  :redraw                    " for shellcheck lint
 ```
 
 ### automatic save
@@ -1149,7 +1149,7 @@ func! DeleteCurBufferNotCloseWindow() abort
                 bn
                 let curbuf = bufnr('%')
                 if curbuf == oldbuf
-                    enew    " oldbuf is the only buffer, create one
+                    new    " oldbuf is the only buffer, create one
                 endif
             endif
             let win = bufwinnr(oldbuf)
@@ -1249,7 +1249,7 @@ xnoremap *         :<C-u>call VSetSearch()<CR>/<C-R>=@/<CR><CR>:normal! N<CR>
 >   - [`:help q-args-example`](https://vimhelp.org/map.txt.html#q-args-example)
 > - [How to execute shell commands silently?](https://vi.stackexchange.com/a/1958/7389)
 > - [How do I execute an external command without jumping out of vim?](https://vi.stackexchange.com/a/9805/7389)
-> - [excuting vim command silently then echo in vim](https://stackoverflow.com/a/37272102/2940319)
+> - [executing vim command silently then echo in vim](https://stackoverflow.com/a/37272102/2940319)
 > - [silent vs. silent! - What is the difference?](https://vi.stackexchange.com/q/34346/7389)
 
 - execute [`doctoc`](https://github.com/thlorenz/doctoc) in vim via command `:Toc`

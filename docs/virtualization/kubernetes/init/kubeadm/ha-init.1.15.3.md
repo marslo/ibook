@@ -660,7 +660,7 @@ defaults
     maxconn                 3000
 
 #---------------------------------------------------------------------
-# kubernetes apiserver frontend which proxys to the backends
+# kubernetes apiserver frontend which proxies to the backends
 #---------------------------------------------------------------------
 frontend kubernetes-apiserver
     mode                 tcp

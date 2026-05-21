@@ -6,7 +6,7 @@
 ## default syntax
 
 > [!NOTE|label:references:]
-> - default syntax for nvim-nighly:
+> - default syntax for nvim-nightly:
 >   - `/usr/local/Caskroom/neovim-nightly/latest/nvim-macos-x86_64/share/nvim/runtime/syntax/groovy.vim`
 
 ### regex

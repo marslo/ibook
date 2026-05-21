@@ -48,7 +48,7 @@
 >   - C/C++/Objective-C/Objective-C++：`--clang-completer`
 >   - C#：`brew install Mono` first and enabled by `--cs-completer`
 >   - Go：`brew install go` and enabled by `--go-completer`
->   - TypeScript：insall Node.js and npm，and enable typescript via `npm install -g typescript`
+>   - TypeScript：install Node.js and npm，and enable typescript via `npm install -g typescript`
 >   - JavaScript: install Node.js and npm，and enabled via `--js-completer`
 >   - Rust: install Rust，`--rust-completer`
 >   - Java: `brew install java`，enabled via `--java-completer`
@@ -85,7 +85,7 @@
     $ brew install java
     $ sudo ln -sfn $(brew --prefix java)/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk.jdk
 
-    # optioinal for C#
+    # optional for C#
     $ brew install mono
     # optional
     $ brew install jdtls
@@ -159,7 +159,7 @@
     $ sudo apt install mono-complete golang openjdk-17-jdk openjdk-17-jre npm
 
     # environment
-    # - nodejs/golang using snap instead of $ sudo apt isntall nodejs
+    # - nodejs/golang using snap instead of $ sudo apt install nodejs
     $ go version
     go version go1.18.1 linux/amd64
     $ node --version
@@ -1363,10 +1363,10 @@ YouCompleteMe/third_party/ycmd/third_party/eclipse.jdt.ls/target/cache/clangd-16
 $ cd ~/.vim/plugged/YouCompleteMe/third_party/ycmd/
 $ cp ycmd/default_settings.json .
 $ python ycmd --options_file default_settings.json
-2023-10-13 01:42:34,337 - INFO - Completion config: 50, detailing -1 candiates
-2023-10-13 01:42:34,337 - INFO - Completion config: 50, detailing -1 candiates
-2023-10-13 01:42:34,337 - INFO - Completion config: 50, detailing -1 candiates
-2023-10-13 01:42:34,338 - INFO - Completion config: 50, detailing -1 candiates
+2023-10-13 01:42:34,337 - INFO - Completion config: 50, detailing -1 candidates
+2023-10-13 01:42:34,337 - INFO - Completion config: 50, detailing -1 candidates
+2023-10-13 01:42:34,337 - INFO - Completion config: 50, detailing -1 candidates
+2023-10-13 01:42:34,338 - INFO - Completion config: 50, detailing -1 candidates
 serving on http://1.0.0.127.in-addr.arpa:63691
 ```
 

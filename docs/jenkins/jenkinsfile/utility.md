@@ -188,7 +188,7 @@ node('controller') {
 import jenkins.model.CauseOfInterruption
 import org.jenkinsci.plugins.workflow.steps.TimeoutStepExecution
 
-stage( 'wating' ) {
+stage( 'waiting' ) {
   catchError( buildResult: 'SUCCESS', stageResult: 'ABORTED' ) {
 
     try {
@@ -233,10 +233,10 @@ stage( 'wating' ) {
 println libs.isTimeout( env.JOB_NAME, currentBuild.previousBuild.number )
 
 // libs.groovy
-Boolean isTimeout( String name, int nubmer ) {
+Boolean isTimeout( String name, int number ) {
   Jenkins.instance
          .getItemByFullName( name )
-         .getBuildByNumber( nubmer )
+         .getBuildByNumber( number )
          .getActions( jenkins.model.InterruptedBuildAction.class )
          .causes
          .flatten()
@@ -262,7 +262,7 @@ cleanWs(
 {% endhint %}
 
 - [Spread Operator](https://www.logicbig.com/tutorials/misc/groovy/spread-operator.html)
-  > [Groovy Goodness: the Spread Operato](https://blog.mrhaki.com/2009/09/groovy-goodness-spread-operator.html)
+  > [Groovy Goodness: the Spread Operator](https://blog.mrhaki.com/2009/09/groovy-goodness-spread-operator.html)
 
   ```groovy
   List p = [ 'a.txt', 'b.txt' ]

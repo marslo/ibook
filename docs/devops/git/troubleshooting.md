@@ -20,7 +20,7 @@
     - [docbook2x-texi](#docbook2x-texi)
     - [xmlto](#xmlto)
     - [gnu/stubs-64.h](#gnustubs-64h)
-- [`git diff` extreamly slow](#git-diff-extreamly-slow)
+- [`git diff` extremely slow](#git-diff-extremely-slow)
   - [way to debug](#way-to-debug)
   - [solution](#solution)
 
@@ -401,7 +401,7 @@ $ git config [--global] http.sslVerify false
   $ sudo yum install glibc-devel
   ```
 
-# `git diff` extreamly slow
+# `git diff` extremely slow
 
 > [!NOTE|label:references:]
 > - [* AMD was contacted but no response...](https://stackoverflow.com/a/48390680/2940319)

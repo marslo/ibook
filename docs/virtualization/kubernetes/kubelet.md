@@ -4,8 +4,8 @@
 - [configuration files](#configuration-files)
   - [systemd](#systemd)
   - [kubelet](#kubelet)
-  - [modfiy `/var/lib/kubelet`](#modfiy-varlibkubelet)
-- [kuabelet configration](#kuabelet-configration)
+  - [modify `/var/lib/kubelet`](#modify-varlibkubelet)
+- [kuabelet configuration](#kuabelet-configuration)
   - [change kubelet root dir](#change-kubelet-root-dir)
 - [config files](#config-files)
   - [`/etc/systemd/system/kubelet.service.d/10-kubeadm.conf`](#etcsystemdsystemkubeletserviced10-kubeadmconf)
@@ -54,7 +54,7 @@ references:
   - `/etc/sysconfig/kubelet` (for RPMs)
 
 
-### modfiy `/var/lib/kubelet`
+### modify `/var/lib/kubelet`
 
 - [`KUBELET_EXTRA_ARGS`](https://stackoverflow.com/a/53228571/2940319)
   ```bash
@@ -64,7 +64,7 @@ references:
   $ sudo systemctl start kubelet
   ```
 
-## kuabelet configration
+## kuabelet configuration
 
 > [!TIP]
 > references: <br>
@@ -93,7 +93,7 @@ $ systemctl start kubelet
   root        2262  2.5  0.0 6830176 143332 ?      Ssl  13:01   2:26 /usr/bin/kubelet --bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf --config=/var/lib/kubelet/config.yaml --cgroup-driver=cgroupfs --network-plugin=cni --root-dir=/home/kubelet
   ```
 
-- or [symolic link](https://stackoverflow.com/a/57872504/2940319)
+- or [symbolic link](https://stackoverflow.com/a/57872504/2940319)
   ```bash
   $ sudo systemctl stop kubelet
   $ mkdir -p /mnt/kubelet

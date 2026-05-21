@@ -769,7 +769,7 @@ If you enter '.', the field will be left blank.
 Country Name (2 letter code) [AU]:CN
 State or Province Name (full name) [Some-State]:Sichuan
 Locality Name (eg, city) []:Chengdu
-Organization Name (eg, company) [Internet Widgits Pty Ltd]:mycompany Ltd
+Organization Name (eg, company) [Internet Widgets Pty Ltd]:mycompany Ltd
 Organizational Unit Name (eg, section) []:.
 Common Name (e.g. server FQDN or YOUR name) []:192.168.1.102
 Email Address []:.
@@ -870,7 +870,7 @@ If you enter '.', the field will be left blank.
 Country Name (2 letter code) [AU]:CN
 State or Province Name (full name) [Some-State]:Sichuan
 Locality Name (eg, city) []:Chengdu
-Organization Name (eg, company) [Internet Widgits Pty Ltd]:mycompany Ltd
+Organization Name (eg, company) [Internet Widgets Pty Ltd]:mycompany Ltd
 Organizational Unit Name (eg, section) []:mycompany CDI
 Common Name (e.g. server FQDN or YOUR name) []:docker-1.artifactory
 Email Address []:.

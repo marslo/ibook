@@ -46,7 +46,7 @@
     - [renew via `kubeadm alpha`](#renew-via-kubeadm-alpha)
     - [renew via `kubectl config`](#renew-via-kubectl-config)
     - [renew via `base64` manually](#renew-via-base64-manually)
-    - [vaildate](#vaildate)
+    - [validate](#validate)
     - [more details](#more-details)
 - [tricky](#tricky)
   - [modify default certificate to 10 years](#modify-default-certificate-to-10-years)
@@ -59,7 +59,7 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 > [!TIP]
-> - [extenal etcd topology](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/ha-topology/#external-etcd-topology) certificates located in : `/etc/etcd/ssl`
+> - [external etcd topology](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/ha-topology/#external-etcd-topology) certificates located in : `/etc/etcd/ssl`
 > - [stacked etcd topology](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/ha-topology/#stacked-etcd-topology) certificates located in : `/etc/kubernetes/pki/etcd`
 
 {% hint style='tip' %}
@@ -322,9 +322,9 @@ bash -c openssl x509 -noout -text -in /etc/kubernetes/pki/front-proxy-client.crt
 
 ### backup
 ```bash
-# timestampe=$(date +"%Y%m%d%H%M%S")
-$ timestampe=$(date +"%Y%m%d")
-$ backupFolder="$HOME/k8s-cert-expired-${timestampe}"
+# timestamp=$(date +"%Y%m%d%H%M%S")
+$ timestamp=$(date +"%Y%m%d")
+$ backupFolder="$HOME/k8s-cert-expired-${timestamp}"
 
 $ mkdir "${backupFolder}"
 $ sudo cp -rp --parents /etc/kubernetes/pki "${backupFolder}"
@@ -333,14 +333,14 @@ $ sudo cp -rp --parents /etc/kubernetes/pki "${backupFolder}"
 # sudo cp -rp --parents /etc/etcd/ssl "${backupFolder}"
 
 # for kubelet
-$ sudo cp -rp /var/lib/kubelet/config.yaml{,.backup.${timestampe}}
+$ sudo cp -rp /var/lib/kubelet/config.yaml{,.backup.${timestamp}}
 $ sudo cp -rp --parents /var/lib/kubelet/pki "${backupFolder}"
-$ sudo cp -r /var/lib/kubelet/pki{,.backup.${timestampe}}
+$ sudo cp -r /var/lib/kubelet/pki{,.backup.${timestamp}}
 $ sudo cp -rp --parents /var/lib/kubelet/config.yaml "${backupFolder}"
 
 # for kubeconfig
 $ sudo cp -rp --parents /etc/kubernetes/*.conf "${backupFolder}"
-$ sudo cp -rp ~/.kube/config{,.backup.${timestampe}}
+$ sudo cp -rp ~/.kube/config{,.backup.${timestamp}}
 ```
 
 ### clean environment
@@ -350,17 +350,17 @@ $ sudo cp -rp ~/.kube/config{,.backup.${timestampe}}
 # or
 $ echo {apiserver,apiserver-kubelet-client,apiserver-etcd-client,front-proxy-client} |
        fmt -1 |
-       xargs -I{} bash -c "sudo cp -rp /etc/kubernetes/pki/{}.crt{,.backup.${timestampe}};
-                           sudo mv /etc/kubernetes/pki/{}.key{,.backup.${timestampe}}"
+       xargs -I{} bash -c "sudo cp -rp /etc/kubernetes/pki/{}.crt{,.backup.${timestamp}};
+                           sudo mv /etc/kubernetes/pki/{}.key{,.backup.${timestamp}}"
 
 # for kubeconfig
 $ echo {admin,kubelet,controller-manager,scheduler} |
        fmt -1 |
-       xargs -I{} bash -c "sudo mv /etc/kubernetes/{}.conf{,.backup.${timestampe}}"
+       xargs -I{} bash -c "sudo mv /etc/kubernetes/{}.conf{,.backup.${timestamp}}"
 
 $ echo {peer,healthcheck-client,server}.{crt,key} |
        fmt -1 |
-       xargs -I{} bash -c "sudo mv /etc/kubernets/pki/etcd/${}{,.backup.${timestampe}}"
+       xargs -I{} bash -c "sudo mv /etc/kubernets/pki/etcd/${}{,.backup.${timestamp}}"
 ```
 
 ### restore backup
@@ -1322,7 +1322,7 @@ $ sed -re "s/(.*client-certificate-data:)(.*)$/\1 $(cat marslo.crt | base64 -w0)
 $ sed -re "s/(.*client-key-data:)(.*)$/\1 $(cat marslo.key| base64 -w0)/g" -i config
 ```
 
-### vaildate
+### validate
 ```bash
 $ kubectl --kubeconfig=config get ns | grep kube
 kube-public            Active   3y10d
@@ -1454,7 +1454,7 @@ kube-system            Active   3y10d
   kubeadm-cert-kubernetes-admin-648w4  47s  kubernetes-admin  Approved,Issued
 
   $ kubectl certificate approve kubeadm-cert-kube-apiserver-kubelet-client-r9lmh
-  $ kubectl certificate approve kubeadm-cert-system:kube-contrller-manager-kzx49
+  $ kubectl certificate approve kubeadm-cert-system:kube-controller-manager-kzx49
   $ kubectl certificate approve kubeadm-cert-font-proxy-client-9kxgj
   $ kubectl certificate approve kubeadm-cert-system:kube-scheduler-8jbb9
 
@@ -1464,7 +1464,7 @@ kube-system            Active   3y10d
   kubeadm-cert-kube-apiserver-bgmcs                 3m9s   kubernetes-admin  Approved,Issued
   kubeadm-cert-kube-apiserver-kubelet-client-r9lmh  2m57s  kubernetes-admin  Approved,Issued
   kubeadm-cert-kubernetes-admin-648w4               4m19s  kubernetes-admin  Approved,Issued
-  kubeadm-cert-system:kube-contrller-manager-kzx49  70s    kubernetes-admin  Approved,Issued
+  kubeadm-cert-system:kube-controller-manager-kzx49  70s    kubernetes-admin  Approved,Issued
   kubeadm-cert-system:kube-scheduler-8jbb9          49s    kubernetes-admin  Approved,Issued
   ```
 

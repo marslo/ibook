@@ -293,7 +293,7 @@
 ### [vim](https://marketplace.visualstudio.com/items?itemName=vscodevim.vim)
 
 > [!NOTE|label:references:]
-> - [nstalling vim inside visual studio code](https://www.barbarianmeetscoding.com/boost-your-coding-fu-with-vscode-and-vim/installing-vim-in-vscode/)
+> - [installing vim inside visual studio code](https://www.barbarianmeetscoding.com/boost-your-coding-fu-with-vscode-and-vim/installing-vim-in-vscode/)
 > - [Shan Khan/Settings Sync](https://marketplace.visualstudio.com/items?itemName=Shan.code-settings-sync)
 
 - install

@@ -1312,7 +1312,7 @@ println new SimpleTemplateEngine().createTemplate( template ).make( binding ).to
   printClassPath this.class.classLoader
   ```
 
-  <!--sec data-title="result of -- this.class.$classLoade" data-id="section0" data-show=true data-collapse=true ces-->
+  <!--sec data-title="result of -- this.class.$classLoad" data-id="section0" data-show=true data-collapse=true ces-->
   ```
   -- groovy.lang.GroovyClassLoader$InnerLoader@37c84fea
 

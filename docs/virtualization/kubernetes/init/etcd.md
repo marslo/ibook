@@ -1,7 +1,7 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [extenal etcd](#extenal-etcd)
+- [external etcd](#external-etcd)
   - [certificates](#certificates)
     - [certificate signing request](#certificate-signing-request)
   - [configuration](#configuration)
@@ -35,9 +35,9 @@
 > - [tutorial: set up a secure and highly available etcd cluster](https://thenewstack.io/tutorial-set-up-a-secure-and-highly-available-etcd-cluster/)
 {% endhint %}
 
-- [extenal etcd topology](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/ha-topology/#external-etcd-topology) certificates located in : `/etc/etcd/ssl`
+- [external etcd topology](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/ha-topology/#external-etcd-topology) certificates located in : `/etc/etcd/ssl`
 
-  ![extenal etcd](../../../screenshot/k8s/kubeadm-ha-topology-stacked-etcd.svg.png)
+  ![external etcd](../../../screenshot/k8s/kubeadm-ha-topology-stacked-etcd.svg.png)
 
   > [!TIP]
   > You need:
@@ -77,7 +77,7 @@
   > See Stacked etcd topology for context.
 
 
-# extenal etcd
+# external etcd
 ## certificates
 ```bash
 $ sudo mkdir -p /etc/etcd/ssl
@@ -86,7 +86,7 @@ $ sudo mkdir -p /etc/etcd/ssl
 ### certificate signing request
 
 {% hint style='tip' %}
-> generate the etcd certificates in major kubernetes master. and sync to the others following kuberentes masters.
+> generate the etcd certificates in major kubernetes master. and sync to the others following kubernetes masters.
 {% endhint %}
 
 ```bash

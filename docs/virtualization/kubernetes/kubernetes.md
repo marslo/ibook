@@ -16,10 +16,10 @@
     - [pod creation](#pod-creation)
     - [ingress traffic](#ingress-traffic)
 - [ports and protocols](#ports-and-protocols)
-  - [contol plane](#contol-plane)
+  - [control plane](#control-plane)
   - [worker node(s)](#worker-nodes)
 - [architecture](#architecture)
-  - [control pannel](#control-pannel)
+  - [control panel](#control-panel)
     - [kube-apiserver](#kube-apiserver)
     - [etcd](#etcd)
     - [kube-scheduler](#kube-scheduler)
@@ -162,7 +162,7 @@
 ![ingress traffic flow](../../screenshot/k8s/k8s-ingress-traffic-flow.png)
 
 # [ports and protocols](https://kubernetes.io/docs/reference/ports-and-protocols/)
-## contol plane
+## control plane
 
 | PROTOCOL | DIRECTION | PORT RANGE  | PURPOSE                 | USED BY              |
 |----------|-----------|-------------|-------------------------|----------------------|
@@ -184,7 +184,7 @@
 
 ![Kubernetes Architecture](../../screenshot/k8s/kubernetes-architecture_k8s-architecture.drawio-1.png)
 
-## control pannel
+## control panel
 
 ### kube-apiserver
 ![Kubernetes Architecture : kube-apiserver](../../screenshot/k8s/kubernetes-architecture_kube-api-server.drawio-1.png)
@@ -196,7 +196,7 @@
 ![Kubernetes Architecture : kube-scheduler](../../screenshot/k8s/kubernetes-architecture_kube-scheduler.png)
 
 ### controller manager
-![Kubernetes Architecture : kube conntroller manager](../../screenshot/k8s/kubernetes-architecture_Kube-controller-manager.png)
+![Kubernetes Architecture : kube controller manager](../../screenshot/k8s/kubernetes-architecture_Kube-controller-manager.png)
 
 ### ccm : cloud controller manager
 ![Kubernetes Architecture : ccm](../../screenshot/k8s/kubernetes-architecture_ccm.png)
@@ -335,9 +335,9 @@ khhfwa.jvkvrpiknx4o6ffy   19h         2018-07-13T11:37:43+08:00   authentication
 
 ## generate token
 
-> [!NOET|label:see also:]
+> [!NOTE|label:see also:]
 > - [* iMarslo: get join command](./init/kubeadm/kubeadm.md#get-join-command)
-> - [* iMarslo: retrive join command](./init/kubeadm/kubeadm.md#retrive-join-command)
+> - [* iMarslo: retrieve join command](./init/kubeadm/kubeadm.md#retrive-join-command)
 
 ```bash
 $ sudo kubeadm token create --print-join-command

@@ -134,7 +134,7 @@ properties([
   import org.jenkinsci.plugins.workflow.cps.replay.ReplayCause
   import com.sonyericsson.rebuild.RebuildCause
 
-  def getCasuedBy( workflowRun build = currentBuild.rawBuild ) {
+  def getCausedBy( workflowRun build = currentBuild.rawBuild ) {
       CauseAction causeAction = currentBuild.rawBuild.getAction(CauseAction.class)
       causeAction.getCauses().each { Cause cause ->
         if ( cause instanceof Cause.UpstreamCause            ) println ( 'by upstream'                  )

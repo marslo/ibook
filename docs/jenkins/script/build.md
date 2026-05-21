@@ -6,7 +6,7 @@
     - [get current build actions](#get-current-build-actions)
   - [get build details](#get-build-details)
     - [setup next build number](#setup-next-build-number)
-  - [NODE_NAME and worksapce path](#node_name-and-worksapce-path)
+  - [NODE_NAME and workspace path](#node_name-and-workspace-path)
   - [build cause](#build-cause)
     - [trigger cause](#trigger-cause)
     - [get build cause](#get-build-cause)
@@ -111,7 +111,7 @@
 >   - `WorkflowJob.getLastFailedBuild()` : get last failed build
 >   - `WorkflowJob.getLastStableBuild()` : get last stable build
 >   - `WorkflowJob.getLastSuccessfulBuild()` : get last successful build
->   - `WorkflowJob.getLastUnstableBuild()` : get last unstalbe build
+>   - `WorkflowJob.getLastUnstableBuild()` : get last unstable build
 >   - `WorkflowJob.getLastUnsuccessfulBuild()` : get last unsuccessful build
 >   - `WorkflowJob.getLastCompletedBuild()` : get last completed only build
 > - from `org.jenkinsci.plugins.workflow.job.WorkflowJob` :
@@ -215,7 +215,7 @@ jenkins.model.Jenkins.instance
        .updateNextBuildNumber( n )
 ```
 
-## [NODE_NAME and worksapce path](https://stackoverflow.com/a/78705311/2940319)
+## [NODE_NAME and workspace path](https://stackoverflow.com/a/78705311/2940319)
 
 > [!NOTE|label:references:]
 > - [`getNodeWsUrl` - Get step id in Jenkins Pipeline for linking to BlueOcean or Pipeline Steps view (flowGraphTable)](https://stackoverflow.com/a/62843912/2940319)
@@ -1031,7 +1031,7 @@ build.addAction(new ParametersAction(new StringParameterValue('BAR', '3')))
 
 ### [get queue jobs parameters](https://stackoverflow.com/a/32912802/2940319)
 
-> [!NOTE|label:refernece:]
+> [!NOTE|label:reference:]
 > - [cg-soft/explore.groovy](https://gist.github.com/cg-soft/4251ad83932340129925)
 
 ```groovy
@@ -1095,7 +1095,7 @@ jenkins.model.Jenkins.instance
 
 - get changeSets to `List<Map<String, String>>`:
   ```groovy
-  def getChangeSets( String name, int nubmer ) {
+  def getChangeSets( String name, int number ) {
     jenkins.model.Jenkins.instance
            .getItemByFullName( name )
            .getBuildByNumber( number )
@@ -1550,7 +1550,7 @@ jenkins.model.Jenkins.instance.computers
   builds.each { build ->
     println ">> ${build.fullDisplayName} :" +
             "\n\t - started " + groovy.time.TimeCategory.minus( new Date(), build.getTime() ) +
-            "\n\t - triggerd by " + build.getCause( Cause.UserIdCause.class ).userId
+            "\n\t - triggered by " + build.getCause( Cause.UserIdCause.class ).userId
   }
 
   "DONE"
@@ -1628,7 +1628,7 @@ jenkins.model.Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
 
 > [!TIP|label:references:]
 > - [hudson.util.RunList<R>](https://javadoc.jenkins.io/hudson/util/RunList.html)
-> - [List Jenkins job build detials for last one year along with the user who triggered the build](https://stackoverflow.com/a/64509896/2940319)
+> - [List Jenkins job build details for last one year along with the user who triggered the build](https://stackoverflow.com/a/64509896/2940319)
 > - [`public RunList<R> byTimestamp(long start, long end)`](https://javadoc.jenkins.io/hudson/util/RunList.html#byTimestamp(long,long))
 >   ```
 >   Filter the list by timestamp. s<=e.
@@ -2154,7 +2154,7 @@ Closure actions = { List builds ->
         .collect { patchset, pBuilds ->
            [
              PATCHSET_NUMBER: patchset,
-             BUILDS         : pBuilds.collectEntries {[ (it.BUILD_NUBMER): [status: it.status, time: it.time] ]}
+             BUILDS         : pBuilds.collectEntries {[ (it.BUILD_NUMBER): [status: it.status, time: it.time] ]}
            ]
          }
 }
@@ -2185,7 +2185,7 @@ jenkins.model.Jenkins.instance.getAllItems( Job.class ).findAll { Job job ->
 Map stats = results.collectEntries { k, v -> [
     (k): v.collect {
             [
-              BUILD_NUBMER     : it.key,
+              BUILD_NUMBER     : it.key,
               time             : it.value.time,
               status           : it.value.status,
               PATCHSET_NUMBER  : it.value.params.GERRIT_REFSPEC.split('/').last()

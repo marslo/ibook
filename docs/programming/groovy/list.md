@@ -20,7 +20,7 @@
   - [`sort`](#sort)
   - [sort with descending order](#sort-with-descending-order)
   - [`swap`](#swap)
-- [conversion or restruction](#conversion-or-restruction)
+- [conversion or restriction](#conversion-or-restriction)
   - [`toSpreadMap` to Map](#tospreadmap-to-map)
   - [`collate` to nested List](#collate-to-nested-list)
   - [zip 2 lists](#zip-2-lists)
@@ -327,7 +327,7 @@ def listsMultiply( List... lists ) {
 // 2 : b
 // 1 : c
 
-# or via comapreTo ( <=> )
+# or via compareTo ( <=> )
 [ 'a', 'b', 'c' ].reverse().indexed(1).sort{ a, b -> b.key.compareTo(a.key) }.collect{ "${it.key} : ${it.value}" }.join('\n')
 // 3 : a
 // 2 : b
@@ -349,7 +349,7 @@ List l = [ '1', '2', '3' ]
 assert [ '3', '1', '2' ] == l.swap(2, 1).swap(1, 0)
 ```
 
-## conversion or restruction
+## conversion or restriction
 
 > [!NOTE|label:references:]
 > - [Class groovy.util.GroovyCollections](https://docs.groovy-lang.org/latest/html/api/groovy/util/GroovyCollections.html)
@@ -478,7 +478,7 @@ Map<String, String> reference = [
 ===> I like 1 she        liks 2
 // ===> I like 1 she liks 2
 ```
-- or keep only comma (and merge more if mutiple comma)
+- or keep only comma (and merge more if multiple comma)
   ```groovy
   'I like 1,----,,|\\/, she        liks 2,,...'
     .replaceAll("[^\\w\\s,]|_", '')

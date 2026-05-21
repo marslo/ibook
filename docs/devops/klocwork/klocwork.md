@@ -626,8 +626,8 @@ $ keytool -import -alias ldap      -file ldap.cer   -keystore cacerts
   + klocwork.protocol=https
 
   $ grep Connector <projects_root>/tomcat/conf/server.template
-  -  <Connector port="$PORT" protocol="org.apache.coyote.http11.Http11NioProtocol" maxThreads="64" minSpareThreads="20" redirectPort="8443" acceptCount="200" connectionTimeout="20000" URIEncoding="UTF-8" compression="on" compressionMinSize="2048" noCompressionUserAgents="gozilla,traviata" compressableMimeType="text/html,text/xml,text/javascript" maxPostSize="-1" />
-  +  <Connector port="$PORT" maxthreads="4-" minSpareThreads="20" maxSpareThreads="40" enableLooksups="false" redirectPort="8443" acceptCount="50" debug="0" connectionTimeout="20000" compression="on" compressionMinSize="2048" noCompressionUserAgents=".*MSIE.*,gozilla,traviata" compressableMimeType="text/html,text/xml" maxPostSize="0" />
+  -  <Connector port="$PORT" protocol="org.apache.coyote.http11.Http11NioProtocol" maxThreads="64" minSpareThreads="20" redirectPort="8443" acceptCount="200" connectionTimeout="20000" URIEncoding="UTF-8" compression="on" compressionMinSize="2048" noCompressionUserAgents="gozilla,traviata" compressibleMimeType="text/html,text/xml,text/javascript" maxPostSize="-1" />
+  +  <Connector port="$PORT" maxthreads="4-" minSpareThreads="20" maxSpareThreads="40" enableLooksups="false" redirectPort="8443" acceptCount="50" debug="0" connectionTimeout="20000" compression="on" compressionMinSize="2048" noCompressionUserAgents=".*MSIE.*,gozilla,traviata" compressibleMimeType="text/html,text/xml" maxPostSize="0" />
   ```
 
 - restart klocwork service

@@ -72,8 +72,8 @@
 
 > [!NOTE|label:reference:]
 > - [Resize splits more quickly](https://vim.fandom.com/wiki/Resize_splits_more_quickly)
-> - maximium split window: <kbd>ctrl</kbd> + <kbd>w</kbd> ⇢ <kbd>_</kbd>
-> - maximium vsplit window: <kbd>ctrl</kbd> + <kbd>w</kbd> ⇢ <kbd>|</kbd>
+> - maximum split window: <kbd>ctrl</kbd> + <kbd>w</kbd> ⇢ <kbd>_</kbd>
+> - maximum vsplit window: <kbd>ctrl</kbd> + <kbd>w</kbd> ⇢ <kbd>|</kbd>
 > - resize window: <kbd>ctrl</kbd> + <kbd>w</kbd> ⇢ <kbd>|</kbd>
 
 ### horizontal resize

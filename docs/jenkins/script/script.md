@@ -156,7 +156,7 @@
 > - [Jenkins Features Controlled with System Properties](https://www.jenkins.io/doc/book/managing/system-properties/)
 > - [Configuring Content Security Policy](https://www.jenkins.io/doc/book/security/configuring-content-security-policy/)
 
-- timestampe
+- timestamp
   ```groovy
   System.setProperty( 'org.apache.commons.jelly.tags.fmt.timeZone', 'America/Los_Angeles' )
   ```

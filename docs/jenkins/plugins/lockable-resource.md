@@ -129,7 +129,7 @@ stage('number of free') {
 
 ### [Get all resource](https://issues.jenkins-ci.org/browse/JENKINS-46235?focusedCommentId=345401&page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel#comment-345401)
 ```groovy
-stage('get all resoruces') {
+stage('get all resources') {
   def all_lockable_resources = GlobalConfiguration.all().get(org.jenkins.plugins.lockableresources.LockableResourcesManager.class).resources
 
   println "~~> free resource for ${l}"
@@ -521,7 +521,7 @@ def removeLabelByName( String name, Boolean force = false ) {
                   ( resource.reserved ? "reserved by ${resource.reservedBy}" : '' )
       }
     } else {
-      println( "WARN: resource ${name} doesn't exist in resrouce pool. Skip..." )
+      println( "WARN: resource ${name} doesn't exist in resource pool. Skip..." )
       println( "Available resources are: ${manager.resources}" )
     }
 

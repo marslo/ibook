@@ -25,7 +25,7 @@
     - [pvc](#pvc)
   - [cm](#cm)
   - [ClusterRole](#clusterrole)
-  - [namesapce](#namesapce)
+  - [namespace](#namespace)
     - [pod security standards with namespace labels](#pod-security-standards-with-namespace-labels)
 - [kubectl](#kubectl)
   - [disable daemonset](#disable-daemonset)
@@ -776,7 +776,7 @@ rules:
   resourceNames: ["06f6ce97-e2c5-4ab8-7ba5-7654dd08d52b"]
 ```
 
-## namesapce
+## namespace
 ### [pod security standards with namespace labels](https://kubernetes.io/docs/tasks/configure-pod-container/enforce-standards-namespace-labels/)
 ```yaml
 apiVersion: v1
@@ -821,7 +821,7 @@ $ kubectl create --edit -f /tmp/srv.yaml
 
 ## secrets
 
-> [!NOTE|label:referencs:]
+> [!NOTE|label:references:]
 > - [Managing Secrets using kubectl](https://kubernetes.io/docs/tasks/configmap-secret/managing-secret-using-kubectl/)
 > - [Managing Secrets using Configuration File](https://kubernetes.io/docs/tasks/configmap-secret/managing-secret-using-config-file/)
 

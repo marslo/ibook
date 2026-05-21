@@ -160,7 +160,7 @@ import java.time.LocalDateTime
 import java.time.LocalDate
 import java.time.Instant
 
-long curerntTime       = System.currentTimeMillis()
+long currentTime       = System.currentTimeMillis()
 long newDateTime       = new Date().getTime()
 long calendarTime      = Calendar.getInstance().getTimeInMillis()
 long instanceTime      = Instant.now().toEpochMilli()
@@ -169,7 +169,7 @@ LocalDate dateTag      = java.time.LocalDate.now()
 LocalDateTime dateTime = LocalDateTime.now()
 
 println """
-   curerntTime : ${curerntTime.toString().padRight(30)} : ${curerntTime.getClass()}
+   currentTime : ${currentTime.toString().padRight(30)} : ${currentTime.getClass()}
    newDateTime : ${newDateTime.toString().padRight(30)} : ${newDateTime.getClass()}
   calendarTime : ${calendarTime.toString().padRight(30)} : ${calendarTime.getClass()}
   instanceTime : ${instanceTime.toString().padRight(30)} : ${calendarTime.getClass()}
@@ -181,7 +181,7 @@ println """
 
 - result
   ```
-   curerntTime : 1723087263176                  : class java.lang.Long
+   currentTime : 1723087263176                  : class java.lang.Long
    newDateTime : 1723087263176                  : class java.lang.Long
   calendarTime : 1723087263176                  : class java.lang.Long
   instanceTime : 1723087263176                  : class java.lang.Long
@@ -674,7 +674,7 @@ def simpleDate     = simpleDateFormat.format( date )
 
 println """
             date : ${date.toString().padRight(30)} : ${date.getClass()}
-     simepleDate : ${simpleDate.toString().padRight(30)} : ${simpleDate.getClass()}
+     simpleDate : ${simpleDate.toString().padRight(30)} : ${simpleDate.getClass()}
     timeInMillis : ${timeInMillis.toString().padRight(30)} : ${timeInMillis.getClass()}
   calendarMillis : ${calendarMillis.toString().padRight(30)} : ${calendarMillis.getClass()}
 """
@@ -684,13 +684,13 @@ println """
   ```
   // default timezone
               date : Thu Apr 29 00:57:03 PDT 2021   : class java.util.Date
-       simepleDate : 2021-04-29 00:57:03            : class java.lang.String
+       simpleDate : 2021-04-29 00:57:03            : class java.lang.String
       timeInMillis : 1619683023852                  : class java.lang.Long
     calendarMillis : 1619683023853                  : class java.lang.Long
 
   // utc timezone
               date : Thu Apr 29 00:57:27 PDT 2021   : class java.util.Date
-       simepleDate : 2021-04-29 07:57:27            : class java.lang.String
+       simpleDate : 2021-04-29 07:57:27            : class java.lang.String
       timeInMillis : 1619683047726                  : class java.lang.Long
     calendarMillis : 1619683047726                  : class java.lang.Long
   ```
@@ -719,7 +719,7 @@ def simpleDate           = simpleDateFormat.format( date )
 
 println """
             date : ${date}
-     simepleDate : ${simpleDate}
+     simpleDate : ${simpleDate}
 
     timeInMillis : ${timeInMillis}
   calendarMillis : ${calendarMillis}
@@ -728,7 +728,7 @@ println """
 - result
   ```
             date : Thu Apr 29 00:00:00 PDT 2021
-     simepleDate : 2021-04-29 00:00:00
+     simpleDate : 2021-04-29 00:00:00
 
     timeInMillis : 1619679600000
   calendarMillis : 1619679600000

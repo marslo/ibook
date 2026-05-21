@@ -52,7 +52,7 @@
 > [!NOTE|label:references:]
 > - [CRI-O Packaging](https://github.com/cri-o/packaging/blob/main/README.md)
 > - [cri-o/packaging actions](https://github.com/cri-o/packaging/actions)
-> - veriables:
+> - variables:
 >   ```bash
 >   $ CRIO_VERSION='v1.30'
 >   ```
@@ -458,7 +458,7 @@ default UID mappings (format <container>:<host>:<size>):
 ### remove
 - stop all pods
   ```bash
-  $ crictl pods -q | xargs -r crictl -t 60s stopp
+  $ crictl pods -q | xargs -r crictl -t 60s stop
 
   # force remove all
   $ crictl rmp -a -f

@@ -110,7 +110,7 @@ The default rule set results in the following:
 2. open in browser:
   ```bash
   job url   : http: //localhost:8080/job/<job-name>/
-  conig url : http: //localhost:8080/job/<job-name>/config.xml
+  config url : http: //localhost:8080/job/<job-name>/config.xml
   ```
 
 ### using style in Jenkins
@@ -292,7 +292,7 @@ CRUMB=$(curl -u "admin:admin" \
       )
 ```
 
-@Dprecated before jenkins `2.176.2`
+@Deprecated before jenkins `2.176.2`
 ```bash
 url='http://jenkins.marslo.com'
 
@@ -378,7 +378,7 @@ CRUMB=$(curl -u "admin:admin" \
       )
 ```
 
-@Dprecated before jenkins `2.176.2`
+@Deprecated before jenkins `2.176.2`
 ```bash
 CRUMB="$(curl -sSLg http://jenkins.marslo.com/crumbIssuer/api/json |
          jq -r .crumb \
@@ -413,7 +413,7 @@ $ curl -X POST \
 ## run Jenkins
 
 {% hint style='tip' %}
-> refernce:
+> reference:
 > - [How to install Jenkins on Docker](https://octopus.com/blog/jenkins-docker-install-guide)
 > - [Jenkins Features Controlled with System Properties](https://www.jenkins.io/doc/book/managing/system-properties/)
 > - [-Dhudson.security.ArtifactsPermission=true](https://github.com/jenkinsci/docker/issues/202#issuecomment-244321911)

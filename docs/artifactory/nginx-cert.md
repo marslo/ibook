@@ -18,7 +18,7 @@
 ## nginx
 ### installation
 ```bash
-$ sudo apt udpate
+$ sudo apt update
 $ sudo apt install nginx
 ```
 
@@ -526,7 +526,7 @@ If you enter '.', the field will be left blank.
 Country Name (2 letter code) [AU]:CN
 State or Province Name (full name) [Some-State]:Sichuan
 Locality Name (eg, city) []:Chengdu
-Organization Name (eg, company) [Internet Widgits Pty Ltd]:CompanyName
+Organization Name (eg, company) [Internet Widgets Pty Ltd]:CompanyName
 Organizational Unit Name (eg, section) []:CompanyName
 Common Name (e.g. server FQDN or YOUR name) []:docker-2.artifactory
 Email Address []:marslo.jiao@CompanyName.com
@@ -597,7 +597,7 @@ If you enter '.', the field will be left blank.
 Country Name (2 letter code) [AU]:CN
 State or Province Name (full name) [Some-State]:Sichuan
 Locality Name (eg, city) []:Chengdu
-Organization Name (eg, company) [Internet Widgits Pty Ltd]:CompanyName
+Organization Name (eg, company) [Internet Widgets Pty Ltd]:CompanyName
 Organizational Unit Name (eg, section) []:CompanyName
 Common Name (e.g. server FQDN or YOUR name) []:sample.artifactory.com
 Email Address []:marslo.jiao@CompanyName.com
@@ -638,7 +638,7 @@ If you enter '.', the field will be left blank.
 Country Name (2 letter code) [AU]:CN
 State or Province Name (full name) [Some-State]:Sichuan
 Locality Name (eg, city) []:Chengdu
-Organization Name (eg, company) [Internet Widgits Pty Ltd]:CompanyName Ltd
+Organization Name (eg, company) [Internet Widgets Pty Ltd]:CompanyName Ltd
 Organizational Unit Name (eg, section) []:.
 Common Name (e.g. server FQDN or YOUR name) []:192.168.1.102
 Email Address []:.
@@ -740,7 +740,7 @@ If you enter '.', the field will be left blank.
 Country Name (2 letter code) [AU]:CN
 State or Province Name (full name) [Some-State]:Sichuan
 Locality Name (eg, city) []:Chengdu
-Organization Name (eg, company) [Internet Widgits Pty Ltd]:CompanyName Ltd
+Organization Name (eg, company) [Internet Widgets Pty Ltd]:CompanyName Ltd
 Organizational Unit Name (eg, section) []:CompanyName CDI
 Common Name (e.g. server FQDN or YOUR name) []:docker-1.artifactory
 Email Address []:.

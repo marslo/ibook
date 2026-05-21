@@ -90,7 +90,7 @@ default   1         2y351d
   done
   ```
 
-  <!--sec data-title="api resoureces results" data-id="section0" data-show=true data-collapse=true ces-->
+  <!--sec data-title="api resources results" data-id="section0" data-show=true data-collapse=true ces-->
   ```bash
   ----- configmaps ------
   No resources found.

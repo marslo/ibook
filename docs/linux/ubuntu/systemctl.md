@@ -197,5 +197,5 @@ Created symlink /etc/systemd/system/multi-user.target.wants/add_route.service �
 - `G`: Gateway: 表示此网关为一路有
 - `R`: Reinstate Route: 使用动态路由重新初始化的路由
 - `D`: Dynamically: 此路由是动态性的写入
-- `M`: Modifed: 此路由是有路由守护程序或导向器动态修改
+- `M`: Modified: 此路由是有路由守护程序或导向器动态修改
 - `!`: 关闭状态

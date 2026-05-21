@@ -439,7 +439,7 @@ $ for i in {0..255}; do echo -e "\e[38;05;${i}m${i}"; done | column -c 80 -s ' '
 
 # or: https://www.commandlinefu.com/commands/view/11759/show-numerical-values-for-each-of-the-256-colors-in-bash-for-bold-and-normal-fonts
 $ for code in $(seq -w 0 255); do for attr in 0 1; do printf "%s-%03s %bTest%b\n" "${attr}" "${code}" "\e[${attr};38;05;${code}m" "\e[m"; done; done | column -c $((COLUMNS*2))
-# better vesion
+# better version
 $ for code in $(seq -w 0 255); do for attr in 0 1; do printf "%b%s-%03s%b\n"  "\e[${attr};38;05;${code}m" "${attr}" "${code}" "\e[m"; done; done | column -c $((COLUMNS*3))
 
 # .. zsh ..

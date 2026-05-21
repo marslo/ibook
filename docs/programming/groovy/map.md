@@ -151,7 +151,7 @@ assert accumulator == [k1:[l1:['s1', 's2', 's3', 's4']], k2:[l2:['x1', 'x2']]]
   }
   ```
 
-  - or more elegant way via `Clousre`:
+  - or more elegant way via `Closure`:
 
     {% hint style='tip' %}
     > ```groovy
@@ -314,7 +314,7 @@ def findValueBelongsTo( Map map, String keyword ) {
   > ```groovy
   > Map<String, String> LOGGER = [
   >        info : [ 'info', 'i' ],
-  >    warnning : [ 'warning' , 'warn', [ 'key' : 'value' ] , 'w' ] ,
+  >    warning : [ 'warning' , 'warn', [ 'key' : 'value' ] , 'w' ] ,
   >       error : [ 'error', 'err', 'e']
   > ]
   > ⇣⇣

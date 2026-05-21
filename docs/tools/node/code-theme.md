@@ -72,9 +72,9 @@
 
 - [base16-codeshool](https://github.com/highlightjs/highlight.js/tree/main/src/styles/base16/codeschool.css)
 
-  [![base16-darcula](../../screenshot/tools/codetheme/hexo-base16-darcula.png)](https://marslo.github.io/ibook/screenshot/tools/codetheme/hexo-base16-darcula.png)
+  [![base16-dracula](../../screenshot/tools/codetheme/hexo-base16-darcula.png)](https://marslo.github.io/ibook/screenshot/tools/codetheme/hexo-base16-darcula.png)
 
-- [base16-darcula](https://github.com/highlightjs/highlight.js/tree/main/src/styles/base16/darcula.css)
+- [base16-dracula](https://github.com/highlightjs/highlight.js/tree/main/src/styles/base16/darcula.css)
 
   [![base16-darkmoss](../../screenshot/tools/codetheme/hexo-base16-darkmoss.png)](https://marslo.github.io/ibook/screenshot/tools/codetheme/hexo-base16-darkmoss.png)
 

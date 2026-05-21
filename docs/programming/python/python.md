@@ -645,8 +645,8 @@ x = 3 if (y == 1) else 2
 
 - or
   ```python
-  x = 3 if (y == 1) else 2                is equvalent to                 x = y == 1 and 3 or 2
-  x = 0 if True else 1                    is equvalent to                 x = True and 0 or 1
+  x = 3 if (y == 1) else 2                is equivalent to                 x = y == 1 and 3 or 2
+  x = 0 if True else 1                    is equivalent to                 x = True and 0 or 1
   ```
 
 - or
@@ -945,7 +945,7 @@ with open('foo.txt', 'w') as f:
   f.write('hello!')
 ```
 
-#### `try...except...elese...finally`
+#### `try...except...else...finally`
 ```python
 try:
   put_4000000000_volts_through_it(parrot)
@@ -1365,7 +1365,7 @@ import foo.bar.yourclass
   ham[1:9], ham[1:9:3], ham[:9:3], ham[1::3], ham[1:9:]
   ham[lower:upper], ham[lowser:pper:], ham[lower::step]
   ham[lower+offset : upper+offset]
-  ham[: upper_fn(x) : setp_fn(x)], ham[:: setp_fn(x)]
+  ham[: upper_fn(x) : step_fn(x)], ham[:: step_fn(x)]
   ham[lower + offset : upper + offset]
   ```
 

@@ -23,6 +23,7 @@ extend-ignore-re = [
   # [c]ommit, d[i]ff, ...
   "\\w*\\[\\w\\]\\w*",
   '\w*\[\w+\]\w*',
+  '\w*\(\w\)\w+',
   # ansicolor
   "\\w+=.*\\\\033.*",
   "\\w*\\\\033\\S+",
@@ -61,6 +62,7 @@ captin = 'captin'
 dbe = 'dbe'
 Dbe = 'Dbe'
 ue = 'ue'
+nd = 'nd'
 comman = 'comman'
 IST = 'IST'
 Cpy = 'Cpy'
@@ -69,11 +71,20 @@ alis = 'alis'
 issu = 'issu'
 mak = 'mak'
 nin = 'nin'
+Pn = 'Pn'
+Activ = 'Activ'
 juli = 'juli'
+flate = 'flate'
+Divy = 'Divy'
+ALS = 'ALS'
+enew = 'enew'
+nd6 = 'nd6'
 Informations = 'Informations'
 cicle = 'cicle'
 Infared = 'Infared'
 Compatability = 'Compatability'
+Seperator = 'Seperator'
 # HashiCorp
 Hashi= 'Hashi'
 synopsys = 'synopsys'
+MICROSFT = 'MICROSFT'

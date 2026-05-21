@@ -22,7 +22,7 @@ anonymous_enable=NO
 local_enable=YES
 write_enable=YES
 chroot_local_user=YES
-allow_writeable_chroot=YES
+allow_writable_chroot=YES
 local_umask=022
 user_sub_token=$USER
 local_root=/srv/share
@@ -49,7 +49,7 @@ $ sudo cat /etc/exports
 /srv/share 10.68.78.0/24(rw,sync,no_subtree_check,all_squash,anonuid=1001,anongid=1001)
 /srv/share 10.69.176.0/24(rw,sync,no_subtree_check,all_squash,anonuid=1001,anongid=1001)
 
-$ sudo exportfs -ra
+$ sudo exports -ra
 $ sudo systemctl restart nfs-kernel-server.service
 $ sudo systemctl enable nfs-kernel-server.service
 ```
@@ -80,7 +80,7 @@ $ sudo systemctl restart nginx.service
 
 ### samba
 
-> [!NOTE|label:login in windwows]
+> [!NOTE|label:login in windows]
 > - to avoid the automatic login with DOMAIN\user, you can use the following command:
 > ```bash
 > \ftpuser

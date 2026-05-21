@@ -3,7 +3,7 @@
 
 - [shadowsocks service](#shadowsocks-service)
   - [CentOS](#centos)
-- [copy artical content from csdn](#copy-artical-content-from-csdn)
+- [copy article content from csdn](#copy-article-content-from-csdn)
 - [beyond compare](#beyond-compare)
   - [whitespace and line-ending](#whitespace-and-line-ending)
 - [Adobe Acrobat Font Packages](#adobe-acrobat-font-packages)
@@ -46,7 +46,7 @@ $ sudo yum install -y git
   $ sudo yum install -y git
   ```
 
-## copy artical content from csdn
+## copy article content from csdn
 1. download html to local
 1. [remove auto-switch to homepage function in html](https://blog.csdn.net/danshiming/article/details/124651989)
   ```html

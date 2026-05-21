@@ -23,7 +23,7 @@
     ```
 
 ### ruby
-- [download official webiste](https://www.ruby-lang.org/en/downloads/)
+- [download official website](https://www.ruby-lang.org/en/downloads/)
   - [current stable ruby 2.1.2](http://cache.ruby-lang.org/pub/ruby/2.1/ruby-2.1.2.tar.gz)
   - [previous stable ruby 2.0.0-p481](http://cache.ruby-lang.org/pub/ruby/2.0/ruby-2.0.0-p481.tar.gz)
   - [old stable ruby 1.9.3-p547](http://cache.ruby-lang.org/pub/ruby/1.9/ruby-1.9.3-p547.tar.gz)

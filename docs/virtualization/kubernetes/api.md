@@ -1,7 +1,7 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [acess cluster](#acess-cluster)
+- [access cluster](#access-cluster)
   - [access cluster with cacert](#access-cluster-with-cacert)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -128,7 +128,7 @@
 >   $ ${server}/api/
 >   ```
 
-## acess cluster
+## access cluster
 ```bash
 $ APISERVER=$(kubectl config view --minify -o jsonpath='{.clusters[0].cluster.server}')
 # or get via cluster name of `kubernetes-staging`

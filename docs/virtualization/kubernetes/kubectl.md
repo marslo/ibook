@@ -497,7 +497,7 @@ $ kubectl -n devops-ci get deployment dev-jenkins -o json |
 
 ## apply
 
-> [!NOTE|label:referenecs]
+> [!NOTE|label:references]
 > - [kube apply](https://www.mankier.com/1/kubectl-apply)
 > - [Declarative Management of Kubernetes Objects Using Configuration Files](https://kubernetes.io/docs/tasks/manage-kubernetes-objects/declarative-config/)
 > - [Understanding the Kubectl Apply Command](https://luispreciado.blog/posts/kubernetes/core-concepts/kubectl-apply)

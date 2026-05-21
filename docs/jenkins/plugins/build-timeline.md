@@ -13,7 +13,7 @@
   $ sudo dnf install npm maven
   ```
 
-- downlaod code
+- download code
   ```bash
   $ git clone git@github.com:tophat/jenkins-timeline-plugin.git
   $ cd jenkins-timeline-plugin
