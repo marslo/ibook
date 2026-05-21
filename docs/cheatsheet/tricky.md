@@ -135,11 +135,19 @@ $ command | lolcat -a -d 100
 $ fortune | lolcat -a -d 20 --freq=0.1 --spread=2.0
 
 $ date +"%I:%M %P" | toilet -f future | lolcat -f --freq=0.1 --spread=1.0 --truecolor
+
+$ temp="$(fortune)"
+$ for s in $(seq 0 2 300); do
+    printf "seed=%3d: " "$s";
+    echo "${temp}" | lolcat --seed="$s" --freq=0.03 --spread=1.1 --truecolor;
+  done
 ```
 
 ![lolcat](../screenshot/linux/lolcat.png)
 
 ![lolcat -a](../screenshot/linux/lolcat-a.gif)
+
+![lolcat --seed](../screenshot/linux/lolcat-seed.png)
 
 
 ### [ccat](https://github.com/owenthereal/ccat)
