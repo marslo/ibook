@@ -15,7 +15,7 @@
 # icons
 
 > [!NOTE|label:references:]
-> - [* Simple Icons](https://simpleicons.org/)
+> - [* Simple Icons](https://simpleicons.org/) | [shields.io/badges](https://shields.io/badges)
 > - [* Primer Design System](https://primer.style/foundations/css-utilities/details) | [github - custom-icon-badges](https://github.com/DenverCoder1/custom-icon-badges)
 > - [Ileriayo/markdown-badges](https://github.com/Ileriayo/markdown-badges)
 > - [VishwaGauravIn/pretty-readme-badges](https://github.com/VishwaGauravIn/pretty-readme-badges)

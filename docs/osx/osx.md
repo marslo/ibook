@@ -75,7 +75,7 @@
         Unique ID: 0x8020000005ac8514
   ```
 
-- grahics & display
+- graphics & display
   ```bash
   $ system_profiler SPDisplaysDataType
   Graphics/Displays:
@@ -152,6 +152,11 @@ $ sudo scutil --set ComputerName "${HNAME}"
 # Flush the DNS Cache
 $ dscacheutil -flushcache
 $ sudo shutdown -r now
+
+# check
+$ sudo scutil --get HostName
+$ sudo scutil --get ComputerName
+$ sudo scutil --get LocalHostName
 ```
 
 - [or](https://docs.gz.ro/node/321)
@@ -207,7 +212,7 @@ $ security login-keychain -s $keychain
 $ csrutil disable
 Successfully disabled System Integrity Protection. Please restart the machine for the changes to take effect.
 $ csrutil clear
-Successfully cleared System Integrity Proteciton. Please restart the machine for the changes to take effect.
+Successfully cleared System Integrity Protections. Please restart the machine for the changes to take effect.
 $ sudo chflags restricted /usr/local
 ```
 

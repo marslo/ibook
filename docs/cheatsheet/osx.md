@@ -114,6 +114,11 @@ $ sudo scutil --set LocalHostName [HOSTNAME]
 $ sudo scutil --set ComputerName [HOSTNAME]             # Optional
 $ dscacheutil -flushcache                               # Flush the DNS Cache
 $ sudo shutdown -r now
+
+# check
+$ sudo scutil --get HostName
+$ sudo scutil --get ComputerName
+$ sudo scutil --get LocalHostName
 ```
 
 ### setup bash as default SHELL
@@ -208,7 +213,7 @@ $ /usr/libexec/java_home -v 1.8.0.162 -exec javac -versioin
   $ brew link xz
   ```
 
-- solutioin 2 (using system libraies):
+- solutioin 2 (using system libraries):
   ```bash
   $ brew install libxml2
   $ gem install nokogiri -- --use-system-libraries --with-xml2-include=$(brew --prefix libxml2)/include/libxml2
