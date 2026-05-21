@@ -629,7 +629,7 @@ b7cc7e6545cf        6 months ago        /bin/sh -c #(nop)  ENV DEBIAN_FRONTEND=n
 f550761577d3        6 months ago        /bin/sh -c #(nop)  ARG group=devops             0B
 25f225d7fdaa        6 months ago        /bin/sh -c #(nop)  ARG user=devops              0B
 ea3b83e6ee69        6 months ago        /bin/sh -c #(nop)  ARG VERSION=1.6              0B
-cf8ee6149a83        6 months ago        /bin/sh -c #(nop)  LABEL description=specifi…   0B
+cf8ee6149a83        6 months ago        /bin/sh -c #(nop)  LABEL description=specific…  0B
 3c8433a403ad        6 months ago        /bin/sh -c #(nop)  LABEL maintainer=marslo@x…   0B
 e7d65936ff5d        6 months ago        /bin/sh -c #(nop)  LABEL version=1.6            0B
 ac9cd6bdb0cf        6 months ago        /bin/sh -c #(nop)  MAINTAINER marslo <marslo…   0B

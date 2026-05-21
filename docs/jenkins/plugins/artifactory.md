@@ -39,7 +39,7 @@ def addInteractivePromotion( String sourceRepo, String targetRepo, def server, d
   ```groovy
   def publish( String promoteRepo ) {
     server = Artifactory.server SERVER_ID
-    uploadSpec = readFile 'jenkins-examples/pipeline-examples/resources/props-upload.json' 
+    uploadSpec = readFile 'jenkins-examples/pipeline-examples/resources/props-upload.json'
     buildInfo = server.upload spec: uploadSpec
     server.publishBuildInfo buildInfo
 
@@ -49,7 +49,7 @@ def addInteractivePromotion( String sourceRepo, String targetRepo, def server, d
   - or for download
     ```groovy
     def download( String promoteRepo ) {
-      server = Artifactory.server SERVER_ID 
+      server = Artifactory.server SERVER_ID
       downloadSpec = readFile 'jenkins-examples/pipeline-examples/resources/props-download.json'
       server.download spec: downloadSpec, buildInfo: buildInfo
       server.publishBuildInfo buildInfo
@@ -60,11 +60,11 @@ def addInteractivePromotion( String sourceRepo, String targetRepo, def server, d
 ### promotion
 > [Delete jenkins builds during Promote / promotion step](https://stackoverflow.com/a/18992627/2940319)
 
-<!--sec data-title="promot" data-id="section0" data-show=true data-collapse=true ces-->
+<!--sec data-title="promote" data-id="section0" data-show=true data-collapse=true ces-->
 ```groovy
 /*** BEGIN META {
   "name" : "Bulk Delete Builds except the given build number",
-  "comment" : "For a given job and a given build numnber, delete all builds of a given release version (M.m.interim) only and except the user provided one. Sometimes a Jenkins job use Build Name setter plugin and same job generates 2.75.0.1 and 2.76.0.43",
+  "comment" : "For a given job and a given build number, delete all builds of a given release version (M.m.interim) only and except the user provided one. Sometimes a Jenkins job use Build Name setter plugin and same job generates 2.75.0.1 and 2.76.0.43",
   "parameters" : [ 'jobName', 'releaseVersion', 'buildNumber' ],
   "core": "1.409",
   "authors" : [

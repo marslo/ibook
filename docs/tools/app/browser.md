@@ -201,7 +201,7 @@ $ pgrep -u `id -u` firefox-bin || find ~/.mozilla/firefox -name '*.sqlite'|(whil
 #### remove "All Bookmarks"
 
 > [!NOTE|label:references:]
-> - [How to remove "All Bookmarks" (Alle Lesezeichen) ?](https://www.reddit.com/r/chrome/comments/16mjav0/comment/k18pkqm/?utm_source=share&utm_medium=web2x&context=3)
+> - [How to remove "All Bookmarks" ?](https://www.reddit.com/r/chrome/comments/16mjav0/comment/k18pkqm/?utm_source=share&utm_medium=web2x&context=3)
 > - [How do I get rid of the "All Bookmarks" tab?](https://www.reddit.com/r/chrome/comments/16mst9c/comment/k1a6hpf/?utm_source=share&utm_medium=web2x&context=3)
 
 - open `about://flags`

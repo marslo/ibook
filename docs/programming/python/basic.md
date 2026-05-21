@@ -1,7 +1,7 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [version capatibility](#version-capatibility)
+- [version capability](#version-capability)
 - [environment](#environment)
   - [list included modules](#list-included-modules)
   - [list lib paths](#list-lib-paths)
@@ -15,7 +15,7 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
-## version capatibility
+## version capability
 
 #### Supported Ubuntu and Python Versions
 

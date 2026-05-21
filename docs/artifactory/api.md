@@ -189,7 +189,7 @@ $ curl -sSg \
           -X GET https://artifactory.domain.com/artifactory/api/repositories |
           jq -r '.[] | select((.type == "VIRTUAL") and select(.key | startswith("<project>"))) | .key'
     ```
-  - get defaultDeployRepo for all virutal repos who named starts with '<project>'
+  - get defaultDeployRepo for all virtual repos who named starts with '<project>'
     ```bash
     $ for i in $(curl -sSg \
                       -XGET https://artifactory.domain.com/artifactory/api/repositories |
@@ -274,7 +274,7 @@ $ curl -s \
        -X GET ${rtUrl}/api/build/${buildName}/${buildNumber}
 ```
 
-- get start timestampe
+- get start timestamp
   ```bash
   $ curl -s \
          --netrc-file ~/.marslo/.netrc \
@@ -413,7 +413,7 @@ $ curl -s \
 > - [build promotion](https://www.jfrog.com/confluence/display/JFROG/Artifactory+REST+API#ArtifactoryRESTAPI-BuildPromotion)
 
 ```bash
-$ cat promot.json
+$ cat promote.json
 {
   "status": "released",
   "ciUser": "ci-user",
@@ -433,7 +433,7 @@ $ curl -s \
        -i \
        -k \
        -H "Content-type:application/json" \
-       -d @promot.json \
+       -d @promote.json \
        -X POST \
        '${rtURL}/api/build/promote/${buildName}/<buildID>'
 ```
@@ -522,7 +522,7 @@ $ curl -gfsSL \
 ### [deploy docker image via API](https://philippart-s.github.io/blog/articles/dev/docker-artificatory-promote/)
 
 > [!NOTE|label:references:]
-> - [* iMarslo: deploy docekr image via CLI](./cli.html#deploy-docker-image-via-cli)
+> - [* iMarslo: deploy docker image via CLI](./cli.html#deploy-docker-image-via-cli)
 
 ```bash
 $ curl -X POST -H "X-JFrog-Art-Api:$ARTI_API_KEY" \

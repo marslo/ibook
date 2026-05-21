@@ -1,5 +1,9 @@
 [files]
-extend-exclude = []
+extend-exclude = [
+  "docs/jenkins/config/*.yaml",
+  "docs/devops/klocwork/klocwork_web_api.html",
+  "docs/linux/ubuntu/shadowsocks-all.sh"
+]
 ignore-hidden = true
 ignore-files = true
 ignore-dot = true
@@ -18,12 +22,26 @@ extend-ignore-re = [
   '\s-[a-zA-Z]+',
   # [c]ommit, d[i]ff, ...
   "\\w*\\[\\w\\]\\w*",
+  '\w*\[\w+\]\w*',
   # ansicolor
   "\\w+=.*\\\\033.*",
   "\\w*\\\\033\\S+",
   # vim modeline
   "(?m)^.*\\bvim:.*$",
   "PS1=.*",
+  # regex: (?:xxx)
+  '\(\?:.*?\)',
+  # regex: ^\s*(...)
+  '\^\\s\*\(.*?\)',
+  # regex: \b(...)
+  '\\b\(.*?\)',
+  # regex: (?=\s*
+  '\(\?=\\s\*',
+  # regex: '...'.split("(?=...)
+  '.*split\("\(\?=.*',
+  # token
+  '[A-Za-z0-9+/]{40,}={0,2}',
+  '// result:.*'
 ]
 
 [default.extend-words]
@@ -44,3 +62,13 @@ dbe = 'dbe'
 Dbe = 'Dbe'
 ue = 'ue'
 comman = 'comman'
+IST = 'IST'
+Cpy = 'Cpy'
+stap = 'stap'
+alis = 'alis'
+mak = 'mak'
+nin = 'nin'
+juli = 'juli'
+synopsys = 'synopsys'
+Informations = 'Informations'
+cicle = 'cicle'

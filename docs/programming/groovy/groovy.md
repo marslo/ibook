@@ -104,7 +104,7 @@ $ groovy -e "println System.getProperties().findAll { it.key.toLowerCase().conta
 ```
 
 ```groovy
-// sun.java.comman in groovyConsole
+// sun.java.command in groovyConsole
 println System.getProperty("sun.java.command")
 // org.codehaus.groovy.tools.GroovyStarter --main groovy.console.ui.Console --conf /opt/homebrew/opt/groovy/libexec/conf/groovy-starter.conf --classpath .:/opt/homebrew/opt/openjdk/lib/tools.jar:/opt/homebrew/opt/openjdk/lib/dt.jar:/opt/homebrew/opt/groovy/libexec/lib:.
 

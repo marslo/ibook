@@ -362,19 +362,19 @@ $ git config --global url.git://github.com/.insteadOf git@github.com:
 ### core.sshCommand
 
 > [!NOTE]
-> - [core.sshCommand](https://stackoverflow.com/a/38474137/2940319) since 26 Jun 2016 [commit 3c8ede3](https://github.com/git/git/commit/3c8ede3ff312134e84d1b23a309cd7d2a7c98e9c)
+> - [core.sshCommand](https://stackoverflow.com/a/38474137/2940319) since 26 Jun 2016 [commit 3c8edge3](https://github.com/git/git/commit/3c8ede3ff312134e84d1b23a309cd7d2a7c98e9c)
 > > A new configuration variable `core.sshCommand` has been added to specify what value for `GIT_SSH_COMMAND` to use per repository.
 
 ```bash
 $ git config --global core.sshCommand "ssh -v -o 'ProxyCommand=connect -H proxy.domain.com:80 %h %p'"
 
 # or
-$ git -c core.sshCommand "ssh -v -o 'ProxyCommand=commect -H proxy.domain.com:80 %h %p'" clone git@github.com/marslo/ibook.git
+$ git -c core.sshCommand "ssh -v -o 'ProxyCommand=connect -H proxy.domain.com:80 %h %p'" clone git@github.com/marslo/ibook.git
 ```
 
 ## proxy for npm
 
-> [!NOTE|label:referencs]
+> [!NOTE|label:references]
 > - [npm config](https://docs.npmjs.com/cli/v8/using-npm/config)
 > - [Is there a way to make npm install (the command) to work behind proxy?](https://stackoverflow.com/a/10304317/2940319)
 > - [How to fix SSL certificate error when running Npm on Windows?](https://stackoverflow.com/a/54538095/2940319)

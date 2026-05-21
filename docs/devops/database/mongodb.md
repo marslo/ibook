@@ -50,7 +50,7 @@
   $ sudo ln -s /opt/mongosh/${version}/bin/mongosh /usr/local/bin/mongosh
   ```
 
-- debain
+- debian
   ```bash
   $ sudo apt-get install gnupg
   $ wget -qO- https://www.mongodb.org/static/pgp/server-7.0.asc | sudo tee /etc/apt/trusted.gpg.d/server-7.0.asc
@@ -329,7 +329,7 @@ db_name> show tables
 db_name> show collections
 ```
 
-- [fileter tables](https://stackoverflow.com/a/51773579/2940319)
+- [filter tables](https://stackoverflow.com/a/51773579/2940319)
   ```bash
   db_name> db.getCollectionNames().filter( function(CollectionName) { return /klocwork/.test(CollectionName) })
   [ 'klocwork', 'klocwork_new' ]
@@ -337,7 +337,7 @@ db_name> show collections
 
 ### list data
 
-> [!NOET|label:references:]
+> [!NOTE|label:references:]
 > - [How can I get all the doc ids in MongoDB?](https://stackoverflow.com/a/28389836/2940319)
 
 - find the first data in table/collection
@@ -421,7 +421,7 @@ db_name> show collections
   db_name> printjson(db.collection.find({}, {_id:1, user:2}))
   ```
 
-- query fiels in conditions
+- query fields in conditions
 
   > [!NOTE|label:references:]
   > - [Return only one field from MongoDB query](https://stackoverflow.com/a/70650152/2940319)
@@ -500,4 +500,3 @@ timestamp
 | `$lte`   | less or equal than (<=)    |
 | `$ne`    | not equal ()               |
 | `$nin`   | not in (not in )           |
-

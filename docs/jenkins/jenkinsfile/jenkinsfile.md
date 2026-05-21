@@ -79,7 +79,7 @@
           testNodeName = env.NODE_NAME
           curLabel  = getLabel()
           newLabel = "${curLabel}~running_${curProject}#${curBuildNumber}"
-          echo "~~> lock ${testNodeName}. update lable: ${curLabel} ~> ${newLabel}"
+          echo "~~> lock ${testNodeName}. update label: ${curLabel} ~> ${newLabel}"
           updateLabel(testNodeName, newLabel)
         } // node
       } // reserve stage
@@ -88,7 +88,7 @@
       stage("release node") {
         nodeLabels = "${newLabel}".split('~')
         orgLabel = nodeLabels[0]
-        echo "~~> release ${testNodeName}. update lable ${newLabel} ~> ${orgLabel}"
+        echo "~~> release ${testNodeName}. update label ${newLabel} ~> ${orgLabel}"
         updateLabel(testNodeName, orgLabel)
       } // release stage
     } // if

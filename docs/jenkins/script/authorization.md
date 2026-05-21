@@ -58,7 +58,7 @@ println jenkins.authorizationStrategy
 > - [hudson.security.Permission](https://javadoc.jenkins.io/hudson/security/Permission.html)
 > - [hudson.security.ProjectMatrixAuthorizationStrategy](https://javadoc.jenkins.io/plugin/matrix-auth/hudson/security/ProjectMatrixAuthorizationStrategy.html)
 > - [matrix-auth-plugin/src/main/java/hudson/security/ProjectMatrixAuthorizationStrategy.java](https://github.com/jenkinsci/matrix-auth-plugin/blob/master/src/main/java/hudson/security/ProjectMatrixAuthorizationStrategy.java)
-> - [How to add permission in GlobalMatrixAuthorizationStrategy through the groovy - for hudson.sercurity.item.Move](https://issues.jenkins.io/browse/JENKINS-57832?attachmentViewMode=list)
+> - [How to add permission in GlobalMatrixAuthorizationStrategy through the groovy - for hudson.security.item.Move](https://issues.jenkins.io/browse/JENKINS-57832?attachmentViewMode=list)
 > - [Jenkins : Grant Cancel Permission for user and group that have Build permission](https://wiki.jenkins.io/display/JENKINS/Grant-Cancel-Permission-for-user-and-group-that-have-Build-permission.html)
 > - [Accessing and dumping Jenkins credentials](https://www.codurance.com/publications/2019/05/30/accessing-and-dumping-jenkins-credentials)
 {% endhint %}
@@ -217,7 +217,7 @@ import hudson.security.*
 import jenkins.model.*
 import java.util.*
 import com.michelin.cio.hudson.plugins.rolestrategy.*
-import com.synopsys.arc.jenkins.plugins.rolestrategy.*
+import com.synopsis.arc.jenkins.plugins.rolestrategy.*
 import java.lang.reflect.*
 import java.util.logging.*
 import groovy.json.*
@@ -278,8 +278,8 @@ import org.kohsuke.stapler.Stapler
 AsyncResourceDisposer disposer = AsyncResourceDisposer.get()
 backlog = disposer.getBacklog()
 
-stap = Stapler
-resp = stap.getCurrentResponse()
+stapler = Stapler
+resp = stapler.getCurrentResponse()
 
 disposer.backlog.each { item ->
   disposer.doStopTracking( item.id, resp )
@@ -301,7 +301,7 @@ disposer.backlog.each { item ->
             "\t${item.getLastState().getDisplayName()} : \n" +
             "\t${item.getDisposable().node} : ${item.getDisposable().path}\n" +
             "\t${item.toString()}"
-    println "removeing ${item.id} : "
+    println "removing ${item.id} : "
     [ 'bash', '-c', 'curl -v -s ' +
                          '-u <user>:<token> ' +
                          '-X POST ' +
@@ -375,7 +375,7 @@ disposer.backlog.each { item ->
 > - [* Jenkins Credentials Store Access via Groovy](https://stackoverflow.com/a/35215587/2940319)
 > - [* Adding Google Service Account Credentials by a groovy script](https://stackoverflow.com/a/66553315/2940319)
 > - [* Fetch the domain for each credential returned in a job template.](https://docs.cloudbees.com/docs/cloudbees-ci-kb/latest/client-and-managed-masters/fetch-the-domain-for-each-credential-returned-in-a-job-template)
-> - [* update username/password crednetial](https://stackoverflow.com/a/32216097/2940319)
+> - [* update username/password credential](https://stackoverflow.com/a/32216097/2940319)
 > - [* How to update credentials of specific folder in Jenkins using Groovy script?](https://stackoverflow.com/q/59696646/2940319)
 > - [Extension Points defined in Credentials Plugin](https://www.jenkins.io/doc/developer/extensions/credentials/)
 > - [CredentialsProvider.java](https://github.com/jenkinsci/credentials-plugin/blob/master/src/main/java/com/cloudbees/plugins/credentials/CredentialsProvider.java)
@@ -607,7 +607,7 @@ CredentialsProvider.lookupCredentials( StandardCredentials.class, jenkins.model.
                                                          prefixPath : ${it.prefixPath}
                                                                path : ${it.path}
                                                              secret : ${it.secret}
-                                                           valutKey : ${it.vaultKey}
+                                                           vaultKey : ${it.vaultKey}
                            """
                            break;
                        }
@@ -891,7 +891,7 @@ creds.each {
       displayName : ${it.displayName}
        prefixPath : ${it.prefixPath}
              path : ${it.path}
-         valutKey : ${it.vaultKey}
+         vaultKey : ${it.vaultKey}
            secret : ${it.secret}
   """
 }

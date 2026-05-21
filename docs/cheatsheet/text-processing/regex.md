@@ -5,7 +5,7 @@
 - [cheatsheet](#cheatsheet)
   - [get URL](#get-url)
   - [matches if exits](#matches-if-exits)
-  - [not matche a word](#not-matche-a-word)
+  - [not matches a word](#not-matches-a-word)
   - [not matches multiple keywords](#not-matches-multiple-keywords)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -55,7 +55,7 @@ $ egrep 'https?://([[:alpha:]]([-[:alnum:]]+[[:alnum:]])*\.)+[[:alpha:]]{2,3}(:\
 ^.*keyword(?:-staging)?\.[^\]+\.com
 ```
 
-### [not matche a word](https://stackoverflow.com/a/67431898/2940319)
+### [not matches a word](https://stackoverflow.com/a/67431898/2940319)
 
 > [!NOTE|label:samples:]
 > ```

@@ -18,7 +18,7 @@
   - [segmented continuous](#segmented-continuous)
   - [scp multipule folder/file to target server](#scp-multipule-folderfile-to-target-server)
   - [all about {curly braces} in bash](#all-about-curly-braces-in-bash)
-  - [fast copy or moving or something (detials -> brace expansion)](#fast-copy-or-moving-or-something-detials---brace-expansion)
+  - [fast copy or moving or something (details -> brace expansion)](#fast-copy-or-moving-or-something-details---brace-expansion)
   - [multiple directories creation](#multiple-directories-creation)
   - [copy single file to multipule folders](#copy-single-file-to-multipule-folders)
 - [pipe and stdin](#pipe-and-stdin)
@@ -308,8 +308,8 @@ IFS=':' read f1 f2 f3 f4 f5 f6 f7 < /etc/passwd
 | match found && `nullglob` disabled    | the word is regarded as a pattern                                                                    |
 | no match found && `nullglob` disabled | the word is left unchanged                                                                           |
 | no match found && `nullglob` set      | the word is removed                                                                                  |
-| no match found && `failglob` set      | show error msg and cmd won't be exectued                                                             |
-| `nocaseglob` enabled                  | patten match case insensitive                                                                        |
+| no match found && `failglob` set      | show error msg and cmd won't be executed                                                             |
+| `nocaseglob` enabled                  | pattern match case insensitive                                                                       |
 | `set -o noglob` or `set -f`           | `*` will not be expanded                                                                             |
 | `shopt -s dotglob`                    | `*` will including all `.*`. see [zip package with dot-file](../good.html#zip-package-with-dot-file) |
 

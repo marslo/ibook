@@ -328,7 +328,7 @@ $ sudo pip install genpac
         "server_port": 1111,
         "password":"mypassword",
         "timeout":300,
-        "user":"nobody",                  // optinal
+        "user":"nobody",                  // optional
         "method":"aes-256-cfb",
         "fast_open":false,
         "nameserver":"1.0.0.1",           // be careful for dns resolve in private network
@@ -633,7 +633,7 @@ $ echo $XDG_SESSION_TYPE
   # Change "GNOME" to "KDE" for a KDE desktop, or "" for a generic desktop
   MODE="GNOME"
 
-  # Uncommment this line if using Gnome and your keyboard mappings are incorrect.
+  # Uncomment this line if using Gnome and your keyboard mappings are incorrect.
   # export XKL_XMODMAP_DISABLE=1
 
   # Load X resources (if any)
@@ -781,7 +781,7 @@ if test "x$XDG_CACHE_HOME" = "x" ; then
 fi
 [ -d "$XDG_CACHE_HOME" ] || mkdir "$XDG_CACHE_HOME"
 
-# set up XDG user directores.  see
+# set up XDG user directories.  see
 # http://freedesktop.org/wiki/Software/xdg-user-dirs
 if which xdg-user-dirs-update >/dev/null 2>&1; then
     xdg-user-dirs-update
@@ -915,13 +915,13 @@ case "x$panel" in
     ret=$?
     while test $ret -ne 0; do
       xmessage -center -file - -timeout 20 -title Error <<EOF
-A crash occured in the panel
+A crash occurred in the panel
 Please report this to the xfce4-dev@xfce.org list
 or on http://bugs.xfce.org
 Meanwhile the panel will be restarted
 EOF
       cat >&2 <<EOF
-A crash occured in the panel
+A crash occurred in the panel
 Please report this to the xfce4-dev@xfce.org list
 or on http://bugs.xfce.org
 Meanwhile the panel will be restarted
@@ -1140,7 +1140,7 @@ $ sudo apt-get -f install
 ## utility
 
 > [!NOTE:label:reference:]
-> - [Nam Huy Linux Blog](http://namhuy.net/1397/disable-bluetooth-ubuntu-xubuntu-linux-mint.html)
+> - [Name Huy Linux Blog](http://namhuy.net/1397/disable-bluetooth-ubuntu-xubuntu-linux-mint.html)
 > - [Stackoverflow answers](http://askubuntu.com/questions/67758/how-can-i-deactivate-bluetooth-on-system-startup)
 
 ### konsole
@@ -1281,7 +1281,7 @@ $ sudo apt autoremove
 ```
 
 ### ALSA Settings:
-#### Informations
+#### Information
 - Check the **type** of Sound Card:
 
     ```bash
@@ -1318,7 +1318,7 @@ $ sudo apt install xmlto
     $ tar xjvf alsa-utils-1.0.25.tar.bz2
     ```
 
-- Upgrade **alsa dirver**
+- Upgrade **alsa driver**
 
     ```bash
     $ cd alsa-driver-1.0.25
@@ -1486,4 +1486,3 @@ $ sudo apt install xmlto
     +++-====================-===============-===============-==============================================
     ii  alsa-utils           1.0.27.1-1ubunt i386            Utilities for configuring and using ALSA
     ```
-

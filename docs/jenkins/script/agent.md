@@ -540,7 +540,7 @@ jenkins.model.Jenkins.instance.computers.findAll{ it instanceof KubernetesComput
                     ${computer.containers.collect{ it.getResources().getRequests() }?.first().collect{ "${it.key} : ${it.value}"}.join( '\n' + subsep ) ?: ''}
        volume : ${computer.containers.collect { it.getVolumeMounts() }.flatten().collect{ "${it.name} : ${it.mountPath}" }.join( '\n' + sep )}
      commands : ${computer.containers.collect{ it.getCommand() }.join(', ')}
-         agrs : ${computer.containers.collect{ it.getArgs() }.join(', ')}
+         args : ${computer.containers.collect{ it.getArgs() }.join(', ')}
    workingDir : ${computer.containers.collect{ it.getWorkingDir() }.join()}
       message : ${computer.containers.collect{ it.getTerminationMessagePath()}.join()}
   isLaunching : ${computer.isLaunching()}
@@ -573,7 +573,7 @@ jenkins.model.Jenkins.instance.computers.findAll{ it instanceof KubernetesComput
        volume : workspace-volume : /home/devops
                 default-token-m6bqf : /var/run/secrets/kubernetes.io/serviceaccount
      commands : []
-         agrs : []
+         args : []
    workingDir : /home/devops
       message : /dev/termination-log
   isLaunching : false
@@ -1209,7 +1209,7 @@ jenkins.model.Jenkins.instance.nodes.findAll { node ->
 >   - `agent.computer.connect( true  )`
 >   - `jenkins.model.Jenkins.instance.getNode( name ).computer.connect( true )`
 > - disconnect:
->   - `agent.computer.doDoDisconnect( 'messasge' )`
+>   - `agent.computer.doDoDisconnect( 'message' )`
 >   - `agent.computer.disconnect( new hudson.slaves.OfflineCause.UserCause(User.current(), 'message') )`
 >   - `agent.computer.disconnect( new hudson.slaves.OfflineCause.ByCLI('message') )`
 > - reference:
@@ -1250,7 +1250,7 @@ jenkins.model.Jenkins.instance.nodes.findAll { node ->
   import hudson.slaves.*
 
   String name = 'AGEENT_NAME'
-  String cause = "disconnet the agent automatically via ${env.BUILD_URL}"
+  String cause = "disconnect the agent automatically via ${env.BUILD_URL}"
 
   DumbSlave agent = jenkins.model.Jenkins.instance.getNode( name )
 

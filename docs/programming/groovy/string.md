@@ -15,13 +15,13 @@
   - [`drop`](#drop)
   - [`tr`](#tr)
   - [tricky](#tricky)
-- [comparation](#comparation)
+- [comparison](#comparison)
   - [`equalsIgnoreCase`](#equalsignorecase)
   - [`compareToIgnoreCase`](#comparetoignorecase)
 - [regex](#regex)
   - [show grouped result](#show-grouped-result)
   - [Named-Capturing Group](#named-capturing-group)
-- [repalce](#repalce)
+- [replace](#replace)
   - [`replaceAll`](#replaceall)
   - [`replaceFirst`](#replacefirst)
   - [replaceAll with case-insensitive](#replaceall-with-case-insensitive)
@@ -29,7 +29,7 @@
 - [split](#split)
   - [split string by Capital Letters](#split-string-by-capital-letters)
   - [split via digits](#split-via-digits)
-  - [split via patten](#split-via-patten)
+  - [split via pattern](#split-via-pattern)
 - [trim](#trim)
   - [`stripIndent()`](#stripindent)
   - [`stripMargin()`](#stripmargin)
@@ -287,7 +287,7 @@ println paths.collectMany {
 // path/to/folder
 ```
 
-## comparation
+## comparison
 ### `equalsIgnoreCase`
 ```groovy
 assert true == "HELLO World".equalsIgnoreCase( 'hello world' )
@@ -346,9 +346,9 @@ println matcher[0].withIndex().collect { "${it.last()} -- ${it.first()}" }.join(
   'https://marslo@google.com:443/admin/repos',
   'http://userid@github.com:8080/admin/repos',
 ].each { url ->
-    def matcher = ( url =~ '(?<protocal>https?):\\/\\/(?<account>[^@]+)?@?(?<domain>[^:]+):?(?<port>\\d+)?\\/?.*$' )
+    def matcher = ( url =~ '(?<protocol>https?):\\/\\/(?<account>[^@]+)?@?(?<domain>[^:]+):?(?<port>\\d+)?\\/?.*$' )
     if ( matcher.matches() ) {
-        println "protocal: ${(matcher.group('protocal')).padRight(5)} " +
+        println "protocol: ${(matcher.group('protocol')).padRight(5)} " +
                 "| account: ${(matcher.group('account')).padRight(8)} " +
                 "| domain: ${(matcher.group ('domain')).padRight(15)} " +
                 "| port: ${(matcher.group ('port')).padRight(4)} "
@@ -356,11 +356,11 @@ println matcher[0].withIndex().collect { "${it.last()} -- ${it.first()}" }.join(
 }
 
 // -- result --
-// protocal: https | account: marslo   | domain: google.com      | port: 443
-// protocal: http  | account: userid   | domain: github.com      | port: 8080
+// protocol: https | account: marslo   | domain: google.com      | port: 443
+// protocol: http  | account: userid   | domain: github.com      | port: 8080
 ```
 
-## repalce
+## replace
 
 ### `replaceAll`
 
@@ -573,7 +573,7 @@ assert ['aabb', '123'] == 'aabb123'.split("(?<=\\D)(?=\\d)")
 assert ['aabb', '123'] == 'aabb123'.split("(?=\\d)(?<!\\d)")
 ```
 
-### split via patten
+### split via pattern
 
 > [!NOTE|label:expect:]
 > - original:
@@ -714,7 +714,7 @@ println "Expired:".padRight(20)     + "NO"
 ### `count`
 ```groovy
 assert 2 == 'Hello world'.count('o')
-assert 2 == 'Hello worlld'.count('ll')
+assert 2 == 'Hello world'.count('ll')
 ```
 
 ### `size`

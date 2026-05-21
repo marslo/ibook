@@ -186,7 +186,7 @@
     git version 2.42.0.325.g3a06386e31
     ```
 
-  - pacakges:
+  - packages:
 
     > [!TIP|label:check apt package bin path without install:]
     > ```bash
@@ -596,7 +596,7 @@ $ printf "protocol=https\nhost=github.com\nusername=${GITHUB_USER}\npassword=${G
 
 > [!NOTE|label:references:]
 > - git-lfs not support *Fine-grained Token (FGPAT)* credential, reason:
->> - git lfs is NOT push into the git repo, but push the LFS objects to the sepcific endpoint:
+>> - git lfs is NOT push into the git repo, but push the LFS objects to the specific endpoint:
 >>   ```bash
 >>   https://github.com/<owner>/<repo>.git/info/lfs
 >>   ```
@@ -676,7 +676,7 @@ $ git lfs ls-files
    ```bash
    $ git config --global credential.helper store
 
-   # or set the credential file in corss-platform
+   # or set the credential file in cross-platform
    $ git config --global credential.helper 'store --file /path/to/.git-credentials'
    $ git config --global credential.helper 'cache --timeout 30000'
    ```
@@ -703,7 +703,7 @@ $ git lfs ls-files
      protocol=https ⏎
      host=github.com ⏎
      ⏎
-     # wil shows:
+     # will shows:
      username=marslo
      password=ghp_***********************************N
 
@@ -788,7 +788,7 @@ $ git lfs ls-files
 #       |                      SUBDOMAINS  |   ONLY        |      NAME         ACCOUNT                                                           TOKEN
 #       v                           v      v    v          v       v       +---------------+    +--------------------------------------------------------------------------------------------------+
 .googlesource.com                  TRUE    /   TRUE    2147483647  o   git-account.gmail.com=1//0***************************-*****************-*******************************************-********A
-# -- another fomat -- #
+# -- another format -- #
 gerrit.googlesource.com           FALSE    /   TRUE    2147483647  o   git-account.gmail.com=1//0***************************-**********-***********************************************************k
 gerrit-review.googlesource.com    FALSE    /   TRUE    2147483647  o   git-account.gmail.com=1//0***************************-**********-***********************************************************k
 ```
@@ -810,7 +810,7 @@ gerrit-review.googlesource.com    FALSE    /   TRUE    2147483647  o   git-accou
 | 7       | `git-account.gmail.com=...` | **Cookie Value**: key-value pair used for authentication (`username=token`) |
 
 
-cookie value explaination
+cookie value explanation
 
 | COMPONENT             | EXAMPLE                 | DESCRIPTION                   |
 | --------------------- | ----------------------- | ----------------------------- |
@@ -988,7 +988,7 @@ Footer: <e.g., Closes #123, Ref #456>
 
 # `__git_ps1`
 
-> [!NOTE|label:localtion]
+> [!NOTE|label:location]
 > - osx: `$(brew --prefix git)/etc/bash_completion.d/git-prompt.sh`
 
 ## add to bash_completion.d

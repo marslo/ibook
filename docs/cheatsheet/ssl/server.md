@@ -13,10 +13,10 @@
 - [usage](#usage)
   - [show content](#show-content)
   - [convert](#convert)
-    - [frmo cer](#frmo-cer)
+    - [from cer](#from-cer)
     - [from a pkcs#12 ( .pfx/.p12 )](#from-a-pkcs12--pfxp12-)
     - [from crt](#from-crt)
-    - [remove password from extacted private key](#remove-password-from-extacted-private-key)
+    - [remove password from extracted private key](#remove-password-from-extracted-private-key)
     - [from certificate](#from-certificate)
     - [convert from windows `certmgr.msc`](#convert-from-windows-certmgrmsc)
   - [Code Signing Certificates](#code-signing-certificates)
@@ -218,7 +218,7 @@ $ openssl x509 -req \
 > - [Do I need to convert .CER to .CRT for Apache SSL certificates? If so, how?](https://stackoverflow.com/a/642346/2940319)
 > - [x509 options](https://www.openssl.org/docs/man1.0.2/man1/x509.html)
 
-### frmo cer
+### from cer
 - to crt
   ```bash
   # DER encoded ( binary )
@@ -268,7 +268,7 @@ $ openssl x509 -req \
   $ openssl x509 -in certificate.der -inform DER -out output.pem -outform PEM
   ```
 
-### [remove password from extacted private key](https://www.xolphin.com/support/Certificate_conversions/Convert_pfx_file_to_pem_file)
+### [remove password from extracted private key](https://www.xolphin.com/support/Certificate_conversions/Convert_pfx_file_to_pem_file)
 ```bash
 $ openssl rsa -in key.pem -out key.pem
 ```

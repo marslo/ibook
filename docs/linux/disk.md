@@ -713,7 +713,7 @@ $ time dd if=/path/to/bigfile of=/dev/null bs=8k
   $ time dd if=/dev/zero of=/mnt/nfs/testfile bs=16k count=128k
   ```
 
-- read spead
+- read speed
   ```bash
   # for NFS ( 2Gb )
   $ time dd if=/mnt/nfs/testfile of=/dev/null bs=16k

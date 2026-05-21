@@ -8,7 +8,7 @@
   - [license](#license)
   - [database](#database)
   - [connect to database](#connect-to-database)
-- [get properity](#get-properity)
+- [get property](#get-property)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -219,7 +219,7 @@ $ /opt/Klocwork/Server/3rdparty/bin/mysql --protocol=TCP -h127.0.0.1 -P3306 -u<u
   1 row in set (0.024 sec)
   ```
 
-## get properity
+## get property
 
 > [!NOTE|label:check services]
 > ```bash

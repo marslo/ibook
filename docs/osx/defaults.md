@@ -337,7 +337,7 @@ $ /usr/bin/xattr -d com.apple.quarantine /path/to/app
 
 > [!NOTE|label:references:]
 > - [Stop macOS 15 Sequoia monthly screen recording prompts](https://lapcatsoftware.com/articles/2024/8/10.html)
-> - [How to stop "Allow For One Month" in macOS 15 Sequoia - especially when replayd ScreenCaptureApprovals.plist is missing?](https://apple.stackexchange.com/a/475541/254265)
+> - [How to stop "Allow For One Month" in macOS 15 Sequoia - especially when replayed ScreenCaptureApprovals.plist is missing?](https://apple.stackexchange.com/a/475541/254265)
 > - [screencapture-nag-remover](https://github.com/luckman212/screencapture-nag-remover)
 
 ```bash
@@ -759,7 +759,7 @@ $ defaults write com.apple.finder CreateDesktop true && killall Finder
   $ defaults write com.apple.finder ShowMountedServersOnDesktop -bool true
   ```
 
-- show removeable media ( CDs, DVDs and iPods )
+- show removable media ( CDs, DVDs and iPods )
   ```bash
   $ defaults write com.apple.finder ShowRemovableMediaOnDesktop -bool true
   ```
@@ -1318,7 +1318,7 @@ $ defaults write com.apple.Safari IncludeInternalDebugMenu 1
 ![debug mode](../screenshot/osx/osx-safari-debug.png)
 
 
-#### standard deply
+#### standard delay
 ```bash
 # disable
 $ defaults write com.apple.Safari WebKitInitialTimedLayoutDelay 0.25
@@ -1525,7 +1525,7 @@ $ sudo dscacheutil -flushcache && sudo killall -HUP mDNSResponder
 | MACOS VERSION                | COMMAND                                                         |
 |------------------------------|-----------------------------------------------------------------|
 | macOS 12 (Monterey)          | `sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder` |
-| macOS 11 (Big Sur)           | `sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder` |
+| macOS 11 (Big Sure)           | `sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder` |
 | macOS 10.15 (Catalina)       | `sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder` |
 | macOS 10.14 (Mojave)         | `sudo killall -HUP mDNSResponder`                               |
 | macOS 10.13 (High Sierra)    | `sudo killall -HUP mDNSResponder`                               |
@@ -1619,7 +1619,7 @@ $ defaults delete com.apple.QuickTimePlayerX MGPlayMovieOnOpen
 
 #### rounded corners
 ```bash
-# diable rounded corners
+# disable rounded corners
 $ defaults write com.apple.QuickTimePlayerX MGCinematicWindowDebugForceNoRoundedCorners -bool true
 
 # enable rounded corners
@@ -1699,7 +1699,7 @@ $ defaults write com.apple.ActivityMonitor "IconType" -int "0" && killall Activi
 $ defaults write com.apple.ActivityMonitor "IconType" -int "2" && killall Activity\ Monitor
 ## 3: show disk usage over time, as two mirrored line graphs
 $ defaults write com.apple.ActivityMonitor "IconType" -int "3" && killall Activity\ Monitor
-## 5: show the current cpu usages, as a verticle meter.
+## 5: show the current cpu usages, as a vertical meter.
 $ defaults write com.apple.ActivityMonitor "IconType" -int "5" && killall Activity\ Monitor
 ## 6: show cpu usage history, graphed over time
 $ defaults write com.apple.ActivityMonitor "IconType" -int "6" && killall Activity\ Monitor
@@ -2073,7 +2073,7 @@ $ defaults -currentHost delete com.apple.ImageCapture disableHotPlug
 ```bash
 $ defaults write com.apple.dock single-app -bool true && killall Dock
 
-# revert to orignial
+# revert to original
 $ defaults write com.apple.dock single-app -bool no && killall Dock
 ```
 
@@ -2115,7 +2115,7 @@ $ defaults write NSGlobalDomain com.apple.keyboard.fnState -bool true
 > - [Clear and disable recent items in OS X dock and applications](https://simon.heimlicher.com/technology/disable-recent-items/)
 > - [How to remove Apple Menu > Recent Items completely? — Servers entry stuck](https://discussions.apple.com/thread/254464926?answerId=258347063022&sortBy=rank#258347063022)
 
-![disable recent itmes](../screenshot/osx/osx-recents.png)
+![disable recent items](../screenshot/osx/osx-recents.png)
 
 # backup & restore
 ## [Moon](https://manytricks.com/osticket/kb/faq.php?id=53)

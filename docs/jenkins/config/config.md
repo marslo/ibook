@@ -44,7 +44,7 @@
 > Additionally, beginning with Jenkins 2.355 (released on June 14, 2022) and Jenkins 2.346.1 LTS (released on June 22, 2022), Jenkins supports Java 17.
 > Plugins have already been prepared in JENKINS-68446. Use the Plugin Manager to upgrade all plugins before and after upgrading to Jenkins 2.357.
 >
-> refrences:
+> references:
 > - [Upgrading Jenkins Java version from 8 to 11](https://www.jenkins.io/doc/administration/requirements/upgrade-java-guidelines/)
 >   - [JVM version on agents](https://www.jenkins.io/doc/administration/requirements/upgrade-java-guidelines/#jvm-version-on-agents)
 > - [Java requirements](https://www.jenkins.io/doc/administration/requirements/java/)
@@ -65,8 +65,8 @@
 
 - get java version from jenkins controller
   ```groovy
-  // https://jenkins.domain/script - for contorller's java version
-  println System.getProperty('java.specification.version')
+  // https://jenkins.domain/script - for controllers' java version
+  println System.getProperty( 'java.specification.version' )
   // 17
 
   // in cmd

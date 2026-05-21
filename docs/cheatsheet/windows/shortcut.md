@@ -125,7 +125,7 @@ reference :
 
   <img src="../../screenshot/win/cmd-admin-without-uac/admin-cmd-5.png" width="600">
 
-- **Settings** Tab : -> `[ ] Stop the task if runing longer than: 3 days` -> `OK`
+- **Settings** Tab : -> `[ ] Stop the task if running longer than: 3 days` -> `OK`
 
   <img src="../../screenshot/win/cmd-admin-without-uac/admin-cmd-6.png" width="600">
 
@@ -191,7 +191,7 @@ reference :
 
 - [proxy setup](https://stackoverflow.com/a/16453587/2940319)
   ```batch
-  > REG ADD "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyServer  /d "hhttp=proxy-url:port;https=proxy-url:port;ftp=proxy-url:port;socks=proxy-url:port;" /t REG_SZ /f
+  > REG ADD "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyServer  /d "http=proxy-url:port;https=proxy-url:port;ftp=proxy-url:port;socks=proxy-url:port;" /t REG_SZ /f
   ```
 
 ### Desktop Icon Settings
