@@ -1,5 +1,7 @@
 # yamllint disable rule:indentation
 ---
+exclude: '^(.*/etc-shadowsocks.json|.*/shadowsocks-all.sh|.*/etcd.yaml|.*/buildinfo.delete.sh)$'
+
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
@@ -7,15 +9,6 @@ repos:
       - id: trailing-whitespace
         name: Trim Trailing Whitespace
         args: [--markdown-linebreak-ext=md]
-        exclude: |
-          (?x)^(
-            (.+/)?(buildinfo\.delete\.sh|shadowsocks-all\.sh)$|
-            .*\.(
-              png|jpg|jpeg|gif|bmp|
-              pdf|zip|tar|gz|xz|7z|
-              exe|dll|so|dylib|bin|dat
-            )$
-          )$
         exclude_types: [binary]
       - id: end-of-file-fixer
         name: End Of File Fixer
@@ -28,7 +21,7 @@ repos:
         args: ["--fix=lf"]
 
   - repo: https://github.com/psf/black
-    rev: 26.3.1
+    rev: 26.5.1
     hooks:
       - id: black
         name: Python Black
