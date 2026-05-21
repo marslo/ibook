@@ -2,8 +2,8 @@
   <style>
      /* rect { stroke: black; stroke-width:0.15pt; } */
      text {
-       font-size:9pt; 
-       font-family: "Bitstream Vera Sans Mono", "Droid Sans Mono", "Menlo", "Monaco", "Consolas", "Inconsolata", "Courier New"; 
+       font-size:9pt;
+       font-family: "Bitstream Vera Sans Mono", "Droid Sans Mono", "Menlo", "Monaco", "Consolas", "Inconsolata", "Courier New";
        fill: white;
      }
      .head {

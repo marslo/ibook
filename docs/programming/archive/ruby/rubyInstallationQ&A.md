@@ -23,7 +23,7 @@
   > [Install openssl lib](https://github.com/Marslo/MyBlog/blob/master/GoodCommand/CompileQ&A.md#sslh)
 
   ```bash
-  $ sudo apt-get intall libssl-dev
+  $ sudo apt-get install libssl-dev
   $ dpkg -l | grep openssl
   ii  libcurl3:amd64                      7.35.0-1ubuntu2                            amd64        easy-to-use client-side URL transfer library (OpenSSL flavour)
   ii  libcurl4-openssl-dev:amd64          7.35.0-1ubuntu2                            amd64        development files and documentation for libcurl (OpenSSL flavour)
@@ -63,7 +63,7 @@
   checking for sqlite3.h... no
   sqlite3.h is missing. Try 'port install sqlite3 +universal',
   'yum install sqlite-devel' or 'apt-get install libsqlite3-dev'
-  and check your shared library search path (the 
+  and check your shared library search path (the
   location where you sqlite3 shared library is located).
   *** extconf.rb failed ***
   ...
