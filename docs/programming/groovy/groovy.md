@@ -15,6 +15,7 @@
 - [groovyConsole](#groovyconsole)
   - [environment](#environment)
   - [get console details](#get-console-details)
+  - [groovyConsole fails on JDK 23+](#groovyconsole-fails-on-jdk-23)
   - [font](#font)
 - [others](#others)
   - [list all functions in groovy files](#list-all-functions-in-groovy-files)
@@ -23,7 +24,7 @@
 
 {% hint style='tip' %}
 > download
-> - [apach software foundatin distribution directory](https://dlcdn.apache.org/)
+> - [apache software foundations distribution directory](https://dlcdn.apache.org/)
 > - [groovy](https://dlcdn.apache.org/groovy/)
 >   - [2.4.21](https://dlcdn.apache.org/groovy/2.4.21/)
 >   - [2.5.19](https://dlcdn.apache.org/groovy/2.5.19/)
@@ -323,7 +324,7 @@ println( (exitCode != 0) ? "exit with ${exitCode}" : '' )
   ```
 
 - result
-  ![execute with environemnt](../../screenshot/groovy/executeWithEnv.png)
+  ![execute with environment](../../screenshot/groovy/executeWithEnv.png)
 
 #### with system environment
 ```groovy
@@ -381,6 +382,102 @@ println """
   file.encoding: UTF-8
   defaultCharset: UTF-8
   ```
+
+### groovyConsole fails on JDK 23+
+
+> [!NOTE|label:error message:]
+> - error message
+>   ```bash
+>   $ groovy --version
+>   Groovy Version: 5.0.6 JVM: 26.0.1 Vendor: Homebrew OS: Mac OS X
+>   $ /opt/homebrew/opt/groovy/libexec/bin/groovyConsole
+>   java.lang.NoClassDefFoundError: javax/swing/JApplet
+>   ```
+> - root cause:
+>   - `javax.swing.JApplet` is removed from JDK 23+ ( [JEP 504: Remove the Applet API](https://openjdk.org/jeps/504) )
+>   - [`groovy.console.ui.Console` still has a deprecated method](https://github.com/apache/groovy/blob/GROOVY_5_0_X/subprojects/groovy-console/src/main/groovy/groovy/console/ui/Console.groovy#L420):
+>     ```groovy
+>     @Deprecated
+>     @SuppressWarnings("removal") // TODO a future Groovy version will remove this method
+>     void run(javax.swing.JApplet applet) {
+>         run([
+>                 rootContainerDelegate: {
+>                     containingWindows += SwingUtilities.getRoot(applet.getParent())
+>                     applet
+>                 },
+>                 menuBarDelegate      : { arg ->
+>                     current.JMenuBar = build(arg)
+>                 }
+>         ])
+>     }
+>     ```
+
+```bash
+# 1. create temp stub
+$ mkdir -p /tmp/japplet-stub/javax/swing
+$ command cat > /tmp/japplet-stub/javax/swing/JApplet.java << 'EOF'
+package javax.swing;
+public class JApplet extends javax.swing.JFrame {
+    public JApplet() {}
+}
+EOF
+
+# 2. compile stub
+$ javac --patch-module java.desktop=/tmp/japplet-stub /tmp/japplet-stub/javax/swing/JApplet.java
+
+# 3. start groovyConsole with patch-module
+$ java --patch-module java.desktop=/tmp/japplet-stub \
+       --add-opens java.desktop/javax.swing=ALL-UNNAMED \
+       -cp "/opt/homebrew/opt/groovy/libexec/lib/*" \
+       org.codehaus.groovy.tools.GroovyStarter \
+       --main groovy.console.ui.Console
+```
+
+```bash
+# APP solution
+$ cat /Applications/groovyConsole.app/Contents/MacOS/groovyConsole -pp
+#!/usr/bin/env bash
+
+HOMEBREW_PREFIX='/opt/homebrew'
+JAVA_HOME="${HOMEBREW_PREFIX}"/opt/openjdk
+export JAVA_HOME
+GROOVY_HOME="$("${HOMEBREW_PREFIX}"/bin/brew --prefix groovy)/libexec"
+GROOVY_VERSION="$(/usr/bin/sed -rn 's/^[^:]+:[[:blank:]]?([[:digit:].]+)[[:blank:]]?.+$/\1/p' < <("${GROOVY_HOME}"/bin/groovy --version))"
+CLASS_PATH='.'
+test -f "${JAVA_HOME}"/lib/tools.jar && CLASS_PATH+=":${JAVA_HOME}/lib/tools.jar"
+test -f "${JAVA_HOME}"/lib/dt.jar    && CLASS_PATH+=":${JAVA_HOME}/lib/dt.jar"
+CLASS_PATH+=":${GROOVY_HOME}/lib"
+
+# JApplet stub for Java 11+ (JApplet removed from JDK)
+JAPPLET_STUB="${HOME}/.groovy/japplet-stub"
+if [[ ! -f "${JAPPLET_STUB}/javax/swing/JApplet.class" ]]; then
+  /bin/mkdir -p "${JAPPLET_STUB}/javax/swing"
+  /bin/cat > "${JAPPLET_STUB}/javax/swing/JApplet.java" << 'JAVA'
+package javax.swing;
+public class JApplet extends javax.swing.JFrame { public JApplet() {} }
+JAVA
+  "${JAVA_HOME}"/bin/javac --patch-module java.desktop="${JAPPLET_STUB}" \
+    "${JAPPLET_STUB}/javax/swing/JApplet.java"
+fi
+
+"${JAVA_HOME}"/bin/java \
+    --patch-module java.desktop="${JAPPLET_STUB}" \
+    --add-opens java.desktop/javax.swing=ALL-UNNAMED \
+    -Dsun.awt.keepWorkingSetOnMinimize=true \
+    -Xdock:name=GroovyConsole \
+    -Xdock:icon="${GROOVY_HOME}"/lib/groovy.icns \
+    -classpath "${GROOVY_HOME}"/lib/groovy-"${GROOVY_VERSION}".jar \
+    -Dscript.name="${GROOVY_HOME}"/bin/groovyConsole \
+    -Dprogram.name=groovyConsole \
+    -Dgroovy.starter.conf="${GROOVY_HOME}"/conf/groovy-starter.conf \
+    -Dgroovy.home="${GROOVY_HOME}" \
+    -Dtools.jar="${JAVA_HOME}"/lib/tools.jar org.codehaus.groovy.tools.GroovyStarter \
+    --main groovy.console.ui.Console \
+    --conf "${GROOVY_HOME}"/conf/groovy-starter.conf \
+    --classpath "${CLASS_PATH}"
+
+# vim:tabstop=2:softtabstop=2:shiftwidth=2:expandtab:filetype=sh
+```
 
 ### font
 
