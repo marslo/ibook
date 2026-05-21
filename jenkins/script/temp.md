@@ -18,8 +18,8 @@
 import hudson.model.*
 
 // get current thread / Executor and current build
-def thr = Thread.currentThread()
-def build = thr?.executable
+def the = Thread.currentThread()
+def build = the?.executable
 
 // if you want the parameter by name ...
 def hardcoded_param = "FOOBAR"
@@ -53,9 +53,9 @@ build.getActions(hudson.model.ParametersAction)
 import hudson.model.*
 
 // get current thread / Executor
-def thr = Thread.currentThread()
+def the = Thread.currentThread()
 // get current build
-def build = thr?.executable
+def build = the?.executable
 
 
 // get parameters

@@ -10,7 +10,7 @@
 - [visual Studio 2019](https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2019)
 - [Tools for Visual Studio 2019](https://visualstudio.microsoft.com/downloads/#remote-tools-for-visual-studio-2019)
   - [Remote Tools for Visual Studio 2019](https://visualstudio.microsoft.com/downloads/#remote-tools-for-visual-studio-2019)
-  - [Performace Tools for Visual Studio 2019](https://visualstudio.microsoft.com/downloads/#performance-tools-for-visual-studio-2019)
+  - [Performance Tools for Visual Studio 2019](https://visualstudio.microsoft.com/downloads/#performance-tools-for-visual-studio-2019)
   - [IntelliTrace Standalone Collector for Visual Studio 2019](https://visualstudio.microsoft.com/downloads/#intellitrace-standalone-collector-for-visual-studio-2019)
   - [Agents for Visual Studio 2019](https://visualstudio.microsoft.com/downloads/#agents-for-visual-studio-2019)
   - [Build Tools for Visual Studio 2019](https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2019)

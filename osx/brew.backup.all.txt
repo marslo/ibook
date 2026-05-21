@@ -35,7 +35,7 @@ brew "corkscrew"
 brew "create-dmg"
 # Get a file from an HTTP, HTTPS or FTP server
 brew "curl", args: ["HEAD"]
-# Good-lookin' diffs with diff-highlight and more
+# Good-looking' diffs with diff-highlight and more
 brew "diff-so-fancy", args: ["HEAD"]
 # File comparison utilities
 brew "diffutils"

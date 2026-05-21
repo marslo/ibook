@@ -420,7 +420,7 @@ v_pci 357d6f7a-4GNS: Processing Next Message
 [    2.923945] FS-Cache: O-cookie d=0000000053913dfb{9P.session} n=0000000084f1cfde
 [    2.924785] FS-Cache: O-key=[10] '34323934393337353335'
 [    2.925258] FS-Cache: N-cookie c=00000005 [p=00000002 fl=2 nc=0 na=1]
-[    2.925866] FS-Cache: N-cookie d=0000000053913dfb{9P.session} n=000000007ef10afe
+[    2.925866] FS-Cache: N-cookie d=0000000053913dfb{9P.session} n=000000007ef10safe
 [    2.926675] FS-Cache: N-key=[10] '34323934393337353335'
 [    3.359332] scsi 0:0:0:1: Direct-Access     Msft     Virtual Disk     1.0  PQ: 0 ANSI: 5
 [    3.363140] sd 0:0:0:1: Attached scsi generic sg1 type 0
@@ -651,7 +651,7 @@ modprobe@fuse.service: Deactivated successfully.
 [  OK  ] Started Network Name Resolution.
 [  OK  ] Reached target Network.
 [  OK  ] Reached target Host and Network Name Lookups.
-[  OK  ] Started Service for snap applicatio…esktop-installer.subiquity-server.
+[  OK  ] Started Service for snap application…esktop-installer.subiquity-server.
          Starting Permit User Sessions...
 [  OK  ] Started Unattended Upgrades Shutdown.
 [  OK  ] Finished Permit User Sessions.
