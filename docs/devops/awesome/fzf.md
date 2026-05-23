@@ -34,6 +34,7 @@
   - [`ctrl-t`](#ctrl-t)
   - [theme](#theme)
 - [tips](#tips)
+  - [show debug info](#show-debug-info)
 - [fzf with git](#fzf-with-git)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -2253,6 +2254,36 @@ export FZF_DEFAULT_OPTS='--color=bg+:#293739,bg:#1B1D1E,border:#808080,spinner:#
   > - [#4160 Add style presets](https://github.com/junegunn/fzf/issues/4160)
 
   ![fzf style](../../screenshot/linux/fzf/fzf-style-full-1.png)
+
+### show debug info
+
+```bash
+
+local -x openWebUrl='
+  clear
+  echo "=== Debugging browser redirection ==="
+  echo "1. directory: $1"
+
+  url=$(git -C "$1" config --get remote.origin.url)
+  echo "2. Git Remote: ${url:-[empty, no remote repository is associated!]}"
+
+  if [[ -n "$url" ]]; then
+    web=$(echo "$url" | sed -E "s|^git@([^:]+):|https://\1/|; s|^ssh://git@([^/]+)/|https://\1/|; s|\.git$||")
+    echo "3. web link: ${web}"
+    echo "try open ..."
+    open "${web}"
+  fi
+
+  echo ""
+  read -r -s -n 1 -p "debug finished. Press any key to return to fzf..."
+'
+
+$ fzf ... \
+      --bind "ctrl-k:execute(bash -c \"\${openWebUrl}; echo URL: \$url; echo WEB: \${web}; read -p 'Press Enter...'\" _ {2})" \
+# or
+$ fzf ... \
+      --bind "ctrl-k:execute(bash -c \"\${openWebUrl} {2}\" _ {2})"
+```
 
 ## fzf with git
 
