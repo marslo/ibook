@@ -2,6 +2,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [awesome shells](#awesome-shells)
+  - [eaz](#eaz)
 - [`ncdu` : NCurses Disk Usage](#ncdu--ncurses-disk-usage)
 - [ansi colors](#ansi-colors)
   - [`c`: bash-colors](#c-bash-colors)
@@ -48,6 +49,62 @@
   - [tldr](./cheatsheet.md#tldr)
   - [cht.sh](./cheatsheet.md#chtsh)
   - [cheat](./cheatsheet.md#cheat)
+
+## [eaz](https://github.com/eza-community/eza)
+
+> [!TIP]
+> - check more icon glyphs in [* iMarslo/unicode](../../cheatsheet/text-processing/unicode.md)
+> - [ngtv2409/eza-themer](https://github.com/ngtv2409/eza-themer)
+
+| UNICODE      | ICON |
+|--------------|------|
+| `\U000F0DFA` | 󰷺    |
+| `\uE7C5`     |     |
+| `\U000F04C1` | 󰓁    |
+| `\U000F0628` | 󰘨    |
+| `\U000F0D6E` | 󰵮    |
+| `\uF1D3`     |     |
+| `\U000F05E6` | 󰗦    |
+| `\U000F1183` | 󱆃    |
+| `\uF4B8`     |     |
+| `\U000F02A4` | 󰊤    |
+| `\uF1D2`     |     |
+| `\U000F117F` | 󱅿    |
+
+```bash
+$ export EZA_CONFIG_DIR="${HOME}/.marslo/.config/eza"
+
+# download the eza-themes
+$ git clone git@github.com:eza-community/eza-themes.git "${HOME}"/.config/eza
+$ ln -sf "${HOME}"/.config/eza/eza-themes/themes/one_dark.yml "${EZA_CONFIG_DIR}"/theme.yml
+
+# customized settings
+$ cat <<'EOF' > "${EZA_CONFIG_DIR}"/custom.yml
+---
+filenames:
+  ".tags": { icon: { glyph: "\U000F0DFA" } }
+  ".vim_mru_files": { icon: { glyph: "\uE7C5" } }
+  ".git-stats": { icon: { glyph: "\U000F04C1" } }
+  ".bashrc": { icon: { glyph: "\U000F0628" } }
+  ".bash_profile": { icon: { glyph: "\U000F0628" } }
+  ".gitignore": { icon: { glyph: "\uF1D3" } }
+  ".gitconfig": { icon: { glyph: "\uF1D3" } }
+  "LICENSE": { icon: { glyph: "\U000F05E6" } }
+  "COPYRIGHT": { icon: { glyph: "\U000F05E6" } }
+  "install": { icon: { glyph: "\U000F1183" } }
+  "uninstall": { icon: { glyph: "\U000F1183" } }
+  ".copilot": { icon: { glyph: "\uF4B8" } }
+  ".github": { icon: { glyph: "\U000F02A4" } }
+  ".git": { icon: { glyph: "\uF1D2" } }
+  "vars": { icon: { glyph: "\U000F117F" } }
+EOF
+
+# merge by yq
+$ brew install --HEAD yq
+$ yq eval-all '. as $item ireduce ({}; . * $item)' \
+  "$HOME"/.config/eza/eza-themes/themes/one_dark.yml
+  "${EZA_CONFIG_DIR}"/custom.yml > "${EZA_CONFIG_DIR}"/theme.yml
+```
 
 # [`ncdu` : NCurses Disk Usage](https://dev.yorhel.nl/ncdu)
 
