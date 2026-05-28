@@ -639,10 +639,17 @@ $ echo {admin,controller-manager,kubelet,scheduler} |
 
 #### update `~/.kube/config`
 ```bash
-$ sudo rm -rf ~/.kube/config
-$ sudo cp /etc/kubernetes/admin.conf ~/.kube/config
-$ sudo chown devops:devops ~/.kube/config
-$ sudo chmod 644 ~/.kube/config
+sudo rm -rf ~/.kube/config
+sudo cp /etc/kubernetes/admin.conf ~/.kube/config
+sudo chown devops:devops ~/.kube/config
+sudo chmod 644 ~/.kube/config
+
+# check via
+$ command grep 'client-certificate-data' config | awk '{print $2}' | base64 -d | openssl x509 -noout -startdate -enddate -subject -issuer
+notBefore=Dec  6 09:20:35 2018 GMT
+notAfter=Jun  2 21:52:21 2026 GMT
+subject=O=system:masters, CN=kubernetes-admin
+issuer=CN=kubernetes
 ```
 
 ### sync to peer controllers
@@ -654,7 +661,7 @@ $ sudo chmod 644 ~/.kube/config
 
 ```bash
 # for k8s certs
-$ find /etc/kubernetes/pki -type f -regextype posix-extended -regex '^.+/pki/[^/]+\.(key|crt|pub)$' -print
+$ find /etc/kubernetes/pki -type f -regextype posix-extended -regex '^.+/pki/[^/]+\.(key|crt|pub)$' -print |
        xargs -L1 -t -i bash -c 'sudo rsync -avzrlpgoDP -e "ssh -q -i $HOME/.ssh/id_ed25519" --rsync-path='sudo rsync' devops@<majorController>:{} {}'
 # or
 $ find /etc/kubernetes/pki/ -type f -regex '^.*\.\(key\|crt\|pub\)$' -print |
@@ -699,17 +706,17 @@ $ for _i in admin kubelet controller-manager scheduler; do
 ### restart kubelet
 #### kill all services
 ```bash
-$ sudo kill -s SIGHUP $(pidof kube-apiserver)
-$ sudo kill -s SIGHUP $(pidof kube-controller-manager)
-$ sudo kill -s SIGHUP $(pidof kube-scheduler)
+sudo kill -s SIGHUP $(pidof kube-apiserver)
+sudo kill -s SIGHUP $(pidof kube-controller-manager)
+sudo kill -s SIGHUP $(pidof kube-scheduler)
 ```
 
 #### restart service
 ```bash
-$ sudo rm -rf /var/lib/kubelet/pki/*
-$ sudo systemctl status kubelet
-$ sudo systemctl restart kubelet
-$ sudo systemctl --no-pager -l status kubelet
+sudo rm -rf /var/lib/kubelet/pki/*
+sudo systemctl status kubelet
+sudo systemctl restart kubelet
+sudo systemctl --no-pager -l status kubelet
 ```
 
 ## v1.15.3
@@ -779,21 +786,19 @@ $ for i in apiserver apiserver-kubelet-client front-proxy-client; do
 certificate for serving the Kubernetes API renewed
 certificate for the API server to connect to kubelet renewed
 certificate for the front proxy client renewed
+
+# or
+$ echo 'apiserver apiserver-kubelet-client front-proxy-client' |
+     xargs -t -n1 sudo kubeadm --config kubeadm.yml alpha certs renew
+
+# or
+$ for i in apiserver apiserver-kubelet-client front-proxy-client; do
+    sudo kubeadm --config kubeadm-conf.yaml alpha certs renew ${i}
+  done
+certificate for serving the Kubernetes API renewed
+certificate for the API server to connect to kubelet renewed
+certificate for the front proxy client renewed
 ```
-
-- or
-  ```bash
-  $ echo 'apiserver apiserver-kubelet-client front-proxy-client' |
-       xargs -t -n1 sudo kubeadm --config kubeadm.yml alpha certs renew
-
-  # or
-  $ for i in apiserver apiserver-kubelet-client front-proxy-client; do
-      sudo kubeadm --config kubeadm-conf.yaml alpha certs renew ${i}
-    done
-  certificate for serving the Kubernetes API renewed
-  certificate for the API server to connect to kubelet renewed
-  certificate for the front proxy client renewed
-  ```
 
 ### sync to peer controllers
 
@@ -830,28 +835,26 @@ $ for pkg in '*.key' '*.crt' '*.pub'; do
   notAfter=Sep 18 12:10:31 2021 GMT
   bash -c openssl x509 -enddate -noout -in /etc/kubernetes/pki/front-proxy-client.crt
   notAfter=Sep 18 12:10:31 2021 GMT
-  ```
 
-  - or
-    ```bash
-    $ find /etc/kubernetes/pki/ -type f -name "*.crt" -print |
-           xargs -L 1 -t -i bash -c 'openssl x509 -in {} -noout -text |grep "Not "'
-    bash -c openssl x509 -in /etc/kubernetes/pki/ca.crt -noout -text |grep "Not "
-                Not Before: Sep 17 07:51:58 2019 GMT
-                Not After : Sep 14 07:51:58 2029 GMT
-    bash -c openssl x509 -in /etc/kubernetes/pki/front-proxy-ca.crt -noout -text |grep "Not "
-                Not Before: Sep 17 07:52:00 2019 GMT
-                Not After : Sep 14 07:52:00 2029 GMT
-    bash -c openssl x509 -in /etc/kubernetes/pki/apiserver.crt -noout -text |grep "Not "
-                Not Before: Sep 17 07:51:58 2019 GMT
-                Not After : Sep 18 12:10:31 2021 GMT
-    bash -c openssl x509 -in /etc/kubernetes/pki/apiserver-kubelet-client.crt -noout -text |grep "Not "
-                Not Before: Sep 17 07:51:58 2019 GMT
-                Not After : Sep 18 12:10:31 2021 GMT
-    bash -c openssl x509 -in /etc/kubernetes/pki/front-proxy-client.crt -noout -text |grep "Not "
-                Not Before: Sep 17 07:52:00 2019 GMT
-                Not After : Sep 18 12:10:31 2021 GMT
-    ```
+  # or
+  $ find /etc/kubernetes/pki/ -type f -name "*.crt" -print |
+         xargs -L 1 -t -i bash -c 'openssl x509 -in {} -noout -text |grep "Not "'
+  bash -c openssl x509 -in /etc/kubernetes/pki/ca.crt -noout -text |grep "Not "
+              Not Before: Sep 17 07:51:58 2019 GMT
+              Not After : Sep 14 07:51:58 2029 GMT
+  bash -c openssl x509 -in /etc/kubernetes/pki/front-proxy-ca.crt -noout -text |grep "Not "
+              Not Before: Sep 17 07:52:00 2019 GMT
+              Not After : Sep 14 07:52:00 2029 GMT
+  bash -c openssl x509 -in /etc/kubernetes/pki/apiserver.crt -noout -text |grep "Not "
+              Not Before: Sep 17 07:51:58 2019 GMT
+              Not After : Sep 18 12:10:31 2021 GMT
+  bash -c openssl x509 -in /etc/kubernetes/pki/apiserver-kubelet-client.crt -noout -text |grep "Not "
+              Not Before: Sep 17 07:51:58 2019 GMT
+              Not After : Sep 18 12:10:31 2021 GMT
+  bash -c openssl x509 -in /etc/kubernetes/pki/front-proxy-client.crt -noout -text |grep "Not "
+              Not Before: Sep 17 07:52:00 2019 GMT
+              Not After : Sep 18 12:10:31 2021 GMT
+  ```
   <!--endsec-->
 
 ### renew kubeconfig
@@ -903,22 +906,20 @@ $ sudo chmod 644 $HOME/.kube/config
 
 ### [restart the controller components](https://stackoverflow.com/a/62911194)
 ```bash
-$ sudo kill -s SIGHUP $(pidof kube-apiserver)
-$ sudo kill -s SIGHUP $(pidof kube-controller-manager)
-$ sudo kill -s SIGHUP $(pidof kube-scheduler)
-```
+sudo kill -s SIGHUP $(pidof kube-apiserver)
+sudo kill -s SIGHUP $(pidof kube-controller-manager)
+sudo kill -s SIGHUP $(pidof kube-scheduler)
 
-- or
-  ```bash
-  $ echo {kube-apiserver,kube-controller-manager,kube-scheduler} |
-         fmt -1 |
-         xargs -I{} bash -c "sudo kill -s SIGHUP $(pidof {}) "
-  ```
+# or
+$ echo {kube-apiserver,kube-controller-manager,kube-scheduler} |
+       fmt -1 |
+       xargs -I{} bash -c "sudo kill -s SIGHUP $(pidof {}) "
+```
 
 ### restart kubelet service
 ```bash
-$ sudo rm -rf /var/lib/kubelet/pki/*
-$ sudo systemctl restart kubelet
+sudo rm -rf /var/lib/kubelet/pki/*
+sudo systemctl restart kubelet
 ```
 
 - verify
