@@ -12,6 +12,8 @@
   - [tips](#tips)
   - [extensions](#extensions)
 - [chromium](#chromium)
+- [safari](#safari)
+  - [url incrementer](#url-incrementer)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -288,27 +290,36 @@ $ pgrep -u `id -u` firefox-bin || find ~/.mozilla/firefox -name '*.sqlite'|(whil
 #### UUID
 
 - `bpojelgakakmcfmjfilgdlmhefphglae`: [Set Character Encoding](https://chromewebstore.google.com/search/bpojelgakakmcfmjfilgdlmhefphglae)
-- `caclkomlalccbpcdllchkeecicepbmbm`: [Advanced Font Settings](https://chromewebstore.google.com/search/caclkomlalccbpcdllchkeecicepbmbm)
+- `caclkomlalccbpcdllchkeecicepbmbm`: [Advanced Font Settings](https://chromewebstore.google.com/search/caclkomlalccbpcdllchkeecicepbmbm) | [config.json](https://github.com/marslo/mytools/tree/main/others/browser/AdvancedFonts)
 - `ckkdlimhmcjmikdlpkmbgfkaikojcbjk`: [Markdown View](https://chromewebstore.google.com/search/ckkdlimhmcjmikdlpkmbgfkaikojcbjk)
 - `clngdbkpkpeebahjckkjfobafhncgmne`: [Stylus](https://chromewebstore.google.com/search/clngdbkpkpeebahjckkjfobafhncgmne)
 - `fjnbnpbmkenffdnngjfgmeleoegfcffe`: [Stylish](https://chromewebstore.google.com/detail/stylish-custom-themes-for/fjnbnpbmkenffdnngjfgmeleoegfcffe)
-- `dbepggeogbaibhgnhhndojpepiihcmeb`: [Vimium](https://chromewebstore.google.com/search/dbepggeogbaibhgnhhndojpepiihcmeb)
-- `gbmdgpbipfallnflgajpaliibnhdgobh`: [JSON View](https://chromewebstore.google.com/search/gbmdgpbipfallnflgajpaliibnhdgobh)
+- `dbepggeogbaibhgnhhndojpepiihcmeb`: [Vimium](https://chromewebstore.google.com/search/dbepggeogbaibhgnhhndojpepiihcmeb) | [vimium-options.json](https://github.com/marslo/mytools/tree/main/others/browser/vimium)
 - `ggaabchcecdbomdcnbahdfddfikjmphe`: [Chrome Capture](https://chromewebstore.google.com/search/ggaabchcecdbomdcnbahdfddfikjmphe)
-- `ghgabhipcejejjmhhchfonmamedcbeod`: [Click&Clean](https://chromewebstore.google.com/search/ghgabhipcejejjmhhchfonmamedcbeod)
+- `ghgabhipcejejjmhhchfonmamedcbeod`: [Click&Clean](https://chromewebstore.google.com/search/ghgabhipcejejjmhhchfonmamedcbeod) | [config-Options](https://github.com/marslo/mytools/tree/main/others/browser/ClickClean)
 - `gieabiemggnpnminflinemaickipbebg`: [CSS Scan](https://chromewebstore.google.com/search/gieabiemggnpnminflinemaickipbebg)
 - `ieelmcmcagommplceebfedjlakkhpden`: [Disable Content-Security-Policy](https://chromewebstore.google.com/search/ieelmcmcagommplceebfedjlakkhpden)
-- `jlgkpaicikihijadgifklkbpdajbkhjo`: [CrxMouse](https://chromewebstore.google.com/search/jlgkpaicikihijadgifklkbpdajbkhjo)
+- `jlgkpaicikihijadgifklkbpdajbkhjo`: [CrxMouse](https://chromewebstore.google.com/search/jlgkpaicikihijadgifklkbpdajbkhjo) | [config.json](https://github.com/marslo/mytools/tree/main/others/browser/crxMouse)
 - `kpppomnoahmhnmmamjfbnnnmeabkjcni`: [Color Picker](https://chromewebstore.google.com/search/kpppomnoahmhnmmamjfbnnnmeabkjcni)
 - `lobiadjfmkomemokdfhiaaaidgdhcded`: [Ultimate Color Picker](https://chromewebstore.google.com/search/lobiadjfmkomemokdfhiaaaidgdhcded)
 - `mcbpblocgmgfnpjjppndjkmgjaogfceg`: [FireShot](https://chromewebstore.google.com/search/mcbpblocgmgfnpjjppndjkmgjaogfceg)
-- `mnamhmcgcfflfjafflanbhbfffpmkmmm`: [Dream Afar New Tab](https://chromewebstore.google.com/search/mnamhmcgcfflfjafflanbhbfffpmkmmm)
 - `ocllfmhjhfmogablefmibmjcodggknml`: [Recent Tab](https://chromewebstore.google.com/search/ocllfmhjhfmogablefmibmjcodggknml)
-- `padekgcemlokbadohgkifijomclgjgif`: [Proxy SwitchOmega](https://chromewebstore.google.com/search/padekgcemlokbadohgkifijomclgjgif)
+
+- `henmfoppjjkcencpbjaigfahdjlgpegn`: [New Tab - Dream Afar: Wallpapers & Productivity Widgets](https://chromewebstore.google.com/detail/new-tab-dream-afar-wallpa/henmfoppjjkcencpbjaigfahdjlgpegn)
+- `hjgllnccfndbjbedlecgdedlikohgbko`: [URL Incrementer - A Next Page Incrementer](https://chromewebstore.google.com/search/hjgllnccfndbjbedlecgdedlikohgbko)
+- `eifflpmocdbdmepbjaopkkhbfmdgijcc`: [JSON Viewer Pro *](https://chromewebstore.google.com/detail/json-viewer-pro/eifflpmocdbdmepbjaopkkhbfmdgijcc)
+- `pamhglogfolfbmlpnenhpeholpnlcclo`: [JsonDiscovery](https://chromewebstore.google.com/detail/jsondiscovery/pamhglogfolfbmlpnenhpeholpnlcclo)
+- `ahmnmhfbokciafffnknlekllgcnafnie`: [Get cookies.txt Clean](https://chromewebstore.google.com/detail/get-cookiestxt-clean/ahmnmhfbokciafffnknlekllgcnafnie)
+- `cclelndahbckbenkjhflpdbgdldlbecc`: [Get cookies.txt LOCALLY *](https://chromewebstore.google.com/detail/get-cookiestxt-locally/cclelndahbckbenkjhflpdbgdldlbecc)
+- `hlepfoohegkhhmjieoechaddaejaokhf`: [Refined GitHub](https://chromewebstore.google.com/detail/refined-github/hlepfoohegkhhmjieoechaddaejaokhf) | [refined-github/refined-github](https://github.com/refined-github/refined-github) | [config.css](https://github.com/marslo/mytools/tree/main/others/browser/RefinedGithub)
+- `dhdgffkkebhmkfjojejmpbldmpobfkfo`: [Tampermonkey](https://chromewebstore.google.com/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo) | [pr-trailing-space-highlight.js](https://github.com/marslo/mytools/tree/main/others/browser/Tampermonkey)
 
 - invalid
-  - `kdcjmllhmhnnadianfhhnoefgcdbpdap`: smooth gestures plus | [official website](https://smoothgesturesplus.com/)
+  - `kdcjmllhmhnnadianfhhnoefgcdbpdap`: smooth gestures plus | [official website](https://smoothgesturesplus.com/) | [config.txt](https://github.com/marslo/mytools/tree/main/others/browser/SmoothGestures)
   - `njabckikapfpffapmjgojcnbfjonfjfg`: Export cookies.txt
+  - `mnamhmcgcfflfjafflanbhbfffpmkmmm`: [Dream Afar New Tab](https://chromewebstore.google.com/search/mnamhmcgcfflfjafflanbhbfffpmkmmm)
+  - `gbmdgpbipfallnflgajpaliibnhdgobh`: [JSON View](https://chromewebstore.google.com/search/gbmdgpbipfallnflgajpaliibnhdgobh)
+  - `padekgcemlokbadohgkifijomclgjgif`: [Proxy SwitchOmega](https://chromewebstore.google.com/search/padekgcemlokbadohgkifijomclgjgif)
 
 - theme
   - `aghfnjkcakhmadgdomlmlhhaocbkloab`: [Just Black](https://chromewebstore.google.com/search/aghfnjkcakhmadgdomlmlhhaocbkloab)
@@ -318,6 +329,39 @@ $ pgrep -u `id -u` firefox-bin || find ~/.mozilla/firefox -name '*.sqlite'|(whil
 > [!NOTE|label:references:]
 > - [Recent Tabs](https://chromewebstore.google.com/detail/recent-tabs/ocllfmhjhfmogablefmibmjcodggknml)
 
+#### [URL Incrementer - A Next Page Incrementer](https://chromewebstore.google.com/detail/url-incrementer-a-next-pa/hjgllnccfndbjbedlecgdedlikohgbko)
+
+1. install the extension
+2. setup the shortcut in [chrome://extensions/shortcuts](chrome://extensions/shortcuts)
+
 ## chromium
-- download page : https://download-chromium.appspot.com
--kdcjmllhmhnnadianfhhnoefgcdbpdap download for OSX : https://download-chromium.appspot.com/?platform=Mac&type=snapshots
+
+> [!NOTE|label:references:]
+> - chromium installer download : [https://download-chromium.appspot.com](https://download-chromium.appspot.com)
+> - or specific the platform via : [https://download-chromium.appspot.com/?platform=Mac&type=snapshots](https://download-chromium.appspot.com/?platform=Mac&type=snapshots)
+
+## safari
+
+### url incrementer
+
+> [!NOTE|label:references:]
+> - using `Bookmarklet` + `javascript` + **Safari native shortcuts** to increment url query parameter
+> - if using Chrome, [URL Incrementer - A Next Page Incrementer](https://chromewebstore.google.com/detail/url-incrementer-a-next-pa/hjgllnccfndbjbedlecgdedlikohgbko) extension is the best choice
+
+```javascript
+// +1
+javascript:(function(){var u=location.href,m=u.match(/(.*?)(\d+)(\D*)$/);if(m){var n=parseInt(m[2],10)+1,s=n.toString().padStart(m[2].length,'0');location.href=m[1]+s+m[3];}else{alert('No Number found in URL');}})();
+```
+
+```javascript
+// -1
+javascript:(function(){var u=location.href,m=u.match(/(.*?)(\d+)(\D*)$/);if(m){var n=parseInt(m[2],10)-1,s=n.toString().padStart(m[2].length,'0');location.href=m[1]+s+m[3];}else{alert('No Number found in URL');}})();
+```
+
+Steps:
+
+1. open url `data:text/html;charset=utf-8,<title>+1</title>` in Safari
+2. <kbd>cmd</kbd> + <kbd>d</kbd> to bookmark the page, and name it <code>&#xF15CB;</code> ( unicode: `F15CB` ), and put into the first of **Favorites** folder ( native shortcut: <kbd>cmd</kbd> + <kbd>option</kbd> + <kbd>1</kbd> )
+3. right click the bookmark → **Edit Address** → paste the above `javascript` code for +1, and save
+4. same steps for -1, and name it <code>&#xF1052;</code> ( unicode: `F1052` ), and put into the second of **Favorites** folder ( native shortcut: <kbd>cmd</kbd> + <kbd>option</kbd> + <kbd>2</kbd> )
+5. now open Jenkins build page, and hit <kbd>cmd</kbd> + <kbd>option</kbd> + <kbd>1</kbd> to increment the build number, or hit <kbd>cmd</kbd> + <kbd>option</kbd> + <kbd>2</kbd> to decrement the build number
