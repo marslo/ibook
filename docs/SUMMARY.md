@@ -131,6 +131,7 @@
     * [coverage](jenkins/plugins/coverage.md)
     * [crumbIssuer](jenkins/plugins/crumbIssuer.md)
     * [customizable-header](jenkins/plugins/customizable-header.md)
+    * [custom-markup-formatter](jenkins/plugins/custom-markup-formatter.md)
     * [docker](jenkins/plugins/docker.md)
     * [generic-webhook-trigger](jenkins/plugins/generic-webhook-trigger.md)
     * [groovy-postbuild](jenkins/plugins/postbuild.md)
