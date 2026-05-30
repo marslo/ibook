@@ -32,6 +32,7 @@
 - [various commands](#various-commands)
 - [tricky](#tricky)
   - [show treesitter syntax](#show-treesitter-syntax)
+  - [debug coc float window](#debug-coc-float-window)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -1096,4 +1097,27 @@ $ nvim --headless -c 'lua local files = vim.api.nvim_get_runtime_file("queries/j
 
 $ nvim --headless -c 'lua local files = vim.api.nvim_get_runtime_file("queries/vim/highlights.scm", true); for _, f in ipairs(files) do print(f) end' -c 'q'
 /opt/homebrew/Cellar/neovim/0.12.2/share/nvim/runtime/queries/vim/highlights.scm
+```
+
+## debug coc float window
+
+> [!NOTE|label:references:]
+> when in insert mode, and it's difficult to execute the command to check/debug. then mapping shortcuts to execute the command in insert mode
+
+```vim
+" vimrc
+inoremap <F12> <C-o>:lua for _, w in ipairs(vim.api.nvim_list_wins()) do local c = vim.api.nvim_win_get_config(w); if c.relative ~= '' then print(w, 'w='..c.width, 'h='..c.height, 'col='..vim.inspect(c.col), 'row='..vim.inspect(c.row)) end end<CR>
+inoremap <F11> <C-o>:lua local f=io.open('/tmp/extmarks.log','w'); local marks=vim.api.nvim_buf_get_extmarks(0,-1,{vim.fn.line('.')-1,0},{vim.fn.line('.')-1,-1},{details=true}); f:write(vim.inspect(marks)); f:close(); print('written to /tmp/extmarks.log')<CR>
+inoremap <F11> <C-o>:lua local f=io.open('/tmp/sbar.log','w'); for _,w in ipairs(vim.api.nvim_list_wins()) do local c=vim.api.nvim_win_get_config(w); if c.width==1 and c.relative~='' then local buf=vim.api.nvim_win_get_buf(w); f:write('win='..w..'\n'); f:write('winhl='..tostring(vim.wo[w].winhl)..'\n'); f:write('buf_lines='..vim.inspect(vim.api.nvim_buf_get_lines(buf,0,-1,false))..'\n') end end; f:close(); print('written to /tmp/sbar.log')<CR>
+inoremap <F11> <C-o>:lua local f=io.open('/tmp/sbar.log','w'); for _,w in ipairs(vim.api.nvim_list_wins()) do local c=vim.api.nvim_win_get_config(w); if c.relative and c.relative~='' then f:write('win='..w..' w='..c.width..' h='..c.height..' col='..vim.inspect(c.col)..' row='..vim.inspect(c.row)..'\n'); local buf=vim.api.nvim_win_get_buf(w); f:write('  winhl='..tostring(vim.wo[w].winhl)..'\n'); f:write('  foldcolumn='..tostring(vim.wo[w].foldcolumn)..'\n'); f:write('  buf[0]='..vim.inspect(vim.api.nvim_buf_get_lines(buf,0,1,false))..'\n\n') end end; f:close(); print('done')<CR>
+inoremap <F11> <C-o>:lua local f=io.open('/tmp/sbar.log','w'); for r=1,vim.o.lines do for c=1,vim.o.columns do local ch=vim.fn.nr2char(vim.fn.screenchar(r,c)); if ch=='>' then f:write('row='..r..' col='..c..' attr='..vim.fn.screenattr(r,c)..'\n') end end end; f:close(); print('done')<CR>
+
+inoremap <F10> <C-o>:lua local f=io.open('/tmp/wins.log','w'); for _,w in ipairs(vim.api.nvim_list_wins()) do local c=vim.api.nvim_win_get_config(w); f:write(w..' rel='..tostring(c.relative)..' w='..tostring(c.width)..' h='..tostring(c.height)..'\n') end; f:close(); print('written to /tmp/wins.log')<CR>
+
+inoremap <F8> <C-o>:lua for _,w in ipairs(vim.api.nvim_list_wins()) do local c=vim.api.nvim_win_get_config(w); if c.relative and c.relative~='' and c.width and c.width>1 then print('win='..w, 'list='..tostring(vim.wo[w].list), 'listchars='..vim.wo[w].listchars) end end<CR>
+inoremap <F8> <C-o>:lua for _,w in ipairs(vim.api.nvim_list_wins()) do local c=vim.api.nvim_win_get_config(w); if c.relative and c.relative~='' then local buf=vim.api.nvim_win_get_buf(w); local lines=vim.api.nvim_buf_get_lines(buf,0,-1,false); print('win='..w, 'w='..c.width, 'buf='..buf, 'content='..vim.inspect(lines)) end end<CR>
+inoremap <F8> <C-o>:lua for _,w in ipairs(vim.api.nvim_list_wins()) do local c=vim.api.nvim_win_get_config(w); if c.relative and c.relative~='' then local buf=vim.api.nvim_win_get_buf(w); local lines=vim.api.nvim_buf_get_lines(buf,0,5,false); local pos=vim.api.nvim_win_get_position(w); print('win='..w, 'w='..c.width, 'h='..c.height, 'pos='..pos[1]..','..pos[2], 'kind='..tostring(vim.w[w].kind), 'buf='..buf, 'L1="'..tostring(lines[1])..'"') end end<CR>
+inoremap <F8> <C-o>:lua local pw=nil; for _,w in ipairs(vim.api.nvim_list_wins()) do local c=vim.api.nvim_win_get_config(w); if c.relative and c.relative~='' and c.width==1 then pw=w end end; if pw then print('pad='..pw, 'fc='..vim.wo[pw].foldcolumn, 'list='..tostring(vim.wo[pw].list), 'wrap='..tostring(vim.wo[pw].wrap), 'winhl='..vim.wo[pw].winhl, 'scl='..vim.wo[pw].signcolumn) end<CR>
+inoremap <F8> <C-o>:lua for _,w in ipairs(vim.api.nvim_list_wins()) do local c=vim.api.nvim_win_get_config(w); if c.relative and c.relative~='' and c.width==1 then print('pad='..w, 'fc='..vim.wo[w].foldcolumn, 'list='..tostring(vim.wo[w].list), 'scl='..vim.wo[w].signcolumn) end end<CR>
+inoremap <F8> <C-o>:lua for _,w in ipairs(vim.api.nvim_list_wins()) do local c=vim.api.nvim_win_get_config(w); if c.relative and c.relative~='' and c.width==1 then local buf=vim.api.nvim_win_get_buf(w); local marks=vim.api.nvim_buf_get_extmarks(buf,-1,0,-1,{details=true}); print('pad='..w, 'buf='..buf, '#extmarks='..#marks); if #marks>0 then for i,m in ipairs(marks) do print(' mark:', vim.inspect(m)) end end end end<CR>
 ```

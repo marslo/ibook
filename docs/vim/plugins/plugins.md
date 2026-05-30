@@ -10,6 +10,7 @@
 - [programming](#programming)
   - [vim-syntastic/syntastic](#vim-syntasticsyntastic)
   - [coc.nvim](#cocnvim)
+    - [floating window configure](#floating-window-configure)
     - [coc-snippets](#coc-snippets)
     - [coc-word](#coc-word)
     - [extensions management](#extensions-management)
@@ -930,6 +931,103 @@ highlight link SyntasticStyleWarningSign GruvboxPurpleSign
 
   $ rustup component add rust-analyzer
   ```
+
+### floating window configure
+
+> [!TIP|label:check from source]
+> ```bash
+> $ sed -n '88892,88900p' "$HOME"/.vim/plugged/coc.nvim/build/index.js &&
+>   echo "---" &&
+>   sed -n '89244,89260p' "$HOME"/.vim/plugged/coc.nvim/build/index.js &&
+>   echo "---" &&
+>   sed -n '89275,89285p' "$HOME"/.vim/plugged/coc.nvim/build/index.js &&
+>   echo "---" &&
+>   sed -n '89918,89930p' "$HOME"/.vim/plugged/coc.nvim/build/index.js &&
+>   echo "---" &&
+>   sed -n '90113,90125p' "$HOME"/.vim/plugged/coc.nvim/build/index.js &&
+>   echo "---" &&
+>   sed -n '90226,90235p' "$HOME"/.vim/plugged/coc.nvim/build/index.js
+> $ sed -n '88000,88098p' /Users/marslo/.vim/plugged/coc.nvim/build/index.js
+> ```
+
+
+#### options
+
+| OPTIONS           | VALUES                                                                | DEFAULT          | DESCRIPTION                                                       |
+|-------------------|-----------------------------------------------------------------------|------------------|-------------------------------------------------------------------|
+| `border`          | true / false                                                          | false            | Set to true to use borders                                        |
+| `rounded`         | true / false                                                          | false            | Use rounded borders when border is true                           |
+| `highlight`       | highlight group name: "CocFloating", "NormalFloat", "Normal", "Pmenu" | "CocFloating"    | Background highlight group of float window                        |
+| `borderhighlight` | highlight group name: "CocFloatBorder", "FloatBorder", "Comment"      | "CocFloatBorder" | Border highlight group of float window                            |
+| `title`           | any string                                                            | ""               | Title used by float window                                        |
+| `close`           | true / false                                                          | false            | Set to true to draw close icon                                    |
+| `maxWidth`        | positive integer                                                      | —                | Maximum width of float window, include border                     |
+| `maxHeight`       | integer ≥ 2                                                           | —                | Maximum height of float window, include border                    |
+| `focusable`       | true / false                                                          | true             | Enable focus by user actions (wincmds, mouse events), neovim only |
+| `shadow`          | true / false                                                          | false            | Drop shadow effect by blending with the background, neovim only   |
+| `winblend`        | 0 – 100                                                               | 0                | Enables pseudo-transparency via 'winblend' option, neovim only    |
+| `position`        | "auto" / "fixed"                                                      | "auto"           | "fixed": use top/bottom/left/right; "auto": default positioning   |
+| `top`             | number ≥ 0                                                            | —                | Distance from top of editor in chars (only when position="fixed") |
+| `bottom`          | number ≥ 0                                                            | —                | Distance from bottom of editor (position="fixed", overrides top)  |
+| `left`            | number ≥ 0                                                            | —                | Distance from left of editor (only when position="fixed")         |
+| `right`           | number ≥ 0                                                            | —                | Distance from right of editor (position="fixed", overrides left)  |
+
+
+> [!TIP|label:highlight groups]
+> ```vim
+> :hi CocFloating
+> :hi CocFloatBorder
+> :hi NormalFloat
+> ```
+
+| COC.NVIM HIGHLIGHT GROUP | DEFAULT LINKS TO                     | DESCRIPTION                  |
+|--------------------------|--------------------------------------|------------------------------|
+| `CocFloating`            | `NormalFloat` (nvim) / `Pmenu` (vim) | 浮窗默认背景                 |
+| `CocFloatBorder`         | `FloatBorder` / `CocFloating`        | 浮窗边框（只用前景色）       |
+| `CocFloatThumb`          | —                                    | 滚动条滑块                   |
+| `CocFloatSbar`           | —                                    | 滚动条轨道                   |
+| `CocFloatDividingLine`   | `NonText`                            | 浮窗内分割线                 |
+| `CocFloatActive`         | `CocSearch`                          | 激活的文本（如当前参数高亮） |
+| `CocErrorFloat`          | —                                    | 浮窗中的错误文本             |
+| `CocHintFloat`           | —                                    | 浮窗中的提示文本             |
+
+
+| NVIM HIGHLIGHT GROUPS / FLOATCONFIG | DESCRIPTION                  |
+|-------------------------------------|------------------------------|
+| `NormalFloat`                       | nvim 浮窗默认背景/前景       |
+| `FloatBorder`                       | nvim 浮窗默认边框            |
+| `Normal`                            | 普通文本（与编辑器背景一致） |
+| `Pmenu`                             | 补全菜单背景                 |
+| `PmenuSel`                          | 补全菜单选中项               |
+| `Comment`                           | 注释颜色（常用于淡化边框）   |
+| `NonText`                           | 不可见字符（如 listchars）   |
+
+
+```vim
+" customize highlight groups
+highlight MyPinkBorder guifg=#FFB6C1 guibg=NONE
+```
+
+```json
+// coc.vim
+"suggest.floatConfig": {
+  "borderhighlight": "MyPinkBorder"
+}
+```
+
+#### types
+
+| TYPES                      | DESCRIPTION                                                                                                     |
+|----------------------------|-----------------------------------------------------------------------------------------------------------------|
+| `floatFactory.floatConfig` | Configure **default/global** style for float window/popup created by float factory (around cursor, auto-closed) |
+| `suggest.floatConfig`      | Configure style of popup menu and documentation window of completion                                            |
+| `suggest.pumFloatConfig`   | Configure style of popup menu, suggest.floatConfig is used when not specified                                   |
+| `signature.floatConfig`    | Configure float window style of signature documents                                                             |
+| `hover.floatConfig`        | Configure float window style of hover documents                                                                 |
+| `diagnostic.floatConfig`   | Configure float window style of diagnostic message                                                              |
+| `dialog.floatConfig`       | Configuration for interactive dialogs (e.g., Code Action menu, Rename input)                                    |
+| `list.floatConfig`         | Configuration for the `coc-list` interface windows                                                              |
+
 
 ### [coc-snippets](https://github.com/neoclide/coc-snippets)
 
