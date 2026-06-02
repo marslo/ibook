@@ -12,6 +12,7 @@
   - [emoji symbols api](#emoji-symbols-api)
   - [oneline badges](#oneline-badges)
 - [custom folder icon](#custom-folder-icon)
+- [colors](#colors)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -4742,3 +4743,28 @@
 
 > [!TIP|label:references]
 > - [Custom Folder Icon](https://plugins.jenkins.io/custom-folder-icon/)
+
+## colors
+
+> [!NOTE|label:references]
+> - [customizable-header plugin/Design Library/Colors](https://weekly.ci.jenkins.io/design-library/colors/)
+> - [Use oklch for the Jenkins UI(#10078)](https://github.com/jenkinsci/jenkins/pull/10078)
+> - [Add color override classes(#6538)](https://github.com/jenkinsci/jenkins/pull/6538)
+> - oklch:
+>   - Light = `$lightness: +20%`
+>   - Base = `$lightness: 0%`
+>   - Dark = `$lightness: -20%`
+
+| COLOR  | LIGHT   | BASE    | DARK    | OKLCH                      |
+|--------|---------|---------|---------|----------------------------|
+| Red    | #F87966 | #F80000 | #CA0000 | `oklch(60% 0.2671 30)`     |
+| Orange | #FFAD7B | #FB6F00 | #D04700 | `oklch(70% 0.2001 50.74)`  |
+| Yellow | #FFDC96 | #FBAC00 | #D38600 | `oklch(80% 0.17   76)`     |
+| Green  | #83DC97 | #00C14C | #009A22 | `oklch(70% 0.2155 150)`    |
+| Teal   | #72B0C0 | #0090AB | #006C86 | `oklch(60% 0.1122 216.72)` |
+| Cyan   | #69AED5 | #008CCB | #0067A4 | `oklch(60% 0.1497 234.48)` |
+| Blue   | #5A96E9 | #0067F3 | #003EC9 | `oklch(55% 0.2308 256.91)` |
+| Indigo | #949DEC | #6B6CEE | #4C46C5 | `oklch(60% 0.191  278.34)` |
+| Purple | #C589E0 | #B143DC | #8B0CB4 | `oklch(60% 0.2308 314.6)`  |
+| Pink   | #F5768A | #F30054 | #C50033 | `oklch(60% 0.2601 12.28)`  |
+| Brown  | #BBA07E | #A2773B | #7E5413 | `oklch(60% 0.0941 72.67)`  |
