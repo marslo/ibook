@@ -369,24 +369,16 @@ local    file:.git/config    marslo
   > - [git/Documentation/config/color.txt](https://github.com/git/git/blob/master/Documentation/config/color.txt) | [git/Documentation/config/color.adoc](https://github.com/git/git/blob/master/Documentation/config/color.adoc)
   > - [rab/.gitconfig](https://gist.github.com/rab/4067067)
 
-  - `color.branch.<slot>`:
-    - `current`, `local`, `remote`, `upstream`, `plain`
-  - `color.diff.<slot>`:
-    - `context`, `meta`, `frag`, `old`, `new`, `plain`, `commit`, `whitespace`,
-    - `oldMoved`, `newMoved`, `oldMovedDimmed`, `newMovedDimmed`, `oldMovedAlternative`, `newMovedAlternative`, `oldMovedAlternativeDimmed`, `newMovedAlternativeDimmed`
-    - `contextDimmed`, `oldDimmed`, `newDimmed`, `contextBold`, `oldBold`, `newBold`
-  - `color.decorate.<slot>`:
-    - `branch`, `remoteBranch`, `tag`, `stash`, `HEAD`
-  - `color.grep.<slot>`
-    - `context`, `filename`, `function`, `lineNumber`, `match`, `matchContext`, `matchSelected`, `selected`, `separator`
-  - `color.interactive.<slot>`:
-    - `prompt`, `header`, `help`, `error`
-  - `color.status.<slot>`:
-    - `added`, `updated`, `changed`, `untracked`, `branch`, `nobranch`, `localBranch`, `remoteBranch`, `unmerged`
-  - `color.remote.<slot>`:
-    - `hint`, `warning`, `success`, `error`
-  - `color.grep.<slot>`:
-    - `context`, `filename`, `function`, `lineNumber`, `column`, `match`, `matchContext`, `matchSelected`, `selected`, `separator`
+| TYPE                       | SLOT(S)                                                                                                                                                                                                                                                                                                                            |
+|----------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `color.branch.<slot>`      | `current`, `local`, `remote`, `upstream`, `plain`                                                                                                                                                                                                                                                                                  |
+| `color.diff.<slot>`        | `context`, `meta`, `frag`, `old`, `new`, `plain`, `commit`, `whitespace`,<br>`oldMoved`, `newMoved`, `oldMovedDimmed`, `newMovedDimmed`, `oldMovedAlternative`, `newMovedAlternative`, `oldMovedAlternativeDimmed`, `newMovedAlternativeDimmed`,<br>`contextDimmed`, `oldDimmed`, `newDimmed`, `contextBold`, `oldBold`, `newBold` |
+| `color.decorate.<slot>`    | `branch`, `remoteBranch`, `tag`, `stash`, `HEAD`                                                                                                                                                                                                                                                                                   |
+| `color.grep.<slot>`        | `context`, `filename`, `function`, `lineNumber`, `match`, `matchContext`, `matchSelected`, `selected`, `separator`                                                                                                                                                                                                                 |
+| `color.interactive.<slot>` | `prompt`, `header`, `help`, `error`                                                                                                                                                                                                                                                                                                |
+| `color.status.<slot>`      | `added`, `updated`, `changed`, `untracked`, `branch`, `nobranch`, `localBranch`, `remoteBranch`, `unmerged`                                                                                                                                                                                                                        |
+| `color.remote.<slot>`      | `hint`, `warning`, `success`, `error`                                                                                                                                                                                                                                                                                              |
+| `color.grep.<slot>`        | `context`, `filename`, `function`, `lineNumber`, `column`, `match`, `matchContext`, `matchSelected`, `selected`, `separator`                                                                                                                                                                                                       |
 
 - list `color.*` config
   ```bash
