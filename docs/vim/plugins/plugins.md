@@ -10,6 +10,7 @@
 - [programming](#programming)
   - [vim-syntastic/syntastic](#vim-syntasticsyntastic)
   - [coc.nvim](#cocnvim)
+    - [coc-settings.json](#coc-settingsjson)
     - [floating window configure](#floating-window-configure)
     - [coc-snippets](#coc-snippets)
     - [coc-word](#coc-word)
@@ -931,6 +932,183 @@ highlight link SyntasticStyleWarningSign GruvboxPurpleSign
 
   $ rustup component add rust-analyzer
   ```
+
+### coc-settings.json
+
+#### list all schema options for single plugin
+
+```bash
+# i.e.: for coc-groovy
+$ grep -oE '"groovy\.[a-zA-Z0-9._]+"' "/Users/marslo/.config/coc/extensions/node_modules/coc-groovy/package.json" 2>/dev/null | sort -u
+"groovy.enable"
+"groovy.java.home"
+"groovy.ls.feature.noRoot"
+"groovy.ls.home"
+"groovy.ls.vmargs"
+"groovy.project.config.update"
+"groovy.project.referencedLibraries"
+"groovy.trace.server"
+```
+
+```bash
+# diagnostic-languageserver
+$ grep -oE '"diagnostic-[a-zA-Z0-9._]+"' ~/.config/coc/extensions/node_modules/coc-diagnostic/package.json | sort -u;
+"diagnostic-languageserver.debug"
+"diagnostic-languageserver.enable"
+"diagnostic-languageserver.filetypes"
+"diagnostic-languageserver.formatFiletypes"
+"diagnostic-languageserver.formatters"
+"diagnostic-languageserver.linters"
+"diagnostic-languageserver.mergeConfig"
+"diagnostic-languageserver.trace.server"
+"diagnostic-languageserver"
+```
+
+```bash
+# i.e.: for coc-java
+$ d=$(find ~/.config/coc/extensions -maxdepth 3 -type d -name 'coc-java' 2>/dev/null | head -1);
+  echo ">>> coc-java: $d <<<";
+  if [ -n "$d" ]; then echo "=== java.* settings declared in its schema ==="; grep -oE '"java\.[a-zA-Z0-9._]+"' "$d/package.json" 2>/dev/null | sort -u; fi
+>>> coc-java: /Users/marslo/.config/coc/extensions/node_modules/coc-java <<<
+=== java.* settings declared in its schema ===
+"java.action.changeBaseType"
+"java.action.doCleanup"
+"java.action.navigateToSuperImplementation"
+"java.action.showClassHierarchy"
+"java.action.showSubtypeHierarchy"
+"java.action.showSupertypeHierarchy"
+"java.action.showTypeHierarchy"
+"java.autobuild.enabled"
+"java.clean.sharedIndexes"
+"java.clean.workspace"
+"java.cleanup.actions"
+"java.cleanup.actionsOnSave"
+"java.codeAction.sortMembers.avoidVolatileChanges"
+"java.codeGeneration.generateComments"
+"java.codeGeneration.hashCodeEquals.useInstanceof"
+"java.codeGeneration.hashCodeEquals.useJava7Objects"
+"java.codeGeneration.insertionLocation"
+"java.codeGeneration.toString.codeStyle"
+"java.codeGeneration.toString.limitElements"
+"java.codeGeneration.toString.listArrayContents"
+"java.codeGeneration.toString.skipNullValues"
+"java.codeGeneration.toString.template"
+"java.codeGeneration.useBlocks"
+"java.compile.nullAnalysis.mode"
+"java.compile.nullAnalysis.nonnull"
+"java.compile.nullAnalysis.nonnullbydefault"
+"java.compile.nullAnalysis.nullable"
+"java.completion.enabled"
+"java.completion.engine"
+"java.completion.favoriteStaticMembers"
+"java.completion.filteredTypes"
+"java.completion.guessMethodArguments"
+"java.completion.importOrder"
+"java.completion.matchCase"
+"java.completion.maxResults"
+"java.completion.postfix.enabled"
+"java.configuration.checkProjectSettingsExclusions"
+"java.configuration.detectJdks"
+"java.configuration.maven.defaultMojoExecutionAction"
+"java.configuration.maven.globalSettings"
+"java.configuration.maven.notCoveredPluginExecutionSeverity"
+"java.configuration.maven.userSettings"
+"java.configuration.runtimes"
+"java.configuration.updateBuildConfiguration"
+"java.configuration.workspaceCacheLimit"
+"java.contentProvider.preferred"
+"java.eclipse.downloadSources"
+"java.enabled"
+"java.errors.incompleteClasspath.severity"
+"java.foldingRange.enabled"
+"java.format.comments.enabled"
+"java.format.enabled"
+"java.format.onType.enabled"
+"java.format.settings.profile"
+"java.format.settings.url"
+"java.home"
+"java.implementationCodeLens"
+"java.implementationsCodeLens.enabled"
+"java.import.exclusions"
+"java.import.generatesMetadataFilesAtProjectRoot"
+"java.import.gradle.annotationProcessing.enabled"
+"java.import.gradle.arguments"
+"java.import.gradle.enabled"
+"java.import.gradle.home"
+"java.import.gradle.java.home"
+"java.import.gradle.jvmArguments"
+"java.import.gradle.offline.enabled"
+"java.import.gradle.user.home"
+"java.import.gradle.version"
+"java.import.gradle.wrapper.enabled"
+"java.import.maven.disableTestClasspathFlag"
+"java.import.maven.enabled"
+"java.import.maven.offline.enabled"
+"java.imports.gradle.wrapper.checksums"
+"java.inlayHints.parameterNames.enabled"
+"java.inlayHints.parameterNames.exclusions"
+"java.jdt.ls.androidSupport.enabled"
+"java.jdt.ls.bundles"
+"java.jdt.ls.directory"
+"java.jdt.ls.java.home"
+"java.jdt.ls.javac.enabled"
+"java.jdt.ls.lombokSupport.enabled"
+"java.jdt.ls.protobufSupport.enabled"
+"java.jdt.ls.statusIcons"
+"java.jdt.ls.vmargs"
+"java.maven.downloadSources"
+"java.maven.updateSnapshots"
+"java.maxConcurrentBuilds"
+"java.open.clientLog"
+"java.open.formatter.settings"
+"java.open.logs"
+"java.open.serverLog"
+"java.open.serverStderrLog"
+"java.open.serverStdoutLog"
+"java.progressReports.enabled"
+"java.project.addToSourcePath.command"
+"java.project.build"
+"java.project.createModuleInfo.command"
+"java.project.encoding"
+"java.project.import.command"
+"java.project.importHint"
+"java.project.importOnFirstTimeStartup"
+"java.project.listSourcePaths.command"
+"java.project.outputPath"
+"java.project.referencedLibraries"
+"java.project.removeFromSourcePath.command"
+"java.project.resourceFilters"
+"java.project.sourcePaths"
+"java.project.updateSourceAttachment.command"
+"java.projectConfiguration.update"
+"java.quickfix.showAt"
+"java.recommendations.dependency.analytics.show"
+"java.refactoring.extract.interface.replace"
+"java.references.includeAccessors"
+"java.references.includeDeclarations"
+"java.references.includeDecompiledSources"
+"java.referencesCodeLens.enabled"
+"java.saveActions.cleanup"
+"java.saveActions.organizeImports"
+"java.selectionRange.enabled"
+"java.server.launchMode"
+"java.server.mode.switch"
+"java.settings.url"
+"java.sharedIndexes.enabled"
+"java.sharedIndexes.location"
+"java.show.server.task.status"
+"java.showBuildStatusOnStart.enabled"
+"java.signatureHelp.description.enabled"
+"java.signatureHelp.enabled"
+"java.sources.organizeImports.starThreshold"
+"java.sources.organizeImports.staticStarThreshold"
+"java.symbols.includeSourceMethodDeclarations"
+"java.templates.fileHeader"
+"java.templates.typeComment"
+"java.trace.server"
+"java.typeHierarchy.lazyLoad"
+"java.workspace.compile"
+```
 
 ### floating window configure
 
