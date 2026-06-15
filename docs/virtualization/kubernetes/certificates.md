@@ -21,12 +21,12 @@
     - [restore backup](#restore-backup)
   - [v1.12.3](#v1123)
     - [renew certificates](#renew-certificates)
+    - [peer controllers](#peer-controllers)
     - [renew kubeconfig](#renew-kubeconfig)
-    - [sync to peer controllers](#sync-to-peer-controllers)
     - [restart kubelet](#restart-kubelet)
   - [v1.15.3](#v1153)
     - [renew certificates](#renew-certificates-1)
-    - [sync to peer controllers](#sync-to-peer-controllers-1)
+    - [sync to peer controllers](#sync-to-peer-controllers)
     - [renew kubeconfig](#renew-kubeconfig-1)
     - [restart the controller components](#restart-the-controller-components)
     - [restart kubelet service](#restart-kubelet-service)
@@ -50,11 +50,12 @@
     - [more details](#more-details)
 - [tricky](#tricky)
   - [modify default certificate to 10 years](#modify-default-certificate-to-10-years)
-- [reference](#reference)
+- [basic knowledge](#basic-knowledge)
   - [required certificates](#required-certificates)
   - [Certificate paths](#certificate-paths)
   - [Configure certificates for user accounts](#configure-certificates-for-user-accounts)
   - [files are used as follows](#files-are-used-as-follows)
+- [reference](#reference)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -65,23 +66,22 @@
 {% hint style='tip' %}
 > references:
 > - [* 创建 TLS 证书和秘钥](https://jimmysong.io/kubernetes-handbook/practice/create-tls-and-secret-key.html)
-> - [* Generate Certificates Manually](https://kubernetes.io/docs/tasks/administer-cluster/certificates/)
-> - [* Manual Rotation of CA Certificates](https://kubernetes.io/docs/tasks/tls/manual-rotation-of-ca-certificates/)
-> - [* Certificate Management with kubeadm](https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-certs/)
-> - stacked CA mode can found from [Certificate Management with kubeadm](https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-certs/)
-> - [* PKI certificates and requirements](https://kubernetes.io/docs/setup/best-practices/certificates/#all-certificates)
-> - [Manage TLS Certificates in a Cluster](https://kubernetes.io/docs/tasks/tls/managing-tls-in-a-cluster/)
+> - [* Kubernetes Documentation/Generate Certificates Manually](https://kubernetes.io/docs/tasks/administer-cluster/certificates/)
+> - [* Kubernetes Documentation/Manual Rotation of CA Certificates](https://kubernetes.io/docs/tasks/tls/manual-rotation-of-ca-certificates/)
+> - [* Kubernetes Documentation/Certificate Management with kubeadm](https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-certs/)
+> - stacked CA mode can found from [Kubernetes Documentation/Certificate Management with kubeadm](https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-certs/)
+> - [* Kubernetes Documentation/PKI certificates and requirements](https://kubernetes.io/docs/setup/best-practices/certificates/#all-certificates)
+> - [* Kubernetes 文档/管理集群中的 TLS 认证](https://kubernetes.io/zh-cn/docs/tasks/tls/managing-tls-in-a-cluster/)
+> - [Kubernetes Documentation/Manage TLS Certificates in a Cluster](https://kubernetes.io/docs/tasks/tls/managing-tls-in-a-cluster/)
 > - [Renew a Kubernetes certificate with a 10-year expiration date](https://www.sobyte.net/post/2021-10/update-k8s-10y-expire-certs/)
-> - [Configure Access to Multiple Clusters](https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/)
+> - [Kubernetes Documentation/Configure Access to Multiple Clusters](https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/)
 > - [Dashboard使用自定义证书](https://blog.csdn.net/chenleiking/article/details/81488028)
 > - [Custom certificates on Kubernetes](https://www.ibm.com/docs/en/api-connect/10.0.1.x?topic=environment-custom-certificates-kubernetes)
 >   - [How to Generate a Self-Signed Certificate for Kubernetes](https://phoenixnap.com/kb/kubernetes-ssl-certificates)
 > - [Certificates in a Kubernetes environment](https://www.ibm.com/docs/en/api-connect/10.0.1.x?topic=deployment-certificates-in-kubernetes-environment)
 > - [Creating Self Signed Certificates on Kubernetes](https://tech.paulcz.net/blog/creating-self-signed-certs-on-kubernetes/)
 > - [How To Configure Ingress TLS/SSL Certificates in Kubernetes](https://devopscube.com/configure-ingress-tls-kubernetes/)
-> - [一文带你彻底厘清 Kubernetes 中的证书工作机制](https://cloud.tencent.com/developer/article/1632666)
-> - [* 管理集群中的 TLS 认证](https://kubernetes.io/zh-cn/docs/tasks/tls/managing-tls-in-a-cluster/)
-> - [* set up a high availability etcd cluster with kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/setup-ha-etcd-with-kubeadm/)
+> - [* Kubernetes Documentation/set up a high availability etcd cluster with kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/setup-ha-etcd-with-kubeadm/)
 > <br>
 > - regenerate the kubeadm.yml
 >   ```bash
@@ -106,17 +106,56 @@
 - certificate component
 
 
-  |          SERVICES         | CERTIFICATES                                     |
-  |:-------------------------:|--------------------------------------------------|
-  |           `etcd`          | `ca.pem`, `kubernetes-key.pem`, `kubernetes.pem` |
-  |      `kube-apiserver`     | `ca.pem`, `kubernetes-key.pem`, `kubernetes.pem` |
-  |         `kubelet`         | `ca.pem`                                         |
-  |        `kube-proxy`       | `ca.pem`, `kube-proxy-key.pem`, `kube-proxy.pem` |
-  |         `kubectl`         | `ca.pem`, `admin-key.pem`, `admin.pem`           |
-  | `kube-controller-manager` | `ca-key.pem`, `ca.pem`                           |
+|          SERVICES         | CERTIFICATES                                     |
+|:-------------------------:|--------------------------------------------------|
+|           `etcd`          | `ca.pem`, `kubernetes-key.pem`, `kubernetes.pem` |
+|      `kube-apiserver`     | `ca.pem`, `kubernetes-key.pem`, `kubernetes.pem` |
+|         `kubelet`         | `ca.pem`                                         |
+|        `kube-proxy`       | `ca.pem`, `kube-proxy-key.pem`, `kube-proxy.pem` |
+|         `kubectl`         | `ca.pem`, `admin-key.pem`, `admin.pem`           |
+| `kube-controller-manager` | `ca-key.pem`, `ca.pem`                           |
+
+
+
+> [!TIP]
+> - [`etcd/healthcheck-client.{crt,key}`](#required-certificates) is specifically leaf certs, it's not contains HOST IP or DNS SAN, so it can be ![](https://img.shields.io/badge/✓_same-darkgreen?style=flat), but most of time it will be re-generated with ![](https://img.shields.io/badge/✗_node--specific-darkred?style=flat) certs
+> - `apiserver-kubelet-client` and `apiserver-etcd-client`, although it is a client certificate, however, the SAN still binds to the information of the node where the apiserver resides, so it is also ![](https://img.shields.io/badge/✗_node--specific-darkred?style=flat)
+
+
+| CERTIFICATE               | PATH                                                     | SAME IN CONTROLLERS ?                                                 | GENERATE COMMAND                                                                 |
+|---------------------------|----------------------------------------------------------|-----------------------------------------------------------------------|----------------------------------------------------------------------------------|
+| Kubernetes CA             | `/etc/kubernetes/pki/ca.{crt,key}`                       | ![](https://img.shields.io/badge/✓_same-darkgreen?style=flat)         | `sudo kubeadm --config ~/kubeadm.yml alpha phase certs ca`                       |
+| Front Proxy CA            | `/etc/kubernetes/pki/front-proxy-ca.{crt,key}`           | ![](https://img.shields.io/badge/✓_same-darkgreen?style=flat)         | `sudo kubeadm --config ~/kubeadm.yml alpha phase certs front-proxy-ca`           |
+| Service Account           | `/etc/kubernetes/pki/sa.{key,pub}`                       | ![](https://img.shields.io/badge/✓_same-darkgreen?style=flat)         | `sudo kubeadm --config ~/kubeadm.yml alpha phase certs sa`                       |
+| Etcd CA                   | `/etc/kubernetes/pki/etcd/ca.{crt,key}`                  | ![](https://img.shields.io/badge/✓_same-darkgreen?style=flat)         | `sudo kubeadm --config ~/kubeadm.yml alpha phase certs etcd-ca`                  |
+| API Server                | `/etc/kubernetes/pki/apiserver.{crt,key}`                | ![](https://img.shields.io/badge/✗_node--specific-darkred?style=flat) | `sudo kubeadm --config ~/kubeadm.yml alpha phase certs apiserver`                |
+| API Server Kubelet Client | `/etc/kubernetes/pki/apiserver-kubelet-client.{crt,key}` | ![](https://img.shields.io/badge/✗_node--specific-darkred?style=flat) | `sudo kubeadm --config ~/kubeadm.yml alpha phase certs apiserver-kubelet-client` |
+| Front Proxy Client        | `/etc/kubernetes/pki/front-proxy-client.{crt,key}`       | ![](https://img.shields.io/badge/✗_node--specific-darkred?style=flat) | `sudo kubeadm --config ~/kubeadm.yml alpha phase certs front-proxy-client`       |
+| API Server Etcd Client    | `/etc/kubernetes/pki/apiserver-etcd-client.{crt,key}`    | ![](https://img.shields.io/badge/✗_node--specific-darkred?style=flat) | `sudo kubeadm --config ~/kubeadm.yml alpha phase certs apiserver-etcd-client`    |
+| Etcd Server               | `/etc/kubernetes/pki/etcd/server.{crt,key}`              | ![](https://img.shields.io/badge/✗_node--specific-darkred?style=flat) | `sudo kubeadm --config ~/kubeadm.yml alpha phase certs etcd-server`              |
+| Etcd Peer                 | `/etc/kubernetes/pki/etcd/peer.{crt,key}`                | ![](https://img.shields.io/badge/✗_node--specific-darkred?style=flat) | `sudo kubeadm --config ~/kubeadm.yml alpha phase certs etcd-peer`                |
+| Etcd Healthcheck Client   | `/etc/kubernetes/pki/etcd/healthcheck-client.{crt,key}`  | ![](https://img.shields.io/badge/✗_node--specific-darkred?style=flat) | `sudo kubeadm --config ~/kubeadm.yml alpha phase certs etcd-healthcheck-client`  |
 
 
 ## [samples](https://cloud.tencent.com/developer/article/1632666)
+
+> [!TIP|label:references:]
+> - [一文带你彻底厘清 Kubernetes 中的证书工作机制](https://cloud.tencent.com/developer/article/1632666)
+> - key files
+>   - `/etc/kubernetes/manifests/kube-apiserver.yaml`
+>   - `/var/lib/kubelet/config.yaml`
+>     ```bash
+>     $ sudo systemctl status kubelet --no-pager -l | grep -i bootstrap-kubeconfig
+>                └─31640 /usr/bin/kubelet --bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf --config=/var/lib/kubelet/config.yaml --cgroup-driver=cgroupfs --network-plugin=cni
+>
+>     $ sudo command grep staticPodPath /var/lib/kubelet/config.yaml
+>     staticPodPath: /etc/kubernetes/manifests
+>
+>     $ sudo ls -A /etc/kubernetes/manifests
+>     etcd.yaml  kube-apiserver.yaml  kube-controller-manager.yaml  kube-scheduler.yaml
+>     ```
+
+
 ### etcd
 ```bash
 /usr/local/bin/etcd \\
@@ -130,6 +169,7 @@
 ```
 
 ### kube-apiserver
+
 ```bash
 /usr/local/bin/kube-apiserver \\
   --tls-cert-file=/var/lib/kubernetes/kube-apiserver.pem \\                             # 用于对外提供服务的服务器证书
@@ -258,7 +298,7 @@ $ kubectl -n kube-system get secrets <SECRET_NAME> -o yaml |
 ### crt
 ```bash
 $ find /etc/kubernetes/pki/ -type f -name "*.crt" -print |
-       egrep -v 'ca.crt$' |
+       egrep --color=never -v 'ca.crt$' |
        xargs -L 1 -t -i bash -c 'openssl x509 -noout -text -in {} | grep After'
 bash -c openssl x509 -noout -text -in /etc/kubernetes/pki/apiserver-kubelet-client.crt | grep After
             Not After : Sep 16 07:51:58 2020 GMT
@@ -266,59 +306,51 @@ bash -c openssl x509 -noout -text -in /etc/kubernetes/pki/apiserver.crt | grep A
             Not After : Sep 16 07:51:59 2020 GMT
 bash -c openssl x509 -noout -text -in /etc/kubernetes/pki/front-proxy-client.crt | grep After
             Not After : Sep 16 07:52:00 2020 GMT
+
+# or
+$ find /etc/kubernetes/pki/ -type f -name "*.crt" -print |
+       egrep --color=never -v 'ca.crt$' |
+       xargs -L 1 -t  -i bash -c 'openssl x509 -enddate -noout -in {}'
+
+# or
+$ ls -1 /etc/kubernetes/pki/*.crt |
+       grep --color=never -Ev 'ca.crt$' |
+       xargs -L 1 -t  -i bash -c 'openssl x509 -enddate -noout -in {}'
 ```
 
-- or
-  ```bash
-  $ find /etc/kubernetes/pki/ -type f -name "*.crt" -print |
-         egrep -v 'ca.crt$' |
-         xargs -L 1 -t  -i bash -c 'openssl x509 -enddate -noout -in {}'
-  ```
-
-- or
-  ```bash
-  $ ls -1 /etc/kubernetes/pki/*.crt |
-         grep -Ev 'ca.crt$' |
-         xargs -L 1 -t  -i bash -c 'openssl x509 -enddate -noout -in {}'
-  ```
-
 ### [pem for external etcd](https://stackoverflow.com/a/21297927/2940319)
-  ```bash
-  $ for i in ca client server peer; do
-      echo /etc/etcd/ssl/$i.pem
-      openssl x509 -enddate -noout -in /etc/etcd/ssl/$i.pem
-    done
-  /etc/etcd/ssl/ca.pem
-  notAfter=Sep  8 10:44:00 2024 GMT
-  /etc/etcd/ssl/client.pem
-  notAfter=Sep  8 10:49:00 2024 GMT
-  /etc/etcd/ssl/server.pem
-  notAfter=Sep  8 11:03:00 2024 GMT
-  /etc/etcd/ssl/peer.pem
-  notAfter=Sep  8 11:03:00 2024 GMT
-  ```
+```bash
+$ for i in ca client server peer; do
+    echo /etc/etcd/ssl/$i.pem
+    openssl x509 -enddate -noout -in /etc/etcd/ssl/$i.pem
+  done
+/etc/etcd/ssl/ca.pem
+notAfter=Sep  8 10:44:00 2024 GMT
+/etc/etcd/ssl/client.pem
+notAfter=Sep  8 10:49:00 2024 GMT
+/etc/etcd/ssl/server.pem
+notAfter=Sep  8 11:03:00 2024 GMT
+/etc/etcd/ssl/peer.pem
+notAfter=Sep  8 11:03:00 2024 GMT
 
-- or
-  ```bash
-  $ find /etc/etcd/ssl/ -type f -name '*.pem' |
-         egrep -v '*-key.pem$' |
-         xargs -L 1 -t -i bash -c 'openssl x509 -enddate -noout -in {}'
-  bash -c openssl x509 -enddate -noout -in /etc/etcd/ssl/ca.pem
-  notAfter=Sep  8 10:44:00 2024 GMT
-  bash -c openssl x509 -enddate -noout -in /etc/etcd/ssl/client.pem
-  notAfter=Sep  8 10:49:00 2024 GMT
-  bash -c openssl x509 -enddate -noout -in /etc/etcd/ssl/server.pem
-  notAfter=Sep  8 11:03:00 2024 GMT
-  bash -c openssl x509 -enddate -noout -in /etc/etcd/ssl/peer.pem
-  notAfter=Sep  8 11:03:00 2024 GMT
-  ```
+# or
+$ find /etc/etcd/ssl/ -type f -name '*.pem' |
+       egrep --color=never -v '*-key.pem$' |
+       xargs -L 1 -t -i bash -c 'openssl x509 -enddate -noout -in {}'
+bash -c openssl x509 -enddate -noout -in /etc/etcd/ssl/ca.pem
+notAfter=Sep  8 10:44:00 2024 GMT
+bash -c openssl x509 -enddate -noout -in /etc/etcd/ssl/client.pem
+notAfter=Sep  8 10:49:00 2024 GMT
+bash -c openssl x509 -enddate -noout -in /etc/etcd/ssl/server.pem
+notAfter=Sep  8 11:03:00 2024 GMT
+bash -c openssl x509 -enddate -noout -in /etc/etcd/ssl/peer.pem
+notAfter=Sep  8 11:03:00 2024 GMT
 
-- or
-  ```bash
-  $ ls -1 /etc/etcd/ssl/*.pem |
-          grep -Ev '\-key.pem$' |
-          xargs -L 1 -t  -i bash -c 'openssl x509 -enddate -noout -in {}'
-  ```
+# or
+$ ls -1 /etc/etcd/ssl/*.pem |
+        grep --color=never -Ev '\-key.pem$' |
+        xargs -L 1 -t  -i bash -c 'openssl x509 -enddate -noout -in {}'
+```
 
 ### backup
 ```bash
@@ -346,21 +378,17 @@ $ sudo cp -rp ~/.kube/config{,.backup.${timestamp}}
 ### clean environment
 ```bash
 # for `/etc/kubernetes/pki`
-
-# or
-$ echo {apiserver,apiserver-kubelet-client,apiserver-etcd-client,front-proxy-client} |
-       fmt -1 |
-       xargs -I{} bash -c "sudo cp -rp /etc/kubernetes/pki/{}.crt{,.backup.${timestamp}};
-                           sudo mv /etc/kubernetes/pki/{}.key{,.backup.${timestamp}}"
+$ printf "%s\n" {apiserver,apiserver-kubelet-client,apiserver-etcd-client,front-proxy-client} |
+         xargs -t -I{} bash -c "sudo cp -rp /etc/kubernetes/pki/{}.crt{,.backup.${timestamp}};
+                             sudo mv /etc/kubernetes/pki/{}.key{,.backup.${timestamp}}"
 
 # for kubeconfig
-$ echo {admin,kubelet,controller-manager,scheduler} |
-       fmt -1 |
-       xargs -I{} bash -c "sudo mv /etc/kubernetes/{}.conf{,.backup.${timestamp}}"
+$ printf "%s\n" {admin,kubelet,controller-manager,scheduler} |
+         xargs -t -I{} bash -c "sudo mv /etc/kubernetes/{}.conf{,.backup.${timestamp}}"
 
-$ echo {peer,healthcheck-client,server}.{crt,key} |
+$ printf "%s\n" {peer,healthcheck-client,server}.{crt,key} |
        fmt -1 |
-       xargs -I{} bash -c "sudo mv /etc/kubernets/pki/etcd/${}{,.backup.${timestamp}}"
+       xargs -t -I{} bash -c "sudo mv /etc/kubernets/pki/etcd/${}{,.backup.${timestamp}}"
 ```
 
 ### restore backup
@@ -447,27 +475,27 @@ $ sudo kubeadm [--config kubeadm.yml] alpha phase certs renew [commands]
   </div>
 </div>
 
-- i.e.
-  ```bash
-  # get target cluster kubeadm-cfg.yml
-  $ kubectl get cm kubeadm-config -n kube-system -o=jsonpath="{.data.ClusterConfiguration}"
-  $ sudo kubeadm --config ~/kubeadm.yml alpha phase certs renew all
+```bash
+# get target cluster kubeadm-cfg.yml
+$ kubectl get cm kubeadm-config -n kube-system -o=jsonpath="{.data.ClusterConfiguration}" > ~/kubeadm.yml
 
-  # or
-  $ sudo kubeadm --config ~/kubeadm.yml alpha phase certs renew etcd-server
-  $ sudo kubeadm --config ~/kubeadm.yml alpha phase certs renew apiserver-kubelet-client
-  $ sudo kubeadm --config ~/kubeadm.yml alpha phase certs renew front-proxy-client
+# renew all certificates - all certs without CA certs
+$ sudo kubeadm --config ~/kubeadm.yml alpha phase certs renew all
 
-  # for /etc/kubernetes/pki/*.crt
-  $ echo {apiserver,apiserver-kubelet-client,front-proxy-client} |
-         fmt -1 |
-         xargs -I{} bash -c "sudo kubeadm --config ~/kubeadm.yml alpha phase certs renew {}"
+# or : for /etc/kubernetes/pki/*.crt
+$ echo {apiserver,apiserver-kubelet-client,front-proxy-client} | xargs -n1 -t sudo kubeadm --config ~/kubeadm.yml alpha phase certs renew
+# or
+sudo kubeadm --config ~/kubeadm.yml alpha phase certs renew apiserver
+sudo kubeadm --config ~/kubeadm.yml alpha phase certs renew apiserver-kubelet-client
+sudo kubeadm --config ~/kubeadm.yml alpha phase certs renew front-proxy-client
 
-  # for /etc/kubernetes/pki/etcd/*.crt
-  $ echo {etcd-server,etcd-peer,etcd-healthcheck-client} |
-         fmt -1 |
-         xargs -I{} bash -c "sudo kubeadm --config ~/kubeadm.yml alpha phase certs renew {}"
-  ```
+# or : for /etc/kubernetes/pki/etcd/*.crt
+$ echo {etcd-server,etcd-peer,etcd-healthcheck-client} | xargs -n1 -t sudo kubeadm --config ~/kubeadm.yml alpha phase certs renew
+# or
+sudo kubeadm --config ~/kubeadm.yml alpha phase certs renew etcd-server
+sudo kubeadm --config ~/kubeadm.yml alpha phase certs renew etcd-peer
+sudo kubeadm --config ~/kubeadm.yml alpha phase certs renew etcd-healthcheck-client
+```
 
 #### generate new certificates
 ```bash
@@ -547,36 +575,139 @@ $ sudo kubeadm [--config kubeadm.yml] alpha phase certs [commands]
 </div>
 
 
-- re-generate `/etc/kubernetes/pki/etcd/*.crt` for modify `X509 Subject Alternative Name`:
-  ```bash
-  $ sudo kubeadm --config ~/kubeadm.yml alpha phase certs etcd-server
-  $ sudo kubeadm --config ~/kubeadm.yml alpha phase certs etcd-peer
-  $ sudo kubeadm --config ~/kubeadm.yml alpha phase certs etcd-healthcheck-client
+```bash
+# re-new
 
-  # or
-  $ echo {etcd-server,etcd-peer,etcd-healthcheck-client} |
-         fmt -1 |
-         xargs -I{} bash -c "sudo kubeadm --config ~/kubeadm.yml alpha phase certs {}"
-  ```
+$ echo etcd-{server,peer,healthcheck-client} | xargs -t -n1 sudo kubeadm --config ~/kubeadm.yml alpha phase certs renew
+# or
+$ printf "%s\n" {etcd-server,etcd-peer,etcd-healthcheck-client} | xargs -t -I{} bash -c "sudo kubeadm --config ~/kubeadm.yml alpha phase certs renew {}"
+# or
+sudo kubeadm --config ~/kubeadm.yml alpha phase certs renew etcd-server
+sudo kubeadm --config ~/kubeadm.yml alpha phase certs renew etcd-peer
+sudo kubeadm --config ~/kubeadm.yml alpha phase certs renew etcd-healthcheck-client
 
-  - check `X509 Subject Alternative Name`
-    ```bash
-    $ openssl x509 -noout -text -in /path/to/NAME.crt
-    ```
+```
 
-  - check expire date
-    ```bash
-    $ openssl x509 -noout -enddate -in /path/to/NAME.crt
-    ```
+```bash
+# re-generate `/etc/kubernetes/pki/etcd/*.crt` for modify `X509 Subject Alternative Name`:
+
+$ echo etcd-{server,peer,healthcheck-client} | xargs -t -n1 sudo kubeadm --config ~/kubeadm.yml alpha phase certs
+# or
+$ printf "%s\n" {etcd-server,etcd-peer,etcd-healthcheck-client} | xargs -t -I{} bash -c "sudo kubeadm --config ~/kubeadm.yml alpha phase certs {}"
+# or
+sudo kubeadm --config ~/kubeadm.yml alpha phase certs etcd-server
+sudo kubeadm --config ~/kubeadm.yml alpha phase certs etcd-peer
+sudo kubeadm --config ~/kubeadm.yml alpha phase certs etcd-healthcheck-client
+```
+
+```bash
+# check `X509 Subject Alternative Name`
+$ openssl x509 -noout -text -in /path/to/NAME.crt
+# check expire date
+$ openssl x509 -noout -enddate -in /path/to/NAME.crt
+```
+
+### peer controllers
+
+> [!NOTE|label:login to peer controller first]
+> ```bash
+> $ ssh devops@<PEER_CONTROLLER>
+> ```
+
+```bash
+##### sync #####
+
+# sync k8s certs (ca only)
+$ echo {ca,front-proxy-ca}.{crt,key} sa.{pub,key} etcd/ca.{crt,key} | fmt -1 |
+       xargs -t -I{} sudo rsync -avzP -e "ssh -q -i $HOME/.ssh/id_ed25519" --rsync-path="sudo rsync" \
+             devops@<MAJOR_CONTROLLER>:/etc/kubernetes/pki/{} /etc/kubernetes/pki/{}
+# or
+$ for f in {ca,front-proxy-ca}.{crt,key} sa.{pub,key} etcd/ca.{crt,key}; do
+      sudo rsync -avzrlpgoDP \
+                 -e "ssh -i $HOME/.ssh/id_ed25519" \
+                 --rsync-path='sudo rsync' \
+                 devops@<MAJOR_CONTROLLER>:"/etc/kubernetes/pki/${pkg}" /etc/kubernetes/pki/
+  done
+
+# re-generate etcd certs on peer controller
+$ echo {etcd-server,etcd-peer,etcd-healthcheck-client} | xargs -n1 -t sudo kubeadm --config ~/kubeadm.yml alpha phase certs
+# or
+sudo kubeadm --config ~/kubeadm.yml alpha phase certs etcd-server
+sudo kubeadm --config ~/kubeadm.yml alpha phase certs etcd-peer
+sudo kubeadm --config ~/kubeadm.yml alpha phase certs etcd etcd-healthcheck-client
+
+# re-new etcd certs on peer controller
+$ echo {etcd-server,etcd-peer,etcd-healthcheck-client} | xargs -n1 -t sudo kubeadm --config ~/kubeadm.yml alpha phase certs renew
+# or
+sudo kubeadm --config ~/kubeadm.yml alpha phase certs renew etcd-server
+sudo kubeadm --config ~/kubeadm.yml alpha phase certs renew etcd-peer
+sudo kubeadm --config ~/kubeadm.yml alpha phase certs renew etcd-healthcheck-client
+```
+
+<!--sec data-title="legacy solution - rsync all certs (including node-specific certs)" data-id="section0" data-show=true data-collapse=true ces-->
+```bash
+# for k8s certs
+$ find /etc/kubernetes/pki -type f -regextype posix-extended -regex '^.+/pki/[^/]+\.(key|crt|pub)$' -print |
+       xargs -L1 -t -i bash -c 'sudo rsync -avzrlpgoDP -e "ssh -q -i $HOME/.ssh/id_ed25519" --rsync-path='sudo rsync' devops@<MAJOR_CONTROLLER>:{} {}'
+# or
+$ find /etc/kubernetes/pki/ -type f -regex '^.*\.\(key\|crt\|pub\)$' -print |
+       xargs -L1 -t -i bash -c 'sudo rsync -avzrlpgoDP -e "ssh -q -i $HOME/.ssh/id_ed25519" --rsync-path='sudo rsync' devops@<MAJOR_CONTROLLER>:{} {}'
+# or
+$ for pkg in '*.key' '*.crt' '*.pub'; do
+    sudo rsync -avzrlpgoDP \
+               -e "ssh -i $HOME/.ssh/id_ed25519" \
+               --rsync-path='sudo rsync' \
+               devops@<MAJOR_CONTROLLER>:"/etc/kubernetes/pki/${pkg}" /etc/kubernetes/pki/
+  done
+
+# for stacked etcd
+$ find /etc/kubernetes/pki/etcd -type f -regextype posix-extended -regex '^.*(server|healthcheck-client|peer)\.(crt|key)$' |
+       xargs -L1 -t -i bash -c 'sudo rsync -avzrlpgoDP -e "ssh -q -i $HOME/.ssh/id_ed25519" --rsync-path='sudo rsync' devops@<MAJOR_CONTROLLER>:{} {}'
+# or
+$ find /etc/kubernetes/pki/etcd -type f -regex '^.*\(server\|healthcheck-client\|peer\)\.\(crt\|key\)$' |
+       xargs -L1 -t -i bash -c 'sudo rsync -avzrlpgoDP -e "ssh -q -i $HOME/.ssh/id_ed25519" --rsync-path='sudo rsync' devops@<MAJOR_CONTROLLER>:{} {}'
+# or
+$ for _i in server healthcheck-client peer; do
+    sudo rsync -avzrlpgoDP  \
+               -e "ssh -i $HOME/.ssh/id_ed25519" \
+               --rsync-path='sudo rsync' \
+               devops@<MAJOR_CONTROLLER>"/etc/kubernetes/pki/etcd/${_i}.{crt,key}" /etc/kubernetes/pki/etcd/
+ done
+
+# for kubeconfig
+$ find /etc/kubernetes -type f -regextype posix-extended -regex '^/etc/kubernetes/(admin|kubelet|controller-manager|scheduler)\.conf$' -print |
+       xargs -L1 -t -i bash -c 'sudo rsync -avzrlpgoDP -e "ssh -q -i $HOME/.ssh/id_ed25519" --rsync-path='sudo rsync' devops@<MAJOR_CONTROLLER>:{} {}'
+# or
+$ find /etc/kubernetes -type f -regex '^\/etc\/kubernetes\/\(admin\|kubelet\|controller-manager\|scheduler\)\.conf$' -print |
+       xargs -L1 -t -i bash -c 'sudo rsync -avzrlpgoDP -e "ssh -q -i $HOME/.ssh/id_ed25519" --rsync-path='sudo rsync' devops@<MAJOR_CONTROLLER>:{} {}'
+# or
+$ for _i in admin kubelet controller-manager scheduler; do
+    sudo rsync -avzrlpgoDP \
+               -e "ssh -i $HOME/.ssh/id_ed25519" \
+               --rsync-path='sudo rsync' \
+               devops@<MAJOR_CONTROLLER>:"/etc/kubernetes/${_i}.conf" /etc/kubernetes/
+ done
+```
+<!--endsec-->
 
 ### renew kubeconfig
+
+![](https://img.shields.io/badge/✗_node--specific-darkred?style=flat)
+
 ```bash
 # clean all config in /etc/kubenernets/*.conf, i.e.:
-# echo {admin,controller-manager,kubelet,scheduler} | fmt -1 | xargs -I{} bash -c "sudo rm -rf {}.conf"
+# echo {admin,controller-manager,kubelet,scheduler} | fmt -1 | xargs -t -I{} bash -c "sudo rm -rf {}.conf"
 $ sudo kubeadm [--config ~/kubeadm.yml] alpha phase kubeconfig [commands]
 ```
 
 #### renew all kubeconfig
+
+> [!NOTE|label:backup and clean environment]
+> ```bash
+> timestamp=$(date +"%Y%m%d")
+> echo {admin,kubelet,controller-manager,scheduler}.conf | fmt -1 | xargs -t -I{} sudo cp -rp /etc/kubernetes/{} /etc/kubernetes/{}.backup.${timestamp}
+> ```
+
 ```bash
 $ sudo kubeadm --config ~/kubeadm.yml alpha phase kubeconfig all
 [endpoint] WARNING: port specified in controlPlaneEndpoint overrides bindPort in the controlplane address
@@ -586,9 +717,14 @@ $ sudo kubeadm --config ~/kubeadm.yml alpha phase kubeconfig all
 [kubeconfig] Wrote KubeConfig file to disk: "/etc/kubernetes/scheduler.conf"
 
 # or
-$ echo {admin,controller-manager,kubelet,scheduler} |
-       fmt -1 |
-       xargs -I{} bash -c "sudo kubeadm --config ~/kubeadm.yml alpha phase kubeconfig {}"
+$ echo {admin,controller-manager,kubelet,scheduler} | fmt -1 | xargs -t -n1 sudo kubeadm --config ~/kubeadm.yml alpha phase kubeconfig
+# or
+$ printf "%s\n" {admin,controller-manager,kubelet,scheduler} | xargs -t -I{} bash -c "sudo kubeadm --config ~/kubeadm.yml alpha phase kubeconfig {}"
+# or
+sudo kubeadm --config ~/kubeadm.yml alpha phase kubeconfig admin
+sudo kubeadm --config ~/kubeadm.yml alpha phase kubeconfig controller-manager
+sudo kubeadm --config ~/kubeadm.yml alpha phase kubeconfig kubelet
+sudo kubeadm --config ~/kubeadm.yml alpha phase kubeconfig scheduler
 ```
 
 <div class="alert alert-success hints-alert">
@@ -645,65 +781,18 @@ sudo chown devops:devops ~/.kube/config
 sudo chmod 644 ~/.kube/config
 
 # check via
-$ command grep 'client-certificate-data' config | awk '{print $2}' | base64 -d | openssl x509 -noout -startdate -enddate -subject -issuer
+$ sudo command grep 'client-certificate-data' /etc/kubernetes/admin.conf | awk '{print $2}' | base64 -d | openssl x509 -noout -startdate -enddate -subject -issuer
+$ command grep 'client-certificate-data' ~/.kube/config | awk '{print $2}' | base64 -d | openssl x509 -noout -startdate -enddate -subject -issuer
 notBefore=Dec  6 09:20:35 2018 GMT
-notAfter=Jun  2 21:52:21 2026 GMT
-subject=O=system:masters, CN=kubernetes-admin
-issuer=CN=kubernetes
-```
-
-### sync to peer controllers
-
-> [!NOTE|label:login to peer controller first]
-> ```bash
-> $ ssh devops@<peerController>
-> ```
-
-```bash
-# for k8s certs
-$ find /etc/kubernetes/pki -type f -regextype posix-extended -regex '^.+/pki/[^/]+\.(key|crt|pub)$' -print |
-       xargs -L1 -t -i bash -c 'sudo rsync -avzrlpgoDP -e "ssh -q -i $HOME/.ssh/id_ed25519" --rsync-path='sudo rsync' devops@<majorController>:{} {}'
-# or
-$ find /etc/kubernetes/pki/ -type f -regex '^.*\.\(key\|crt\|pub\)$' -print |
-       xargs -L1 -t -i bash -c 'sudo rsync -avzrlpgoDP -e "ssh -q -i $HOME/.ssh/id_ed25519" --rsync-path='sudo rsync' devops@<majorController>:{} {}'
-# or
-$ for pkg in '*.key' '*.crt' '*.pub'; do
-    sudo rsync -avzrlpgoDP \
-               -e "ssh -i $HOME/.ssh/id_ed25519" \
-               --rsync-path='sudo rsync' \
-               devops@<majorController>:"/etc/kubernetes/pki/${pkg}" /etc/kubernetes/pki/
-  done
-
-# for stacked etcd
-$ find /etc/kubernetes/pki/etcd -type f -regextype posix-extended -regex '^.*(server|healthcheck-client|peer)\.(crt|key)$' |
-       xargs -L1 -t -i bash -c 'sudo rsync -avzrlpgoDP -e "ssh -q -i $HOME/.ssh/id_ed25519" --rsync-path='sudo rsync' devops@<majorController>:{} {}'
-# or
-$ find /etc/kubernetes/pki/etcd -type f -regex '^.*\(server\|healthcheck-client\|peer\)\.\(crt\|key\)$' |
-       xargs -L1 -t -i bash -c 'sudo rsync -avzrlpgoDP -e "ssh -q -i $HOME/.ssh/id_ed25519" --rsync-path='sudo rsync' devops@<majorController>:{} {}'
-# or
-$ for _i in server healthcheck-client peer; do
-    sudo rsync -avzrlpgoDP  \
-               -e "ssh -i $HOME/.ssh/id_ed25519" \
-               --rsync-path='sudo rsync' \
-               devops@<majorController>"/etc/kubernetes/pki/etcd/${_i}.{crt,key}" /etc/kubernetes/pki/etcd/
- done
-
-# for kubeconfig
-$ find /etc/kubernetes -type f -regextype posix-extended -regex '^/etc/kubernetes/(admin|kubelet|controller-manager|scheduler)\.conf$' -print |
-       xargs -L1 -t -i bash -c 'sudo rsync -avzrlpgoDP -e "ssh -q -i $HOME/.ssh/id_ed25519" --rsync-path='sudo rsync' devops@<majorController>:{} {}'
-# or
-$ find /etc/kubernetes -type f -regex '^\/etc\/kubernetes\/\(admin\|kubelet\|controller-manager\|scheduler\)\.conf$' -print |
-       xargs -L1 -t -i bash -c 'sudo rsync -avzrlpgoDP -e "ssh -q -i $HOME/.ssh/id_ed25519" --rsync-path='sudo rsync' devops@<majorController>:{} {}'
-# or
-$ for _i in admin kubelet controller-manager scheduler; do
-    sudo rsync -avzrlpgoDP \
-               -e "ssh -i $HOME/.ssh/id_ed25519" \
-               --rsync-path='sudo rsync' \
-               devops@<majorController>:"/etc/kubernetes/${_i}.conf" /etc/kubernetes/
- done
+notAfter=Jun 15 22:34:57 2027 GMT
+subject= /O=system:masters/CN=kubernetes-admin
+issuer= /CN=kubernetes
 ```
 
 ### restart kubelet
+
+![](https://img.shields.io/badge/✗_node--specific-darkred?style=flat)
+
 #### kill all services
 ```bash
 sudo kill -s SIGHUP $(pidof kube-apiserver)
@@ -806,13 +895,13 @@ certificate for the front proxy client renewed
 > sync renewed certificates to **peer controllers**
 
 ```bash
-$ leadIP=<majorController>
+$ leadIP=<MAJOR_CONTROLLER>
 
 $ find /etc/kubernetes/pki -type f -regextype posix-extended -regex '^.+/pki/[^/]+\.(key|crt|pub)$' -print
-       xargs -L1 -t -i bash -c 'sudo rsync -avzrlpgoDP -e "ssh -q -i $HOME/.ssh/id_ed25519" --rsync-path='sudo rsync' devops@<majorController>:{} {}'
+       xargs -L1 -t -i bash -c 'sudo rsync -avzrlpgoDP -e "ssh -q -i $HOME/.ssh/id_ed25519" --rsync-path='sudo rsync' devops@<MAJOR_CONTROLLER>:{} {}'
 # or
 $ find /etc/kubernetes/pki/ -type f -regex '^.*\.\(key\|crt\|pub\)$' -print |
-       xargs -L1 -t -i bash -c 'sudo rsync -avzrlpgoDP -e "ssh -q -i $HOME/.ssh/id_ed25519" --rsync-path='sudo rsync' devops@<majorController>:{} {}'
+       xargs -L1 -t -i bash -c 'sudo rsync -avzrlpgoDP -e "ssh -q -i $HOME/.ssh/id_ed25519" --rsync-path='sudo rsync' devops@<MAJOR_CONTROLLER>:{} {}'
 # or
 $ for pkg in '*.key' '*.crt' '*.pub'; do
     sudo rsync -avzrlpgoDP \
@@ -824,7 +913,7 @@ $ for pkg in '*.key' '*.crt' '*.pub'; do
 
 - verify
 
-  <!--sec data-title="verify" data-id="section0" data-show=true data-collapse=true ces-->
+  <!--sec data-title="verify" data-id="section1" data-show=true data-collapse=true ces-->
   ```bash
   $ find /etc/kubernetes/pki/ -type f -name "*.crt" -print |
              egrep -v 'ca.crt$' |
@@ -911,9 +1000,7 @@ sudo kill -s SIGHUP $(pidof kube-controller-manager)
 sudo kill -s SIGHUP $(pidof kube-scheduler)
 
 # or
-$ echo {kube-apiserver,kube-controller-manager,kube-scheduler} |
-       fmt -1 |
-       xargs -I{} bash -c "sudo kill -s SIGHUP $(pidof {}) "
+$ echo {kube-apiserver,kube-controller-manager,kube-scheduler} | fmt -1 | xargs -I{} bash -c "sudo kill -s SIGHUP $(pidof {}) "
 ```
 
 ### restart kubelet service
@@ -923,7 +1010,7 @@ sudo systemctl restart kubelet
 ```
 
 - verify
-  <!--sec data-title="verify" data-id="section1" data-show=true data-collapse=true ces-->
+  <!--sec data-title="verify" data-id="section2" data-show=true data-collapse=true ces-->
   ```bash
   $ sudo systemctl status kubelet
   ● kubelet.service - kubelet: The Kubernetes Node Agent
@@ -1278,31 +1365,26 @@ $ sudo openssl x509 -req \
 - 1.15-
   ```bash
   $ sudo kubeadm [--config ~/kubeadm.yml] alpha phase kubeconfig all
-  ```
 
-  - renew all certs
-    ```bash
-    $ sudo kubeadm [--config ~/kubeadm.yml] alpha phase certs renew all
-    ```
-  - re-generate all certs
-    ```bash
-    $ sudo kubeadm [--config ~/kubeadm.yml] alpha phase certs all
-    ```
+  # renew all certs
+  $ sudo kubeadm [--config ~/kubeadm.yml] alpha phase certs renew all
+
+  # re-generate all certs
+  $ sudo kubeadm [--config ~/kubeadm.yml] alpha phase certs all
+  ```
 
 - v1.15+
   ```bash
   $ sudo kubeadm [--config ~/kubeadm.yml] alpha certs renew all
-  ```
 
-  - renew all certs
-    ```bash
-    $ sudo kubeadm [--config ~/kubeadm.yml] alpha certs renew all
-    ```
+  # renew all certs
+  $ sudo kubeadm [--config ~/kubeadm.yml] alpha certs renew all
+  ```
 
 ### renew via `kubectl config`
 
 > reference:
-> - [kubectlp-command#config](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#config)
+> - [kubectl-command#config](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#config)
 
 ```bash
 $ kubectl config set-credentials kubernetes-admin \
@@ -1335,7 +1417,7 @@ kube-system            Active   3y10d
 > reference:
 > - [Get user and group from current-context](https://stackoverflow.com/questions/61157272/what-role-and-rolebinding-is-kubectl-associated-to)
 
-- conf:
+- conf
   ```bash
   # current kubeconfig context
   $ kubectl config view --raw -o json |
@@ -1348,7 +1430,7 @@ kube-system            Active   3y10d
 
   # for all confs
   $ find /etc/kubernetes/ -type f -name "*.conf" -print |
-         grep -Ev 'kubelet.conf$' |
+         command grep -Ev 'kubelet.conf$' |
          xargs -L1 -t -i bash -c "sudo grep 'client-certificate-data' {} \
                                        | awk '{print \$2}' \
                                        | base64 -d \
@@ -1367,26 +1449,26 @@ kube-system            Active   3y10d
           Subject: O=system:nodes, CN=system:node:kubernetes-master01
   ```
 
-  - certs
-    ```bash
-    $ find /etc/kubernetes/pki/ -type f -name "*.crt" -print |
-          grep -Ev 'ca.crt$' |
-          xargs -L1 -t -i bash -c 'openssl x509 -noout -text -in {} | grep --color=always Subject\:'
-    bash -c openssl x509 -noout -text -in /etc/kubernetes/pki/front-proxy-client.crt | grep --color=always Subject\:
-            Subject: CN=front-proxy-client
-    bash -c openssl x509 -noout -text -in /etc/kubernetes/pki/etcd/server.crt | grep --color=always Subject\:
-            Subject: CN=kubernetes-master01
-    bash -c openssl x509 -noout -text -in /etc/kubernetes/pki/etcd/peer.crt | grep --color=always Subject\:
-            Subject: CN=kubernetes-master01
-    bash -c openssl x509 -noout -text -in /etc/kubernetes/pki/etcd/healthcheck-client.crt | grep --color=always Subject\:
-    ubject: O=system:masters, CN=kube-apiserver-etcd-client
-    bash -c openssl x509 -noout -text -in /etc/kubernetes/pki/apiserver.crt | grep --color=always Subject\:
-            Subject: CN=kube-apiserver
-    bash -c openssl x509 -noout -text -in /etc/kubernetes/pki/apiserver-kubelet-client.crt | grep --color=always Subject\:
-            Subject: O=system:masters, CN=kube-apiserver-kubelet-client
-    bash -c openssl x509 -noout -text -in /etc/kubernetes/pki/apiserver-etcd-client.crt | grep --color=always Subject\:
-            Subject: O=system:masters, CN=kube-apiserver-etcd-client
-    ```
+- certs
+  ```bash
+  $ find /etc/kubernetes/pki/ -type f -name "*.crt" -print |
+        grep -Ev 'ca.crt$' |
+        xargs -L1 -t -i bash -c 'openssl x509 -noout -text -in {} | grep --color=always Subject\:'
+  bash -c openssl x509 -noout -text -in /etc/kubernetes/pki/front-proxy-client.crt | grep --color=always Subject\:
+          Subject: CN=front-proxy-client
+  bash -c openssl x509 -noout -text -in /etc/kubernetes/pki/etcd/server.crt | grep --color=always Subject\:
+          Subject: CN=kubernetes-master01
+  bash -c openssl x509 -noout -text -in /etc/kubernetes/pki/etcd/peer.crt | grep --color=always Subject\:
+          Subject: CN=kubernetes-master01
+  bash -c openssl x509 -noout -text -in /etc/kubernetes/pki/etcd/healthcheck-client.crt | grep --color=always Subject\:
+  ubject: O=system:masters, CN=kube-apiserver-etcd-client
+  bash -c openssl x509 -noout -text -in /etc/kubernetes/pki/apiserver.crt | grep --color=always Subject\:
+          Subject: CN=kube-apiserver
+  bash -c openssl x509 -noout -text -in /etc/kubernetes/pki/apiserver-kubelet-client.crt | grep --color=always Subject\:
+          Subject: O=system:masters, CN=kube-apiserver-kubelet-client
+  bash -c openssl x509 -noout -text -in /etc/kubernetes/pki/apiserver-etcd-client.crt | grep --color=always Subject\:
+          Subject: O=system:masters, CN=kube-apiserver-etcd-client
+  ```
 
   - about `system:masters`
     ```bash
@@ -1460,13 +1542,13 @@ kube-system            Active   3y10d
   $ kubectl certificate approve kubeadm-cert-system:kube-scheduler-8jbb9
 
   $ kubectl -n kube-system get csr
-  NAME                                              AGE    REQUESTORE        CONDITION
-  kubeadm-cert-font-proxy-client-9kxgj              57s    kubernetes-admin  Approved,Issued
-  kubeadm-cert-kube-apiserver-bgmcs                 3m9s   kubernetes-admin  Approved,Issued
-  kubeadm-cert-kube-apiserver-kubelet-client-r9lmh  2m57s  kubernetes-admin  Approved,Issued
-  kubeadm-cert-kubernetes-admin-648w4               4m19s  kubernetes-admin  Approved,Issued
+  NAME                                               AGE    REQUESTORE        CONDITION
+  kubeadm-cert-font-proxy-client-9kxgj               57s    kubernetes-admin  Approved,Issued
+  kubeadm-cert-kube-apiserver-bgmcs                  3m9s   kubernetes-admin  Approved,Issued
+  kubeadm-cert-kube-apiserver-kubelet-client-r9lmh   2m57s  kubernetes-admin  Approved,Issued
+  kubeadm-cert-kubernetes-admin-648w4                4m19s  kubernetes-admin  Approved,Issued
   kubeadm-cert-system:kube-controller-manager-kzx49  70s    kubernetes-admin  Approved,Issued
-  kubeadm-cert-system:kube-scheduler-8jbb9          49s    kubernetes-admin  Approved,Issued
+  kubeadm-cert-system:kube-scheduler-8jbb9           49s    kubernetes-admin  Approved,Issued
   ```
 
   - [older version : v1.15](https://stackoverflow.com/a/67101376/2940319)
@@ -1510,45 +1592,18 @@ kube-system            Active   3y10d
     $ echo | openssl s_client -showcerts -connect 127.0.0.1:6443 -servername api 2>/dev/null | openssl x509 -noout -enddate
     ```
 
-# reference
-
-> [!TIP]
-> reference:
-> - [* Kubernetes中的证书工作机制](https://blog.51cto.com/u_15127645/4342894)
-> - [证书](https://kubernetes.io/zh/docs/tasks/administer-cluster/certificates/)
-> - [手动档搭建 Kubernetes HA 集群](https://mritd.com/2017/07/21/set-up-kubernetes-ha-cluster-by-binary/)
-> - [Certificates](https://kubernetes.io/docs/tasks/administer-cluster/certificates/)
-> - [PKI certificates and requirements](https://kubernetes.io/docs/setup/best-practices/certificates/)
-> - [Generate self-signed certificates](https://coreos.com/os/docs/latest/generate-self-signed-certificates.html)
-> - [Certification authority root certificate expiry and renewal](https://serverfault.com/a/308100)
-> - [Certificates](https://kubernetes.io/docs/concepts/cluster-administration/certificates/)
-> - [CUSTOM CERTIFICATE AUTHORITY](https://choria.io/docs/configuration/custom_ca/)
-> - [Certificate Authority with CFSSL](https://jite.eu/2019/2/6/ca-with-cfssl/)
-> - [K8S Cluster tls Certificate Management](https://programmer.group/k8s-cluster-tls-certificate-management.html)
-> - [Access Kubernetes API with Client Certificates](https://codefarm.me/2019/02/01/access-kubernetes-api-with-client-certificates/)
-> - [Public-key cryptography and X.509](https://codefarm.me/2019/01/31/public-key-cryptography-and-x509/)
-> - [Bootstrapping Kubernetes Clusters with kubeadm](https://codefarm.me/2019/01/28/bootstrapping-kubernetes-clusters-with-kubeadm/)
-> - [how to renew the certificate when apiserver cert expired?](https://github.com/kubernetes/kubeadm/issues/581#issuecomment-421477139)
-> - [Can not access my kubernetes cluster even if all my server certificates are valid](https://stackoverflow.com/a/52964957)
-> - [The Cluster API Book](https://cluster-api.sigs.k8s.io/tasks/certs/generate-kubeconfig.html)
-> - [K8S 集群中的认证、授权与 kubeconfig](http://www.xuyasong.com/?p=2054)
-> - [Certificate Signing Requests](https://kubernetes.io/docs/reference/access-authn-authz/certificate-signing-requests/)
-> - [Authenticating](https://kubernetes.io/docs/reference/access-authn-authz/authentication/)
-> - [Kubernetes – KUBECONFIG and Context](https://theithollow.com/2019/02/11/kubernetes-kubeconfig-and-context/)
-> - [The connection to the server x.x.x.:6443 was refused - did you specify the right host or port? Kubernetes](https://stackoverflow.com/a/65409311/2940319)
-> - [Troubleshooting kubectl Error: The connection to the server x.x.x.x:6443 was refused – did you specify the right host or port?](https://www.thegeekdiary.com/troubleshooting-kubectl-error-the-connection-to-the-server-x-x-x-x6443-was-refused-did-you-specify-the-right-host-or-port/)
-
+# basic knowledge
 ## required certificates
 
-| DEFAULT CN                      |         PARENT CA         |  O (IN SUBJECT)  |      KIND      |                         HOSTS (SAN)                         |
-|:--------------------------------|:-------------------------:|:----------------:|:--------------:|:-----------------------------------------------------------:|
-| `kube-etcd`                     |          etcd-ca          |         -        | server, client | `hostname` <br> `Host_IP` <br> `localhost` <br> `127.0.0.1` |
-| `kube-etcd-peer`                |          etcd-ca          |         -        | server, client | `hostname` <br> `Host_IP` <br> `localhost` <br> `127.0.0.1` |
-| `kube-etcd-healthcheck-client`  |          etcd-ca          |         -        |     client     |                              -                              |
-| `kube-apiserver-etcd-client`    |          etcd-ca          | `system:masters` |     client     |                              -                              |
-| `kube-apiserver`                |       kubernetes-ca       |         -        |     server     |          `hostname`, `Host_IP`, `advertise_IP`, [1]         |
-| `kube-apiserver-kubelet-client` |       kubernetes-ca       | `system:masters` |     client     |                              -                              |
-| `front-proxy-client`            | kubernetes-front-proxy-ca |         -        |     client     |                              -                              |
+| DEFAULT CN                      |         PARENT CA         |  O (IN SUBJECT)  |      KIND      |                   HOSTS (SAN)                   |
+|:--------------------------------|:-------------------------:|:----------------:|:--------------:|:-----------------------------------------------:|
+| `kube-etcd`                     |          etcd-ca          |         -        | server, client | `hostname`, `Host_IP`, `localhost`, `127.0.0.1` |
+| `kube-etcd-peer`                |          etcd-ca          |         -        | server, client | `hostname`, `Host_IP`, `localhost`, `127.0.0.1` |
+| `kube-etcd-healthcheck-client`  |          etcd-ca          |         -        |     client     |                        -                        |
+| `kube-apiserver-etcd-client`    |          etcd-ca          | `system:masters` |     client     |                        -                        |
+| `kube-apiserver`                |       kubernetes-ca       |         -        |     server     |    `hostname`, `Host_IP`, `advertise_IP`, [1]   |
+| `kube-apiserver-kubelet-client` |       kubernetes-ca       | `system:masters` |     client     |                        -                        |
+| `front-proxy-client`            | kubernetes-front-proxy-ca |         -        |     client     |                        -                        |
 
 ## [Certificate paths](https://kubernetes.io/docs/setup/best-practices/certificates/#certificate-paths)
 
@@ -1585,4 +1640,31 @@ kube-system            Active   3y10d
 | `admin.conf`                | `kubectl`                   | Configures administrator user for the cluster                         |
 | `kubelet.conf`              | `kubelet`                   | One required for each node in the cluster.                            |
 | `controller-manager.conf`   | `kube-controller-manager`   | Must be added to manifest in manifests/kube-controller-manager.yaml   |
-| `scheduler.conf`            | `kube-scheduler`            | Must be added to manifest in manifests/kube-scheduler.yaml            |
+
+
+# reference
+
+> [!TIP]
+> reference:
+> - [* Kubernetes中的证书工作机制](https://blog.51cto.com/u_15127645/4342894)
+> - [证书](https://kubernetes.io/zh/docs/tasks/administer-cluster/certificates/)
+> - [手动档搭建 Kubernetes HA 集群](https://mritd.com/2017/07/21/set-up-kubernetes-ha-cluster-by-binary/)
+> - [Certificates](https://kubernetes.io/docs/tasks/administer-cluster/certificates/)
+> - [Generate self-signed certificates](https://coreos.com/os/docs/latest/generate-self-signed-certificates.html)
+> - [Certification authority root certificate expiry and renewal](https://serverfault.com/a/308100)
+> - [Certificates](https://kubernetes.io/docs/concepts/cluster-administration/certificates/)
+> - [CUSTOM CERTIFICATE AUTHORITY](https://choria.io/docs/configuration/custom_ca/)
+> - [Certificate Authority with CFSSL](https://jite.eu/2019/2/6/ca-with-cfssl/)
+> - [K8S Cluster tls Certificate Management](https://programmer.group/k8s-cluster-tls-certificate-management.html)
+> - [Access Kubernetes API with Client Certificates](https://codefarm.me/2019/02/01/access-kubernetes-api-with-client-certificates/)
+> - [Public-key cryptography and X.509](https://codefarm.me/2019/01/31/public-key-cryptography-and-x509/)
+> - [Bootstrapping Kubernetes Clusters with kubeadm](https://codefarm.me/2019/01/28/bootstrapping-kubernetes-clusters-with-kubeadm/)
+> - [how to renew the certificate when apiserver cert expired?](https://github.com/kubernetes/kubeadm/issues/581#issuecomment-421477139)
+> - [Can not access my kubernetes cluster even if all my server certificates are valid](https://stackoverflow.com/a/52964957)
+> - [The Cluster API Book](https://cluster-api.sigs.k8s.io/tasks/certs/generate-kubeconfig.html)
+> - [K8S 集群中的认证、授权与 kubeconfig](http://www.xuyasong.com/?p=2054)
+> - [Certificate Signing Requests](https://kubernetes.io/docs/reference/access-authn-authz/certificate-signing-requests/)
+> - [Authenticating](https://kubernetes.io/docs/reference/access-authn-authz/authentication/)
+> - [Kubernetes – KUBECONFIG and Context](https://theithollow.com/2019/02/11/kubernetes-kubeconfig-and-context/)
+> - [The connection to the server x.x.x.:6443 was refused - did you specify the right host or port? Kubernetes](https://stackoverflow.com/a/65409311/2940319)
+> - [Troubleshooting kubectl Error: The connection to the server x.x.x.x:6443 was refused – did you specify the right host or port?](https://www.thegeekdiary.com/troubleshooting-kubectl-error-the-connection-to-the-server-x-x-x-x6443-was-refused-did-you-specify-the-right-host-or-port/)
