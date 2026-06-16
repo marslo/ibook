@@ -244,7 +244,7 @@ assert 3 == merged.get('z')
   ```
 
 ## get key or value from nested Map
-> insprired from :
+> inspired from :
 > - [How to find a map key by value of nested map in Groovy](https://stackoverflow.com/a/44829625/2940319)
 
 {% hint style='tip' %}

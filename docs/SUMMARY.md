@@ -43,6 +43,7 @@
     * [shell:folder](cheatsheet/windows/shell-folder.md)
 * [vim](vim/vim.md)
   * [nvim](vim/nvim.md)
+    * [nvim-treesitter](./vim/plugins/nvim-treesitter.md)
   * [install](vim/install.md)
   * [color](vim/color.md)
   * [plugins](vim/plugins/plugins.md)
