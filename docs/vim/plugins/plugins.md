@@ -1271,6 +1271,7 @@ highlight! link snipLeadingSpaces snipComment
 ```
 
 #### snippets
+
 ```
 snippet "mode(line)?( (\S+))?" "vim modeline" br
 ${1:#} vim`!v ':set '. (&expandtab ? printf('expandtab shiftwidth=%i tabstop=%i softtabstop=%i', &sw, &ts, &sts) : printf('noexpandtab:sts=%i:sw=%i:ts=%i', &sts, &sw, &ts)) . (&tw ? ':tw='. &tw : '') . (':filetype=')`${2:`!p
@@ -1301,6 +1302,7 @@ endsnippet
 ```
 
 #### commands
+
 ```vim
 :CocList snippets
 :CocCommand snippets.openSnippetFiles
@@ -1354,6 +1356,36 @@ let g:coc_global_extensions = [ 'coc-word' ]
   $ ls ~/.config/coc/extensions/node_modules
   coc-css     coc-emoji   coc-html-css-support  coc-java  coc-omni     coc-sh        coc-tag
   coc-docker  coc-groovy  coc-htmlhint          coc-json  coc-pyright  coc-snippets
+  ```
+
+  ```bash
+  $ command cat ~/.config/coc/extensions/package.json 2>/dev/null
+  {
+    "dependencies": {
+      "coc-groovy": ">=1.5.0",
+      "coc-yaml": ">=1.9.1",
+      "coc-java": ">=1.26.1",
+      "coc-css": ">=2.1.0",
+      "coc-sh": ">=1.2.4",
+      "coc-html-css-support": ">=0.5.3",
+      "coc-htmlhint": ">=0.6.1",
+      "coc-toml": ">=1.2.5",
+      "coc-snippets": ">=3.4.7",
+      "coc-git": ">=2.7.7",
+      "coc-emoji": ">=1.3.1",
+      "coc-highlight": ">=2.0.4",
+      "coc-word": ">=1.2.2",
+      "coc-dictionary": ">=1.2.3",
+      "coc-tag": ">=1.2.5",
+      "coc-diagnostic": ">=0.24.1",
+      "coc-vimlsp": ">=0.13.1",
+      "coc-pyright": ">=1.1.408",
+      "coc-docker": ">=1.0.2",
+      "coc-json": ">=1.9.3",
+      "coc-html": ">=1.8.0"
+    },
+    "lastUpdate": 1781737446303
+  }
   ```
 
 - show status

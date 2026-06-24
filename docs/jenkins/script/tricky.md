@@ -14,6 +14,7 @@
   - [Jenkins search results missing /ci/ URL component](#jenkins-search-results-missing-ci-url-component)
   - [jenkins server info](#jenkins-server-info)
   - [How to access Junit test counts in Jenkins Pipeline project](#how-to-access-junit-test-counts-in-jenkins-pipeline-project)
+- [save jenkins log into file](#save-jenkins-log-into-file)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -469,3 +470,110 @@ def testStatuses() {
   return testStatus
 }
 ```
+
+## save jenkins log into file
+
+> [!NOTE|label:works immediately but not permanent:]
+> running in jenkins Script Console - https://jenkins.example.com/script
+
+```groovy
+import java.util.logging.*
+
+new File("/var/lib/jenkins/logs/security").mkdirs()
+
+def logger = Logger.getLogger("jenkins.security.SecurityListener")
+logger.level = Level.FINE
+if (!logger.handlers.any { it instanceof FileHandler }) {
+  def h = new FileHandler("/var/lib/jenkins/logs/security/security.%g.log", 10485760, 10, true)
+  h.formatter = new SimpleFormatter()
+  h.level = Level.FINE
+  logger.addHandler(h)
+  logger.useParentHandlers = false
+  println "added"
+} else {
+  println "already added"
+}
+```
+
+```bash
+# verify
+$ cat /var/lib/jenkins/logs/security/security.0.log
+Jun 24, 2026 1:01:47 AM jenkins.security.SecurityListener fireLoggedOut
+FINE: logged out: marslo
+Jun 24, 2026 1:01:50 AM jenkins.security.SecurityListener fireAuthenticated2
+FINE: authenticated: marslo []
+Jun 24, 2026 1:01:50 AM jenkins.security.SecurityListener fireAuthenticated2
+FINE: authenticated: marslo []
+Jun 24, 2026 1:01:50 AM jenkins.security.SecurityListener fireLoggedIn
+FINE: logged in: marslo
+```
+
+> [!NOTE|label:permanent but need Jenkins restart:]
+> running in JENKINS_HOME - `/var/lib/jenkins/init.groovy.d/security-audit.groovy`
+
+```bash
+mkdir -p /var/lib/jenkins/init.groovy.d /var/lib/jenkins/logs/security
+
+cat > /var/lib/jenkins/init.groovy.d/security-audit.groovy <<'EOF'
+import java.util.logging.*
+
+new File("/var/lib/jenkins/logs/security").mkdirs()
+
+def logger = Logger.getLogger("jenkins.security.SecurityListener")
+logger.level = Level.FINE
+if (!logger.handlers.any { it instanceof FileHandler }) {
+    def h = new FileHandler("/var/lib/jenkins/logs/security/security.%g.log", 10485760, 10, true)
+    h.formatter = new SimpleFormatter()
+    h.level = Level.FINE
+    logger.addHandler(h)
+    logger.useParentHandlers = false
+}
+EOF
+
+chown -R jenkins:jenkins /var/lib/jenkins/init.groovy.d /var/lib/jenkins/logs/security
+```
+
+> [!NOTE|label:permanent with log rotation:]
+> requires /var/lib/jenkins/logs/security/security.log + logrotate + cron
+
+```bash
+mkdir -p /var/lib/jenkins/init.groovy.d /var/lib/jenkins/logs/security
+
+# create /var/lib/jenkins/logs/security/security.log
+cat > /var/lib/jenkins/init.groovy.d/security-audit.groovy <<'EOF'
+import java.util.logging.*
+
+new File("/var/lib/jenkins/logs/security").mkdirs()
+
+def logger = Logger.getLogger("jenkins.security.SecurityListener")
+logger.level = Level.FINE
+if (!logger.handlers.any { it instanceof FileHandler }) {
+    def h = new FileHandler("/var/lib/jenkins/logs/security/security.log", true)
+    h.formatter = new SimpleFormatter()
+    h.level = Level.FINE
+    logger.addHandler(h)
+    logger.useParentHandlers = false
+}
+EOF
+chown -R jenkins:jenkins /var/lib/jenkins/init.groovy.d /var/lib/jenkins/logs/security
+
+# logrotate config
+cat > /etc/logrotate.d/jenkins-security <<'EOF'
+/var/lib/jenkins/logs/security/security.log {
+    daily
+    rotate 15
+    missingok
+    notifempty
+    copytruncate
+}
+EOF
+
+# crontab - in host
+0 1 * * * docker exec <DOCKER_NAME> logrotate /etc/logrotate.conf
+```
+
+> [!NOTE|label:using Jenkins System Log Recorder:]
+> running in https://jenkins.example.com/manage/log
+
+1. **Add recorder** → Name: `user-login` → **Create**
+2. **Loggers**: `jenkins.security.SecurityListener`; **Log level**: `FINE` or `ALL`
