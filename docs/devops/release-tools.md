@@ -5,7 +5,10 @@
   - [install](#install)
   - [conventional commits](#conventional-commits)
   - [plugins](#plugins)
+    - [check and upgrade](#check-and-upgrade)
+  - [configurations](#configurations)
     - [.releaserc.json](#releasercjson)
+    - [.releaserc.js](#releasercjs)
     - [with conventionalcommits](#with-conventionalcommits)
   - [execution](#execution)
 - [conventional-changelog](#conventional-changelog)
@@ -75,6 +78,40 @@ $ npm install -g @commitlint/cli @commitlint/config-conventional
 | [`@semantic-release/exec`](https://github.com/semantic-release/exec)                                                     | to execute custom shell commands                                                   |
 | [`conventional-changelog-conventionalcommits`](https://www.npmjs.com/package/conventional-changelog-conventionalcommits) | for automated CHANGELOG generation and version management                          |
 
+### check and upgrade
+```bash
+$ npm outdated -g
+Package                                     Current   Wanted   Latest  Location                                                 Depended by
+@commitlint/cli                              21.0.1   21.2.0   21.2.0  node_modules/@commitlint/cli                             global
+@commitlint/config-conventional              21.0.1   21.2.0   21.2.0  node_modules/@commitlint/config-conventional             global
+@pnp/cli-microsoft365                        11.7.1   11.8.0   11.8.0  node_modules/@pnp/cli-microsoft365                       global
+conventional-changelog-conventionalcommits    9.3.1   10.2.0   10.2.0  node_modules/conventional-changelog-conventionalcommits  global
+npm                                         11.17.0  11.18.0  11.18.0  node_modules/npm                                         global
+npm-groovy-lint                              17.0.5   18.0.0   18.0.0  node_modules/npm-groovy-lint                             global
+semantic-release                             25.0.3   25.0.5   25.0.5  node_modules/semantic-release                            global
+
+# check version list
+$ npm view conventional-changelog-conventionalcommits versions --json | tail
+  "8.0.0",
+  "9.0.0",
+  "9.1.0",
+  "9.2.0",
+  "9.3.0",
+  "9.3.1",
+  "10.0.0",
+  "10.1.0",
+  "10.2.0"
+]
+
+# upgrade all
+$ npm update -g
+
+added 293 packages, removed 1068 packages, and changed 1081 packages in 55s
+# upgrade specific package
+$ npm install -g conventional-changelog-conventionalcommits@latest
+```
+
+## configurations
 
 ### .releaserc.json
 
@@ -104,8 +141,9 @@ $ npm install -g @commitlint/cli @commitlint/config-conventional
 ```
 <!--endsec-->
 
+<!--sec data-title="create or update CHANGELOG.md and commit as new revision" data-id="section1" data-show=true data-collapse=true ces-->
 ```json
-// will create or update CHANGELOG.md and commit as new revision
+// create or update CHANGELOG.md and commit as new revision
 {
   "branches": [
     { "name": "main" },
@@ -121,9 +159,11 @@ $ npm install -g @commitlint/cli @commitlint/config-conventional
   ]
 }
 ```
+<!--endsec-->
 
+<!--sec data-title="update version in pyproject.toml and poetry.lock via poetry" data-id="section2" data-show=true data-collapse=true ces-->
 ```json
-// will update version in pyproject.toml and poetry.lock via poetry
+// update version in pyproject.toml and poetry.lock via poetry
 {
   "branches": [
     { "name": "main" },
@@ -146,7 +186,9 @@ $ npm install -g @commitlint/cli @commitlint/config-conventional
   ]
 }
 ```
+<!--endsec-->
 
+<!--sec data-title="format the release notes with conventional-changelog-conventionalcommits" data-id="section3" data-show=true data-collapse=true ces-->
 ```json
 // to format the release notes with conventional-changelog-conventionalcommits
 {
@@ -178,6 +220,233 @@ $ npm install -g @commitlint/cli @commitlint/config-conventional
   ]
 }
 ```
+<!--endsec-->
+
+### .releaserc.js
+
+
+> [!NOTE|label:references:]
+> - [conventional-changelog-conventionalcommits - v10.0.0 BREAKING CHANGES](https://github.com/conventional-changelog/conventional-changelog/blob/master/packages/conventional-changelog-conventionalcommits/CHANGELOG.md#1000-2026-06-26)
+> - [conventional-changelog-writer](https://github.com/conventional-changelog/conventional-changelog/blob/master/packages/conventional-changelog-writer/README.md)
+
+```javascript
+// minimal .releaserc.js for conventional-changelog-conventionalcommits v10+
+module.exports = {
+  branches: ["main"],
+  plugins: [
+    ["@semantic-release/commit-analyzer",         { preset: "conventionalcommits" }],
+    ["@semantic-release/release-notes-generator", { preset: "conventionalcommits" }],
+    "@semantic-release/changelog",   // writes/updates CHANGELOG.md
+    "@semantic-release/git"          // commits the updated CHANGELOG.md
+  ]
+};
+```
+
+<!--sec data-title="customized changelog format for conventional-changelog-conventionalcommits v10+" data-id="section4" data-show=true data-collapse=true ces-->
+```javascript
+// with customized changelog format for conventional-changelog-conventionalcommits v10+
+const SECTIONS = [
+  { type: 'feat',     section: 'Features' },
+  { type: 'fix',      section: 'Bug Fixes' },
+  { type: 'refactor', section: 'Code Refactoring' },
+  { type: 'chore',    section: 'Others' },
+  { type: 'docs',     section: 'Documentation' },
+  { type: 'perf',     section: 'Performance' },
+  { type: 'ci',       section: 'CI/CD' }
+];
+const TYPE_TO_SECTION = Object.fromEntries(SECTIONS.map(s => [s.type, s.section]));
+const SECTION_ORDER   = SECTIONS.map(s => s.section);
+const isSignoff       = (line) => /^\s*Signed-off-by:/i.test(line);
+const stripSignoff    = (text) => (text || '').split('\n').filter(l => !isSignoff(l)).join('\n').trim();
+
+// ── Handlebars templates (writer-8 compatible; vendored from the conventional - commits preset so they work regardless of the installed preset major) ──
+const mainTemplate = `{{> header}}
+{{#if noteGroups}}
+{{#each noteGroups}}
+
+### ⚠ {{title}}
+
+{{#each notes}}
+* {{#if commit.scope}}**{{commit.scope}}:** {{/if}}{{text}}
+{{/each}}
+{{/each}}
+{{/if}}
+{{#each commitGroups}}
+
+{{#if title}}
+### {{title}}
+
+{{/if}}
+{{#each commits}}
+{{> commit root=@root}}
+{{/each}}
+{{/each}}
+`;
+
+const headerPartial = `## {{#if @root.linkCompare~}}
+  [{{version}}]({{~@root.host}}/{{#if this.owner}}{{~this.owner}}{{else}}{{~@root.owner}}{{/if}}/{{#if this.repository}}{{~this.repository}}{{else}}{{~@root.repository}}{{/if}}/compare/{{previousTag}}...{{currentTag}})
+{{~else}}
+  {{~version}}
+{{~/if}}
+{{~#if date}} ({{date}})
+{{/if}}
+`;
+
+// {{header}} keeps the original "feat: ..." prefix; body/footer follow (signoff stripped in transform)
+const commitPartial = "* {{header}}\n{{#if body}}\n{{body}}\n{{/if}}\n{{#if footer}}\n\n{{footer}}\n{{/if}}\n";
+
+module.exports = {
+  "branches": ["main"],
+  "tagFormat": "v${version}",
+  "plugins": [
+    ["@semantic-release/commit-analyzer", {
+      "preset": "angular",
+      "releaseRules": [
+        // { "type": "feat",     "release": "patch" },
+        // { "breaking": true,   "release": "minor" },
+        { "type": "chore",    "release": "patch" },
+        { "type": "refactor", "release": "patch" },
+        { "type": "docs",     "release": "patch" },
+        { "type": "ci",       "release": "patch" }
+      ]
+    }],
+    ["@semantic-release/release-notes-generator", {
+      "preset": "conventionalcommits",
+      "presetConfig": { "types": SECTIONS },
+      "writerOpts": {
+        "groupBy": "type",
+        // order sections as listed in SECTIONS (not alphabetically)
+        "commitGroupsSort": (a, b) => SECTION_ORDER.indexOf(a.title) - SECTION_ORDER.indexOf(b.title),
+        "commitsSort": ["header", "subject"],
+        "noteGroupsSort": "title",
+        "mainTemplate": mainTemplate,
+        "headerPartial": headerPartial,
+        "commitPartial": commitPartial,
+        "footerPartial": "",
+        "transform": (commit) => {
+          const c = { ...commit };
+
+          // type -> section label (drives the "### <section>" grouping)
+          if (TYPE_TO_SECTION[c.type]) {
+            c.type = TYPE_TO_SECTION[c.type];
+          }
+
+          // drop Signed-off-by trailers from body / footer / notes
+          if (c.body) {
+            const lines = c.body.split('\n').filter(l => !isSignoff(l));
+            c.body = lines.length > 0 ? lines.map(l => '  ' + l).join('\n') : null;
+          }
+          if (c.footer) {
+            c.footer = stripSignoff(c.footer) || null;
+          }
+          if (Array.isArray(c.notes)) {
+            c.notes = c.notes
+              .map(n => ({ ...n, text: stripSignoff(n.text) }))
+              .filter(n => n.text);
+          }
+
+          return c;
+        }
+      }
+    }],
+    ["@semantic-release/changelog", { "changelogFile": "CHANGELOG.md" }],
+    ["@semantic-release/exec", {
+      "prepareCmd": "pre-commit run --files CHANGELOG.md || true"
+    }],
+    ["@semantic-release/git", {
+      "assets": ["CHANGELOG.md"],
+      "message": "chore(release): v${nextRelease.version}"
+    }],
+    "@semantic-release/github"
+  ]
+};
+```
+<!--endsec-->
+
+<!--sec data-title="with conventional-changelog-conventionalcommits <= v9.x" data-id="section5" data-show=true data-collapse=true ces-->
+```javascript
+module.exports = {
+  "branches": ["main"],
+  "tagFormat": "v${version}",
+  "plugins": [
+    ["@semantic-release/commit-analyzer", {
+      "preset": "angular",
+      "releaseRules": [
+        // { "breaking": true,   "release": "minor" },
+        { "type": "chore",    "release": "patch" },
+        { "type": "refactor", "release": "patch" },
+        { "type": "docs",     "release": "patch" },
+        { "type": "ci",       "release": "patch" }
+      ]
+    }],
+    ["@semantic-release/release-notes-generator", {
+      "preset": "conventionalcommits",
+      "presetConfig": {
+        "types": [
+          { "type": "Features",  "section": "Features" },
+          { "type": "Bug Fixes", "section": "Bug Fixes" }
+        ]
+      },
+      "writerOpts": {
+        "commitsSort": ["header", "subject"],
+        "transform": (commit) => {
+          // clone object to avoid immutable error
+          const clonedCommit = { ...commit };
+
+          // mapping from original commit type to section title in CHANGELOG
+          const sectionMap = {
+            'feat': 'Features',
+            'fix': 'Bug Fixes',
+            'refactor': 'Code Refactoring',
+            'chore': 'Others',
+            'docs': 'Documentation',
+            'perf': 'Performance',
+            'ci': 'CI/CD'
+          };
+
+          const isSignoff = (line) => /^\s*Signed-off-by:/i.test(line);
+
+          // commit body
+          if (clonedCommit.body) {
+            const cleanedBodyLines = clonedCommit.body.split('\n').filter(line => !isSignoff(line));
+            clonedCommit.body = cleanedBodyLines.length > 0
+              ? cleanedBodyLines.map(line => '  ' + line).join('\n')
+              : null;
+          }
+
+          // footer
+          if (clonedCommit.footer) {
+            clonedCommit.footer = clonedCommit.footer
+              .split('\n')
+              .filter(line => !isSignoff(line))
+              .join('\n').trim() || null;
+          }
+
+          // notes
+          if (Array.isArray(clonedCommit.notes)) {
+            clonedCommit.notes = clonedCommit.notes.filter(n => !isSignoff(n.text || n.title || ''));
+          }
+
+          // return the modified commit object, note: we did not change the subject,
+          return clonedCommit;
+        },
+        // using {{header}} to ensure the original "feat: ..." is fully preserved
+        "commitPartial": "* {{header}}\n{{#if body}}\n{{body}}\n{{/if}}\n{{#if footer}}\n\n{{footer}}\n{{/if}}\n"
+      }
+    }],
+    ["@semantic-release/changelog", { "changelogFile": "CHANGELOG.md" }],
+    ["@semantic-release/exec", {
+      "prepareCmd": "pre-commit run --files CHANGELOG.md || true"
+    }],
+    ["@semantic-release/git", {
+      "assets": ["CHANGELOG.md"],
+      "message": "chore(release): v${nextRelease.version}"
+    }],
+    "@semantic-release/github"
+  ]
+};
+```
+<!--endsec-->
 
 ### with conventionalcommits
 
@@ -240,7 +509,7 @@ $ CI=true GIT_BRANCH=main npx semantic-release --branch main --debug [ --dry-run
 
 - sample release : [pass-fzf v2.0.0](https://github.com/marslo/pass-fzf/releases)
 
-<!--sec data-title="sample debug log" data-id="section1" data-show=true data-collapse=true ces-->
+<!--sec data-title="sample debug log" data-id="section6" data-show=true data-collapse=true ces-->
 ```bash
 $ CI=true GIT_BRANCH=main npx semantic-release --branch main --debug
 [5:28:07 PM] [semantic-release] › ℹ  Running semantic-release version 24.2.3
