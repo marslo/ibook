@@ -14,6 +14,7 @@
     - [curl](#curl)
   - [Q&A](#qa)
     - [`a windows service must first be installed ( using installutil.exe )`](#a-windows-service-must-first-be-installed--using-installutilexe-)
+    - [Error 1064: An exception occurred in the service when handling he control request](#error-1064-an-exception-occurred-in-the-service-when-handling-he-control-request)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -529,12 +530,6 @@ SERVICE_NAME: jenkins
   * add `c:\tools\curl\bin` into Environment Variable
   * restart jenkins agent service
 
-  | RETURN | ARCHITECTURE | SYSTEM TYPE      | DOWNLOAD |
-  |--------|--------------|------------------|----------|
-  | `9`    | x64 (AMD64)  | `x64-based PC`   | `64-bit` |
-  | `5`    | ARM          | `ARM64-based PC` | `ARM64`  |
-  | `0`    | x86          | `x86-based PC`   | `32-bit` |
-
   ```powershell
   # 64-bit or 32-bit
   > [System.Environment]::Is64BitOperatingSystem
@@ -548,6 +543,12 @@ SERVICE_NAME: jenkins
   > systeminfo | findstr /C:"System Type"
   System Type:               x64-based PC
   ```
+
+| RETURN | ARCHITECTURE | SYSTEM TYPE      | DOWNLOAD |
+|--------|--------------|------------------|----------|
+| `9`    | x64 (AMD64)  | `x64-based PC`   | `64-bit` |
+| `5`    | ARM          | `ARM64-based PC` | `ARM64`  |
+| `0`    | x86          | `x86-based PC`   | `32-bit` |
 
 ## Q&A
 ### `a windows service must first be installed ( using installutil.exe )`
@@ -596,4 +597,32 @@ Remove InstallState file because there are no installers.
 The Commit phase completed successfully.
 
 The transacted install has completed.
+```
+
+### Error 1064: An exception occurred in the service when handling he control request
+
+```batch
+REM check wrapper log
+> powershell "Get-Content jenkins-agent.wrapper.log | Select-Object -Last 60"
+2026-07-08 11:33:23,785 ERROR - Failed to start service.
+System.ComponentModel.Win32Exception (2): An error occurred trying to start process 'C:\Program Files\Java\jdk-17\bin\java.exe' with working directory 'D:\jenkins'. The system cannot find the file specified.
+   at System.Diagnostics.Process.StartWithCreateProcess(ProcessStartInfo )
+   at System.Diagnostics.Process.StartCore(ProcessStartInfo )
+   at System.Diagnostics.Process.Start()
+   at WinSW.Util.ProcessHelper.StartProcessAndCallbackForExit(Process processToStart, String executable, String arguments, Dictionary`2 envVars, String workingDirectory, Nullable`1 priority, ProcessCompletionCallback callback, LogHandler logHandler, Boolean hideWindow)
+   at WinSW.WrapperService.StartProcess(Process processToStart, String arguments, String executable, LogHandler logHandler)
+   at WinSW.WrapperService.DoStart()
+   at WinSW.WrapperService.OnStart(String[] args)
+```
+
+```batch
+REM reinstall java
+> powershell "Get-Content jenkins-agent.wrapper.log | Select-Object -Last 60"
+2026-07-08 11:41:49,405 DEBUG - Starting WinSW in service mode
+2026-07-08 11:41:49,497 INFO  - Downloading: https://jenkins.domain.com/jnlpJars/agent.jar to D:\jenkins\agent.jar. failOnError=False
+2026-07-08 11:41:50,002 INFO  - Skipped downloading unmodified resource 'https://jenkins.domain.com/jnlpJars/agent.jar'
+2026-07-08 11:41:50,097 INFO  - Starting C:\Program Files\Java\jdk-17\bin\java.exe -jar agent.jar -url https://jenkins.domain.com/ -secret e81580ea1541ab8441b043d32bd71256a4e6438101b93000863c0ddab07d5600 -name "CI-MBI-DC5-SSDFW14" -webSocket -workDir "D:\jenkins"
+2026-07-08 11:41:50,136 INFO  - Started process 8824
+2026-07-08 11:41:50,150 DEBUG - Forwarding logs of the process System.Diagnostics.Process (java) to WinSW.RollingLogAppender
+2026-07-08 11:41:52,284 DEBUG - Starting WinSW in console mode
 ```
