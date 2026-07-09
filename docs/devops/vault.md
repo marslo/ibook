@@ -9,6 +9,7 @@
   - [auth](#auth)
   - [security](#security)
   - [list](#list)
+  - [policy](#policy)
 - [approle](#approle)
   - [via CLI](#via-cli)
     - [get approle mount path](#get-approle-mount-path)
@@ -24,7 +25,7 @@
 - [ssh](#ssh)
   - [client key sign](#client-key-sign)
     - [signing key & role configuration](#signing-key--role-configuration)
-    - [client ssh authentication](#client-ssh-authentication)
+    - [client ssh authentication/sign ssh key with Vault CA](#client-ssh-authenticationsign-ssh-key-with-vault-ca)
   - [host key sign](#host-key-sign)
     - [verify](#verify)
   - [troubleshooting](#troubleshooting)
@@ -214,6 +215,18 @@ HA Enabled      false
   username                 read-only
   ```
 
+## policy
+
+```bash
+# list all policies
+$ vault policy list
+```
+
+```bash
+# read default policy
+$ vault policy read default
+```
+
 # approle
 
 > [!NOTE|label:references:]
@@ -320,19 +333,19 @@ $ curl \
       --header "X-Vault-Token: ..." \
       --request POST \
       --data '{"type": "approle"}' \
-      http://127.0.0.1:8200/v1/sys/auth/approle
+      http://vault.domain.com:8200/v1/sys/auth/approle
 
 # create approle with policy
 $ curl \
       --header "X-Vault-Token: ..." \
       --request POST \
       --data '{"policies": "dev-policy,test-policy"}' \
-      http://127.0.0.1:8200/v1/auth/approle/role/my-role
+      http://vault.domain.com:8200/v1/auth/approle/role/ROLE_NAME
 
 # check identifier of role
 $ curl \
       --header "X-Vault-Token: ..." \
-      http://127.0.0.1:8200/v1/auth/approle/role/my-role/role-id
+      http://vault.domain.com:8200/v1/auth/approle/role/ROLE_NAME/role-id
 {
   "data": {
     "role_id": "988a9dfd-ea69-4a53-6cb6-9d6b86474bba"
@@ -343,7 +356,7 @@ $ curl \
 $ curl \
       --header "X-Vault-Token: ..." \
       --request POST \
-       http://127.0.0.1:8200/v1/auth/approle/role/my-role/secret-id
+       http://vault.domain.com:8200/v1/auth/approle/role/ROLE_NAME/secret-id
 {
   "data": {
     "secret_id_accessor": "45946873-1d96-a9d4-678c-9229f74386a5",
@@ -362,7 +375,8 @@ Key        Value
 ---        -----
 role_id    1*******-****-****-****-***********5
 
-$ vault write -f auth/approle/role/srv-ssd-fw-devops/secret-id
+# re-generate secret_id
+$ vault write -f auth/approle/role/devops/secret-id
 Key                   Value
 ---                   -----
 secret_id             3*******-****-****-****-***********3
@@ -475,8 +489,42 @@ Initial Root Token: s.s**********************K
 > - [Signed SSH certificates](https://developer.hashicorp.com/vault/docs/secrets/ssh/signed-ssh-certificates#host-key-signing)
 > - [Managing SSH Access at Scale with HashiCorp Vault](https://www.hashicorp.com/blog/managing-ssh-access-at-scale-with-hashicorp-vault)
 
+| -                 | TRADITIONAL SSH                                           | VAULT SSH                                                |
+|-------------------|-----------------------------------------------------------|----------------------------------------------------------|
+| Authentication    | static public key, long-lived                             | dynamic certificate, with TTL                            |
+| Key Management    | maintain authorized_keys on every server                  | servers only trust the Vault CA                          |
+| Key Compromise    | permanently valid until manually removed from all servers | automatically expires with certificate TTL               |
+| Access Revocation | must log in to every server to remove the key             | simply stop renewing — certificate expires automatically |
+| Audit             | difficult to track who used which key                     | complete audit log in Vault                              |
+
+
+| -                    | authorized_keys                          | VAULT CA                                                 |
+|----------------------|------------------------------------------|----------------------------------------------------------|
+| Initial Setup        | deploy public key to every server once   | update `sshd_config` on every server once                |
+| Add User             | add key to every server                  | no server changes needed                                 |
+| Remove User          | remove key from every server             | stop renewing — wait for certificate to expire           |
+| Employee Offboarding | log in to every server to remove the key | revoke Vault permission — wait for certificate to expire |
+| Key Compromise       | log in to every server to remove the key | stop renewing — certificate expires automatically        |
+
 ## client key sign
+
+| PATH/ENDPOINT    | CAPABILITIES                      | DESCRIPTION                               |
+|------------------|-----------------------------------|-------------------------------------------|
+| ssh/roles/       | `list`, `read`, `write`, `delete` | managing SSH role configurations          |
+| ssh/sign/<role>  | `create`, `update`                | issuing certificates, not allowed to list |
+| ssh/config/ca    | `read`, `write`                   | CA Configuration                          |
+| ssh/issue/<role> | `create`, `update`                | issuing certificates (another method)     |
+
+
 ### [signing key & role configuration](https://developer.hashicorp.com/vault/docs/secrets/ssh/signed-ssh-certificates#signing-key-role-configuration)
+
+> [!NOTE|label:flow]
+> - vault:
+>   1. create/enable ssh engine ( `<name>` )
+>   2. create CA signing key (private/public key pair) for ssh engine ( `<name>/config/ca` )
+>   3. create role for ssh engine ( `<name>/roles/<role>` )
+> - remote server:
+>   1. download CA public key and add to all servers ( `sshd_config` -> `TrustedUserCAKeys` )
 
 - mount ssh secret engine
   ```bash
@@ -485,19 +533,28 @@ Initial Root Token: s.s**********************K
 
 - configure vault with a ca
   ```bash
+  # vault generate a new signing key ( private/public key pair )
   $ vault write devops-ssh/config/ca generate_signing_key=true
-  # or with private/public key pairs
+
+  # provide private/public key pairs manually
   $ vault write devops-ssh/config/ca \
           private_key="..." \
           public_key="..."
-
+  # or
+  $ vault write devops-ssh/config/ca \
+          private_key=@/path/to/ca_key \
+          public_key=@/path/to/ca_key.pub
   ```
 
-- add CA to all servers
+- add CA (public key) to all servers
+
+  > [!NOTE]
+  > the `Vault CA` public key is a ssh public key ( `ssh-rsa xxx` )
+
   ```bash
-  # download pem
-  $ curl -o /etc/ssh/trusted-user-ca-keys.pem http://vault.sample.com:8200/v1/ssh-client-signer/public_key
-  # or
+  # download pem for `PATH` - v1/PATH/public_key (API)
+  $ curl -o /etc/ssh/trusted-user-ca-keys.pem http://vault.sample.com:8200/v1/PATH/public_key
+  # download pem for `devops-ssh` - v1/devops-ssh/public_key (API) | devops-ssh/config/ca (CLI)
   $ vault read -field=public_key devops-ssh/config/ca > /etc/ssh/trusted-user-ca-keys.pem
 
   # modify sshd_config to `TrustedUserCAKeys`
@@ -512,7 +569,8 @@ Initial Root Token: s.s**********************K
 
 - create role
   ```bash
-  $ vault write devops-ssh/roles/my-role -<<"EOH"
+  # heredoc
+  $ vault write devops-ssh/roles/ROLE_NAME -<<"EOH"
   {
     "algorithm_signer": "rsa-sha2-256",
     "allow_user_certificates": true,
@@ -526,49 +584,84 @@ Initial Root Token: s.s**********************K
     "ttl": "30m0s"
   }
   EOH
+
+  # cli
+  $ vault write devops-ssh/roles/ROLE_NAME \
+          algorithm_signer=rsa-sha2-256 \
+          allow_user_certificates=true \
+          allowed_users="*" \
+          allowed_extensions="permit-pty,permit-port-forwarding" \
+          default_extensions="permit-pty=" \
+          key_type=ca \
+          default_user=ubuntu \
+          ttl=30m
+  # sample:
+  $ vault write path/to/ssh/roles/ROLE_NAME \
+          allow_user_certificates=true \
+          allow_host_certificates=false \
+          allowed_users="*" \
+          allowed_extensions="permit-pty,permit-port-forwarding" \
+          default_extensions="permit-pty=,permit-port-forwarding=" \
+          key_type=ca \
+          default_user=neo \
+          ttl=168h
   ```
 
-### [client ssh authentication](https://developer.hashicorp.com/vault/docs/secrets/ssh/signed-ssh-certificates#client-ssh-authentication)
-- create ssh-key paire
-  ```bash
-  $ ssh-keygen -t ed25519 -C "user@example.com"
-  ```
+### [client ssh authentication/sign ssh key with Vault CA](https://developer.hashicorp.com/vault/docs/secrets/ssh/signed-ssh-certificates#client-ssh-authentication)
 
-- sign the public key
-  ```bash
-  $ vault write ssh-client-signer/sign/my-role \
-      public_key=@$HOME/.ssh/id_ed25519.pub
+> [!NOTE|label:process]
+> ```bash
+> ssh-keygen
+> ├──ssh public key
+> │     │ ( sign with vault CA )
+> │     ▼
+> │  ssh certificate ╮
+> │                  ├ ssh with signed certificate
+> └──ssh private key ╯
+> ```
 
-  Key             Value
-  ---             -----
-  serial_number   c73f26d2340276aa
-  signed_key      ssh-rsa-cert-v01@openssh.com AAAAHHNzaC1...
+```bash
+# create ssh-key paire
+$ ssh-keygen -t ed25519 -C 'user@example.com'
+```
 
-  # or customerize
-  $ vault write ssh-client-signer/sign/my-role -<<"EOH"
-  {
-    "public_key": "ssh-rsa AAA...",
-    "valid_principals": "my-user",
-    "key_id": "custom-prefix",
-    "extensions": {
-      "permit-pty": "",
-      "permit-port-forwarding": ""
-    }
+```bash
+# sign the public key
+$ vault write PATH/sign/ROLE_NAME \
+        public_key=@$HOME/.ssh/id_ed25519.pub
+
+Key             Value
+---             -----
+serial_number   c73f26d2340276aa
+signed_key      ssh-rsa-cert-v01@openssh.com AAAAHHNzaC1...
+
+# or customized
+$ vault write PATH/sign/ROLE_NAME -<<"EOH"
+{
+  "public_key": "ssh-rsa AAA...",
+  "valid_principals": "my-user",
+  "key_id": "custom-prefix",
+  "extensions": {
+    "permit-pty": "",
+    "permit-port-forwarding": ""
   }
-  EOH
-  ```
+}
+EOH
+```
 
-- saved the signed keys
-  ```bash
-  $ vault write -field=signed_key ssh-client-signer/sign/my-role \
-      public_key=@$HOME/.ssh/id_ed25519.pub > signed-cert.pub
+```bash
+# get/save the signed keys
+$ vault write -field=signed_key PATH/sign/ROLE_NAME \
+        public_key=@$HOME/.ssh/id_ed25519.pub > signed-cert.pub
 
-  # verify
-  $ ssh-keygen -Lf ~/.ssh/signed-cert.pub
+# verify
+$ ssh-keygen -Lf ~/.ssh/signed-cert.pub
 
-  # ssh
-  $ ssh -i signed-cert.pub -i ~/.ssh/id_ed25519 username@10.0.23.5
-  ```
+# ssh
+#       CertificateFile       IdentityFile
+#     +----------------+ +------------------+
+$ ssh -i signed-cert.pub -i ~/.ssh/id_ed25519 username@domain.com
+```
 
 ## host key sign
 
@@ -580,15 +673,20 @@ Initial Root Token: s.s**********************K
 
 - configure CA
   ```bash
+  # generate new signing key automatically ( private/public key pair )
   $ vault write devops-ssh-hosts/config/ca generate_signing_key=true
   Key             Value
   ---             -----
   public_key      ssh-rsa AAAAB3NzaC1yc2EA...
 
-  # or with key pairs
+  # with local key pairs
   $ vault write devops-ssh-hosts/config/ca \
           private_key="..." \
           public_key="..."
+  # or with file path
+  $ vault write devops-ssh-hosts/config/ca \
+          private_key=@/path/to/private_key \
+          public_key=@/path/to/public_key
   ```
 
 - extend host key certificate ttls
@@ -599,12 +697,12 @@ Initial Root Token: s.s**********************K
 - create role
   ```bash
   $ vault write devops-ssh-hosts/roles/hostrole \
-      key_type=ca \
-      algorithm_signer=rsa-sha2-256 \
-      ttl=87600h \
-      allow_host_certificates=true \
-      allowed_domains="localdomain,example.com" \
-      allow_subdomains=true
+          key_type=ca \
+          algorithm_signer=rsa-sha2-256 \
+          ttl=87600h \
+          allow_host_certificates=true \
+          allowed_domains="localdomain,example.com" \
+          allow_subdomains=true
   ```
 
 - sign ssh public key
@@ -643,9 +741,9 @@ Initial Root Token: s.s**********************K
 ### verify
 - retrieve the host signing ca public key
   ```bash
-  $ curl http://127.0.0.1:8200/v1/devops-ssh-hosts/public_key
-
-  # or
+  # API
+  $ curl http://vault.domain.com:8200/v1/devops-ssh-hosts/public_key
+  # CLI
   $ vault read -field=public_key devops-ssh-hosts/config/ca
   ```
 
@@ -686,13 +784,13 @@ $ curl \
       -H "X-Vault-Token: f3b09679-3001-009d-2b80-9c306ab81aa6" \
       -H "X-Vault-Namespace: ns1/ns2/" \
       -X GET \
-      http://127.0.0.1:8200/v1/secret/foo
+      http://vault.domain.com:8200/v1/secret/foo
 
 # or
 $ curl \
       -H "X-Vault-Token: f3b09679-3001-009d-2b80-9c306ab81aa6" \
       -X GET \
-      http://127.0.0.1:8200/v1/ns1/ns2/secret/foo
+      http://vault.domain.com:8200/v1/ns1/ns2/secret/foo
 ```
 
 ## CLI
@@ -710,7 +808,7 @@ $ curl \
 > - [print curl commands](https://developer.hashicorp.com/vault/docs/commands#print-curl-command)
 >  ```bash
 >  $ vault write -output-curl-string  auth/userpass/users/bob password="long-password"
->  curl -X PUT -H "X-Vault-Request: true" -H "X-Vault-Token: $(vault print token)" -d '{"password":"long-password"}' http://127.0.0.1:8200/v1/auth/userpass/users/bob
+>  curl -X PUT -H "X-Vault-Request: true" -H "X-Vault-Token: $(vault print token)" -d '{"password":"long-password"}' http://vault.domain.com:8200/v1/auth/userpass/users/bob
 >  ```
 > - [print policy requirements](https://developer.hashicorp.com/vault/docs/commands#print-policy-requirements)
 >   ```bash
@@ -788,7 +886,7 @@ $ vault kv put secret/password value=@data.txt
 
 ## basic usage
 ```bash
-$ export VAULT_ADDR='http://127.0.0.1:8200'
+$ export VAULT_ADDR='http://vault.domain.com:8200'
 $ export VAULT_TOKEN=root
 
 # enable azure
