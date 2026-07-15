@@ -769,6 +769,9 @@ highlight link SyntasticStyleWarningSign GruvboxPurpleSign
     * issues                 [[I]]      #          99  gitcommit,gina-commit
     * semantic-commit        [Commit]              99  gitcommit,gina-commit
     * vimlsp                 [LS]       .:#[&$<"'  99  vim
+    * sh                     [LS]       ${         99  sh
+    " or
+    :echo CocAction('sourceStat')
     ```
 
   - [language server setup](https://www.narga.net/how-to-set-up-code-completion-for-vim/)

@@ -79,12 +79,16 @@ $ pre-commit run --all-files
 $ pre-commit run --all-files --show-diff-on-failure --color always
 
 # -- all files with specific hook --
-$ pre-commit run <hook_id> --all-files
+$ pre-commit run <HOOK_ID> --all-files
 # i.e.: trailing-whitespace
 $ pre-commit run trailing-whitespace --all-files
 
 # -- from ref -> to ref --
 $ pre-commit run --show-diff-on-failure --color=always --from-ref "${START_REF}" --to-ref "${END_REF}"
+
+# to check all files under folder recursively
+$ pre-commit run --files $(git ls-files folder/path/) -v
+$ pre-commit run <HOOK_ID> --files $(git ls-files folder/path/) -v
 ```
 
 ### run with manual stage
@@ -103,6 +107,7 @@ $ pre-commit run --hook-stage manual --all-files
 ## hooks
 
 > [!NOTE|labels:reference:]
+> - [Supported hooks](https://pre-commit.com/hooks.html)
 > - sample config
 >> ```bash
 >> $ pre-commit sample-config
@@ -128,7 +133,7 @@ $ pre-commit run --hook-stage manual --all-files
 ---
 repos:
   - repo: https://github.com/marslo/cr-manager
-    rev: v3.1.0
+    rev: v4.0.0
     hooks:
       - id: update-copyright
         args: ["--update"]
