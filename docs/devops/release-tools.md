@@ -11,6 +11,7 @@
     - [.releaserc.js](#releasercjs)
     - [with conventionalcommits](#with-conventionalcommits)
   - [execution](#execution)
+    - [github workflow](#github-workflow)
 - [conventional-changelog](#conventional-changelog)
   - [install](#install-1)
   - [usage](#usage)
@@ -675,6 +676,82 @@ Signed-off-by: marslo <marslo.jiao@gmail.com>
   semantic-release:github found semantic-release issues: [] +942ms
 [5:28:16 PM] [semantic-release] › ✔  Completed step "success" of plugin "@semantic-release/github"
 [5:28:16 PM] [semantic-release] › ✔  Published release 2.0.0 on default channel
+```
+<!--endsec-->
+
+
+### github workflow
+
+<!--sec data-title="github workflow with summary status" data-id="section7" data-show=true data-collapse=true ces-->
+
+```javascript
+// .releaserc.js
+...
+module.exports = {
+    ...
+    ["@semantic-release/exec", {
+      "prepareCmd": "pre-commit run --files CHANGELOG.md || true",
+      "successCmd": "echo \"RELEASED_VERSION=${nextRelease.version}\" >> \"$GITHUB_ENV\""       // export to env for later steps
+    }],
+};
+```
+
+
+```yaml
+# .github/workflows/semantic-release.yml
+---
+name: Release
+run-name: Release · ${{ github.ref_name }} · @${{ github.actor }}
+
+...
+
+permissions:
+  contents: write    # allow to create tag / push commit
+  pull-requests: write
+  issues: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      # ...
+      - name: Run semantic-release
+        id: release
+        env:
+          GH_TOKEN: ${{ secrets.SEMANTIC_RELEASE_TOKEN }}
+          CI: "true"
+          DRY_RUN: ${{ github.event.inputs.dry_run }}
+        run: |
+          if [ "$DRY_RUN" = "true" ]; then
+            semantic-release --dry-run
+          else
+            semantic-release --verbose
+          fi
+
+      - name: Release summary
+        if: always()
+        run: |
+          if [ -n "${RELEASED_VERSION:-}" ]; then
+            echo "::notice title=Release::Released v${RELEASED_VERSION} on ${GITHUB_REF_NAME} by @${GITHUB_ACTOR}"
+            {
+              echo "## Release v${RELEASED_VERSION}"
+              echo ""
+              echo "| | |"
+              echo "|---|---|"
+              echo "| Version      | \`v${RELEASED_VERSION}\` |"
+              echo "| Branch       | \`${GITHUB_REF_NAME}\` |"
+              echo "| Triggered by | @${GITHUB_ACTOR} |"
+              echo "| Release      | ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/releases/tag/v${RELEASED_VERSION} |"
+            } >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "::notice title=Release::No new release (no version bump, or dry-run)"
+            {
+              echo "## No new release"
+              echo ""
+              echo "_No commits triggered a version bump (or this was a dry-run)._"
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
 ```
 <!--endsec-->
 
