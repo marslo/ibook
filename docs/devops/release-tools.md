@@ -29,9 +29,13 @@
     - [update requests](#update-requests)
   - [use poetry](#use-poetry)
     - [activate env](#activate-env)
+  - [publish to Artifactory](#publish-to-artifactory)
+    - [setup repo and token](#setup-repo-and-token)
+    - [build and publish](#build-and-publish)
 - [publish to PyPI](#publish-to-pypi)
   - [setup token](#setup-token)
-  - [build and publish](#build-and-publish)
+  - [build and publish](#build-and-publish-1)
+  - [github workflow](#github-workflow-1)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -925,13 +929,35 @@ $ poetry env use $(pyenv which python)
 $ source "$(poetry env info --path)/bin/activate"
 ```
 
+## publish to Artifactory
+
+### setup repo and token
+```bash
+# i.e.: artifactory repo name : pypi-local
+$ poetry config repositories.pypi-local
+$ poetry config repositories.pypi-local https://artifactory.domain.com/artifactory/api/pypi/pypi-local
+$ poetry config http-basic.pypi-local marslo cm************************************************************Nn
+$ poetry config repositories.pypi-local
+
+# check (macos)
+$ poetry config --list | grep repositories
+$ ls -Altrh "$HOME/Library/Application Support/pypoetry"
+```
+
+### build and publish
+```bash
+# deploy
+$ poetry build
+$ poetry publish --repository pypi-local [--verbose]
+```
+
 # publish to PyPI
 
 ## setup token
 ```bash
 $ poetry config pypi-token.pypi pypi-xxxxxxxxxx
 
-# optional
+# verify
 $ poetry check
 ```
 
@@ -984,3 +1010,10 @@ Publishing cr-manager (3.0.3) to PyPI
  - Uploading cr_manager-3.0.3-py3-none-any.whl 100%
  - Uploading cr_manager-3.0.3.tar.gz 100%
 ```
+
+## github workflow
+
+> [!NOTE]
+> setup `PYPI_API_TOKEN` secret in github repo settings
+
+take [publish.yml](https://github.com/marslo/cr-manager/blob/main/.github/workflows/publish.yml) as example
