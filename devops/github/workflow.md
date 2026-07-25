@@ -1,6 +1,10 @@
 
 ## variables
 
+> [!NOTE|label:references:]
+> - [Workflow commands for GitHub Actions](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-commands)
+> - [Variables reference](https://docs.github.com/en/actions/reference/workflows-and-actions/variables)
+
 | VARIABLE               | WHAT IT IS                | SCOPE                       | HOW TO READ                                          |
 |------------------------|---------------------------|-----------------------------|------------------------------------------------------|
 | `$GITHUB_ENV`          | Environment-variable file | Later steps (same job)      | `$KEY` / {% raw %}`${{ env.KEY }}`{% endraw %}       |
