@@ -29,6 +29,7 @@
 - [rule suites](#rule-suites)
   - [list failure rule suites](#list-failure-rule-suites)
   - [check failure evaluations](#check-failure-evaluations)
+- [get checkers version](#get-checkers-version)
 - [have fun](#have-fun)
   - [emoji](#emoji)
   - [zen](#zen)
@@ -105,6 +106,15 @@ $ curl -sL https://api.github.com/meta | jq -r '.ssh_keys | .[]'  | sed -e 's/^/
   ```bash
   # i.e.:
   $ curl -fsSL https://api.github.com/repos/marslo/ibook/contributors
+  ```
+
+- disable actions workflow
+  ```bash
+  # disable
+  $ gh api -X PUT "repos/${ORG}/${REPO}/actions/permissions" -F enabled=false
+
+  # check status
+  $ gh api "repos/${ORG}/${REPO}/actions/permissions" --jq '.enabled'
   ```
 
 ## pull request
@@ -549,7 +559,71 @@ $ gh api -H 'X-GitHub-Api-Version: 2022-11-28' \
 ```
 <!--endsec-->
 
+## get checkers version
 
+```yaml
+# workflow/<name>.yml
+jobs:
+  sync:
+    name: <NAME>
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout source
+        uses: actions/checkout@v6               # get version via following command
+```
+
+```bash
+$ gh api repos/actions/checkout/releases/latest --jq '.tag_name' 2>/dev/null || echo "GH_API_FAILED"
+v7.0.1
+
+# uses: actions/setup-python@v<X>
+$ gh api repos/actions/setup-python/releases/latest --jq '.tag_name' 2>/dev/null || echo "GH_API_FAILED"
+v7.0.0
+
+# uses: actions/setup-node@v<X>
+$ gh api repos/actions/setup-node/releases/latest --jq '.tag_name' 2>/dev/null || echo "GH_API_FAILED"
+v7.0.0
+```
+
+```bash
+# check latest version
+$ for a in actions/checkout actions/setup-python actions/setup-node actions/cache; do
+    latest="$(gh api "repos/$a/releases/latest" --jq '.tag_name' 2>/dev/null)"
+    printf '%-24s latest=%s\n' "$a" "${latest:-<none>}"
+  done
+actions/checkout         latest=v7.0.1
+actions/setup-python     latest=v7.0.0
+actions/setup-node       latest=v7.0.0
+actions/cache            latest=v6.1.0
+
+# -- check node using version --
+# $1=repo  $2=ref
+$ check() {
+    local using
+    using="$(gh api "repos/$1/contents/action.yml?ref=$2" --jq '.content' 2>/dev/null | base64 -d 2>/dev/null | command grep -E '^\s*using:' | head -1 | tr -d ' ')"
+    printf '%-24s %-6s -> %s\n' "$1" "$2" "${using:-unknown}"
+  }
+
+# for current actions
+$ check actions/checkout v6
+actions/checkout         v6     -> using:node24
+$ check actions/setup-python v6
+actions/setup-python     v6     -> using:'node24'
+$ check actions/setup-node v6
+actions/setup-node       v6     -> using:'node24'
+$ check actions/cache v5
+actions/cache            v5     -> using:'node24'
+
+# for latest actions
+$ check actions/checkout v7
+actions/checkout         v7     -> using:node24
+$ check actions/setup-python v7
+actions/setup-python     v7     -> using:'node24'
+$ check actions/setup-node v7
+actions/setup-node       v7     -> using:'node24'
+$ check actions/cache v6
+actions/cache            v6     -> using:'node24'
+```
 
 ## have fun
 ### emoji
