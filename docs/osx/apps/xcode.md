@@ -12,6 +12,7 @@
   - [commandline tools](#commandline-tools)
   - [components installation](#components-installation)
 - [developer tools](#developer-tools)
+  - [apple shim](#apple-shim)
 - [troubleshooting](#troubleshooting)
   - [xcode-select: error: tool 'xcodebuild' requires Xcode](#xcode-select-error-tool-xcodebuild-requires-xcode)
   - [Symbol not found: _XPCTypeBool](#symbol-not-found-_xpctypebool)
@@ -168,11 +169,11 @@ $ xcodebuild -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.pl
 > [!NOTE|label:references:]
 > - [get sdk params](https://stackoverflow.com/a/18742844/2940319)
 >   ```bash
->   $ xcodebuild -showsdks | awk '/^$/{p=0};p; /macOS SDKs:/{p=1}' | tail -1 | cut -f3
+>   $ /usr/bin/xcodebuild -showsdks | awk '/^$/{p=0};p; /macOS SDKs:/{p=1}' | tail -1 | cut -f3
 >   -sdk macosx14.2
 >   ```
 
-- `xcodebuild -showsdks`
+- `/usr/bin/xcodebuild -showsdks`
 
   <!--sec data-title="xcodebuild -showsdks" data-id="section0" data-show=true data-collapse=true ces-->
   ```bash
@@ -347,7 +348,7 @@ $ xcodebuild -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.pl
 
     <!--sec data-title="system_profile SPDeveloperToolsDataType" data-id="section2" data-show=true data-collapse=true ces-->
     ```bash
-    $ system_profiler SPDeveloperToolsDataType
+    $ /usr/sbin/system_profiler SPDeveloperToolsDataType
     Developer:
 
         Developer Tools:
@@ -595,6 +596,74 @@ $ pkgutil --pkg-info=com.apple.pkg.CLTools_Executables
   No receipt for 'com.apple.pkg.CLTools_Executables' found at '/'.
   ```
 
+### apple shim
+
+> [!TIP]
+> **shim** A.K.A. *stub* / *trampoline*<br>
+> **shim** is A tiny Mach-O executable that, at runtime, uses **`libxcselect.dylib`** to locate the *real* tool inside the **active developer directory** (Xcode or the Command Line Tools) and then `exec`s it
+
+```bash
+# differentiate
+$ file /opt/homebrew/Cellar/git/HEAD-e9019fc/bin/git
+/opt/homebrew/Cellar/git/HEAD-e9019fc/bin/git: Mach-O 64-bit arm64 executable, flags:<NOUNDEFS|DYLDLINK|TWOLEVEL|PIE>
+
+$ file /usr/bin/git
+/usr/bin/git: Mach-O universal binary with 2 architectures: [x86_64:\012- Mach-O 64-bit x86_64 executable, flags:<NOUNDEFS|DYLDLINK|TWOLEVEL|PIE>] [\012- arm64e (caps: 0x2):\012- Mach-O 64-bit arm64e (caps: PAC00) executable, flags:<NOUNDEFS|DYLDLINK|TWOLEVEL|PIE>]
+```
+
+```bash
+# details
+$ otool -L /usr/bin/git
+/usr/bin/git:
+  /usr/lib/libxcselect.dylib (compatibility version 1.0.0, current version 1.0.0)          # the forwarding engine — proves it's an xcode-select shim
+  /usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1356.0.0)
+
+# show the SAME inode - `78`
+$ /bin/ls -li /usr/bin/git /usr/bin/clang /usr/bin/swift
+1152921500312571562 -rwxr-xr-x  78 root  wheel  118640 Jul 22 14:57 /usr/bin/clang
+1152921500312571562 -rwxr-xr-x  78 root  wheel  118640 Jul 22 14:57 /usr/bin/git
+1152921500312571562 -rwxr-xr-x  78 root  wheel  118640 Jul 22 14:57 /usr/bin/swift
+#                               ^
+#                               + inode
+
+# show name list (symbols) of the shim
+$ dyld_info -arch arm64e -imports /usr/bin/git
+/usr/bin/git [arm64e]:
+    -imports:
+      0x0000  _xcselect_invoke_xcrun  (from libxcselect)
+      0x0001  __NSGetExecutablePath  (from libSystem)
+      0x0002  __NSGetProgname  (from libSystem)
+      0x0003  ___error  (from libSystem)
+      0x0004  ___stack_chk_fail  (from libSystem)
+      0x0005  _dispatch_once  (from libSystem)
+      0x0006  _getattrlist  (from libSystem)
+      0x0007  _strcmp  (from libSystem)
+      0x0008  _strdup  (from libSystem)
+      0x0009  _strrchr  (from libSystem)
+      0x000A  ___stack_chk_guard  (from libSystem)
+      0x000B  __NSConcreteGlobalBlock  (from libSystem)
+# - or -
+$ dyld_info -arch x86_64 -imports /usr/bin/git
+# - or -
+$ nm -u /usr/bin/git 2>&1 | command grep -v '^$' | command grep -nE 'xcselect|NSGet|strcmp|strdup|strrchr|dispatch'
+
+# find all shims in `/usr/bin`
+$ find /usr/bin -inum "$( /usr/bin/stat -f '%i' /usr/bin/git )" | wc -l
+78
+```
+
+#### how it works
+
+```bash
+/usr/bin/git   (shim shared by 78 hard links)
+  └─ libxcselect resolves the active developer directory:
+       1. env var DEVELOPER_DIR, else
+       2. xcode-select -p   (/var/db/xcode_select_link)
+  └─ locates the real git under that directory -> exec, forwarding argv unchanged
+       1. pointing at CLT → exec /Library/Developer/CommandLineTools/usr/bin/git          # sudo xcode-select --switch /Library/Developer/CommandLineTools
+       2. pointing at Xcode → exec /Applications/Xcode.app/Contents/Developer/usr/bin/git # sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer
+```
+
 ## troubleshooting
 ### [xcode-select: error: tool 'xcodebuild' requires Xcode](https://github.com/nodejs/node-gyp/issues/569#issuecomment-104284148)
 
@@ -678,16 +747,23 @@ Build version 15C500b
   ```
 
 ## download via wget
+
+> [!TIP|label:chrome extensions]
+> - [Get cookies.txt Clean](https://chromewebstore.google.com/detail/get-cookiestxt-clean/ahmnmhfbokciafffnknlekllgcnafnie) - `ahmnmhfbokciafffnknlekllgcnafnie`
+> - [Get cookies.txt LOCALLY](https://chromewebstore.google.com/detail/get-cookiestxt-locally/cclelndahbckbenkjhflpdbgdldlbecc) - `cclelndahbckbenkjhflpdbgdldlbecc`
+> - _@deprecated_ [Get cookies.txt](https://chrome.google.com/webstore/detail/cookiestxt/njabckikapfpffapmjgojcnbfjonfjfg) - `njabckikapfpffapmjgojcnbfjonfjfg`
+
+
 * get cookies.txt
-  * install google chrome extension from [official website](https://chrome.google.com/webstore/detail/cookiestxt/njabckikapfpffapmjgojcnbfjonfjfg?hl=en)
+  * install google chrome extension
   * login [developer.apple.com](https://developer.apple.com/download/more/)
   * select cookies.txt and download
 
-  ![download cookies.txt](../screenshot/cookies.txt-1.png)
+  ![download cookies.txt](../../screenshot/cookies.txt-1.png)
 
 * get xcode download url and right click and select **Copy Link Address**:
 
-  ![copy link address](../screenshot/cookies.txt-2.png)
+  ![copy link address](../../screenshot/cookies.txt-2.png)
 
 * download xcode (inspired from [here](https://stackoverflow.com/a/4089758/2940319) and [here](https://stackoverflow.com/a/46020878/2940319))
   ```bash
@@ -701,10 +777,10 @@ Build version 15C500b
   * example
     ```bash
     $ wget --cookies=on \
-    >          --load-cookies=cookies.txt \
-    >          --keep-session-cookies \
-    >          --save-cookies=cookies.txt \
-    >          https://download.developer.apple.com/Developer_Tools/Xcode_11.2_beta_2/Xcode_11.2_beta_2.xip
+           --load-cookies=cookies.txt \
+           --keep-session-cookies \
+           --save-cookies=cookies.txt \
+           https://download.developer.apple.com/Developer_Tools/Xcode_11.2_beta_2/Xcode_11.2_beta_2.xip
     --2019-10-15 07:55:18--  https://download.developer.apple.com/Developer_Tools/Xcode_11.2_beta_2/Xcode_11.2_beta_2.xip
     Resolving download.developer.apple.com (download.developer.apple.com)... 17.253.17.207, 17.253.17.211
     Connecting to download.developer.apple.com (download.developer.apple.com)|17.253.17.207|:443... connected.
