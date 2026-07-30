@@ -12,6 +12,7 @@
   - [commandline tools](#commandline-tools)
   - [components installation](#components-installation)
 - [developer tools](#developer-tools)
+  - [pkgutil](#pkgutil)
   - [apple shim](#apple-shim)
 - [troubleshooting](#troubleshooting)
   - [xcode-select: error: tool 'xcodebuild' requires Xcode](#xcode-select-error-tool-xcodebuild-requires-xcode)
@@ -38,7 +39,7 @@ $ xcode-select --print-path
 > [!NOTE|label:list all tools pkgs]
 > - [Determine xcode command line tools version](https://apple.stackexchange.com/a/181994/254265)
 >   ```bash
->   $ pkgutil --pkgs | grep -i tools
+>   $ /usr/sbin/pkgutil --pkgs | grep -i tools
 >   com.apple.pkg.CLTools_SDK_macOS13
 >   com.apple.pkg.CLTools_SDK_macOS12
 >   com.apple.pkg.CLTools_Executables
@@ -53,33 +54,33 @@ $ xcodebuild -version
 Xcode 15.2
 Build version 15C500b
 
-$ pkgutil --pkg-info=com.apple.pkg.CLTools_Executables | grep version
+$ /usr/sbin/pkgutil --pkg-info=com.apple.pkg.CLTools_Executables | grep version
 version: 15.3.0.0.1.1708646388
 
 # full content
-$ pkgutil --pkg-info=com.apple.pkg.CLTools_Executables
+$ /usr/sbin/pkgutil --pkg-info=com.apple.pkg.CLTools_Executables
 package-id: com.apple.pkg.CLTools_Executables
 version: 15.3.0.0.1.1708646388
 volume: /
 location: /
 install-time: 1709684830
 # osx 10.8-
-$ pkgutil --pkg-info=com.apple.pkg.DeveloperToolsCLI
+$ /usr/sbin/pkgutil --pkg-info=com.apple.pkg.DeveloperToolsCLI
 ```
 
 ### sdk
 #### sdk path
 ```bash
-$ xcrun --show-sdk-path
+$ /usr/bin/xcrun --show-sdk-path
 /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
 
-$ xcrun --sdk macosx --show-sdk-path
+$ /usr/bin/xcrun --sdk macosx --show-sdk-path
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk
 
-$ xcrun --sdk macosx --show-sdk-platform-path
+$ /usr/bin/xcrun --sdk macosx --show-sdk-platform-path
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform
 
-$ xcodebuild -version $(xcodebuild -showsdks | awk '/^$/{p=0};p; /macOS SDKs:/{p=1}' | tail -1 | cut -f3) Path
+$ /usr/bin/xcodebuild -version $(xcodebuild -showsdks | awk '/^$/{p=0};p; /macOS SDKs:/{p=1}' | tail -1 | cut -f3) Path
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk
 ```
 
@@ -118,49 +119,49 @@ $ xcodebuild -version $(xcodebuild -showsdks | awk '/^$/{p=0};p; /macOS SDKs:/{p
 >
 > - sample:
 >   ```bash
->   $ xcodebuild -sdk $(xcrun --sdk macosx --show-sdk-path) -version SDKVersion
+>   $ /usr/bin/xcodebuild -sdk $(/usr/bin/xcrun --sdk macosx --show-sdk-path) -version SDKVersion
 >   14.2
->   $ xcodebuild -sdk $(xcrun --sdk macosx --show-sdk-path) -version Path
+>   $ /usr/bin/xcodebuild -sdk $(/usr/bin/xcrun --sdk macosx --show-sdk-path) -version Path
 >   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk
->   $ xcodebuild -sdk $(xcrun --sdk macosx --show-sdk-path) -version PlatformVersion
+>   $ /usr/bin/xcodebuild -sdk $(/usr/bin/xcrun --sdk macosx --show-sdk-path) -version PlatformVersion
 >   14.2
->   $ xcodebuild -sdk $(xcrun --sdk macosx --show-sdk-path) -version PlatformPath
+>   $ /usr/bin/xcodebuild -sdk $(/usr/bin/xcrun --sdk macosx --show-sdk-path) -version PlatformPath
 >   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform
->   $ xcodebuild -sdk $(xcrun --sdk macosx --show-sdk-path) -version BuildID
+>   $ /usr/bin/xcodebuild -sdk $(/usr/bin/xcrun --sdk macosx --show-sdk-path) -version BuildID
 >   A541C0AE-820A-11EE-A7B4-597349BFF88C
->   $ xcodebuild -sdk $(xcrun --sdk macosx --show-sdk-path) -version ProductBuildVersion
+>   $ /usr/bin/xcodebuild -sdk $(/usr/bin/xcrun --sdk macosx --show-sdk-path) -version ProductBuildVersion
 >   23C53
->   $ xcodebuild -sdk $(xcrun --sdk macosx --show-sdk-path) -version ProductCopyright
+>   $ /usr/bin/xcodebuild -sdk $(/usr/bin/xcrun --sdk macosx --show-sdk-path) -version ProductCopyright
 >   1983-2023 Apple Inc.
->   $ xcodebuild -sdk $(xcrun --sdk macosx --show-sdk-path) -version ProductName
+>   $ /usr/bin/xcodebuild -sdk $(/usr/bin/xcrun --sdk macosx --show-sdk-path) -version ProductName
 >   macOS
->   $ xcodebuild -sdk $(xcrun --sdk macosx --show-sdk-path) -version ProductUserVisibleVersion
+>   $ /usr/bin/xcodebuild -sdk $(/usr/bin/xcrun --sdk macosx --show-sdk-path) -version ProductUserVisibleVersion
 >   14.2
->   $ xcodebuild -sdk $(xcrun --sdk macosx --show-sdk-path) -version ProductVersion
+>   $ /usr/bin/xcodebuild -sdk $(/usr/bin/xcrun --sdk macosx --show-sdk-path) -version ProductVersion
 >   14.2
->   $ xcodebuild -sdk $(xcrun --sdk macosx --show-sdk-path) -version iOSSupportVersion
+>   $ /usr/bin/xcodebuild -sdk $(/usr/bin/xcrun --sdk macosx --show-sdk-path) -version iOSSupportVersion
 >   17.2
 >   ```
 
 ```bash
-$ xcrun --sdk macosx --show-sdk-version
+$ /usr/bin/xcrun --sdk macosx --show-sdk-version
 14.2
 
 # or
-$ xcodebuild -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk -version SDKVersion
+$ /usr/bin/xcodebuild -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk -version SDKVersion
 14.2
 
-$ xcrun --sdk macosx --show-sdk-build-version
+$ /usr/bin/xcrun --sdk macosx --show-sdk-build-version
 23C53
 
 # or
-$ xcodebuild -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk -version ProductBuildVersion
+$ /usr/bin/xcodebuild -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk -version ProductBuildVersion
 23C53
 
-$ xcrun --sdk macosx --show-sdk-platform-version
+$ /usr/bin/xcrun --sdk macosx --show-sdk-platform-version
 14.2
 # or
-$ xcodebuild -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk -version PlatformVersion
+$ /usr/bin/xcodebuild -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk -version PlatformVersion
 14.2
 ```
 
@@ -212,11 +213,11 @@ $ xcodebuild -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.pl
   <!--endsec-->
 
 
-  - `xcodebuild -sdk -version`
+  - `/usr/bin/xcodebuild -sdk -version`
 
     <!--sec data-title="xcodebuild -sdk -version" data-id="section1" data-show=true data-collapse=true ces-->
     ```bash
-    $ xcodebuild -sdk -version
+    $ /usr/bin/xcodebuild -sdk -version
     DriverKit23.2.sdk - DriverKit 23.2 (driverkit23.2)
     SDKVersion: 23.2
     Path: /Applications/Xcode.app/Contents/Developer/Platforms/DriverKit.platform/Developer/SDKs/DriverKit23.2.sdk
@@ -454,12 +455,16 @@ Dict {
 
 ### setup
 ```bash
-$ sudo xcodebuild -license accept
+$ sudo /usr/bin/xcodebuild -license accept
 ```
 
 ### enable developer mode
 ```bash
-$ DevToolsSecurity -enable
+$ /usr/sbin/DevToolsSecurity -enable
+
+# check status
+$ /usr/sbin/DevToolsSecurity -status
+Developer mode is currently enabled.
 ```
 
 ### commandline tools
@@ -467,22 +472,22 @@ $ DevToolsSecurity -enable
 > [!NOTE|label:references:]
 > - check installation status:
 >   ```bash
->   $ xcode-select -p
+>   $ /usr/bin/xcode-select -p
 >   ```
 
 - install commandline tools
   ```bash
-  $ xcode-select --install
+  $ /usr/bin/xcode-select --install
   xcode-select: note: install requested for command line developer tools
   ```
 
 - upgrade commandline tools
   ```bash
-  $ softwareupdate --all --install --force
+  $ /usr/sbin/softwareupdate --all --install --force
 
   # or
   $ sudo rm -rf /Library/Developer/CommandLineTools
-  $ sudo xcode-select --install
+  $ sudo /usr/bin/xcode-select -select --install
   ```
 
   - [more details](https://stackoverflow.com/a/44234214/2940319)
@@ -573,16 +578,19 @@ $ for pkg in /Applications/Xcode.app/Contents/Resources/Packages/*.pkg; do
 
 ## developer tools
 
+### pkgutil
+
 > [!NOTE]
+> `pkgutil` – Query and manipulate macOS Installer packages and receipts.<br>
 > - [Install Ansible on Mac OSX](https://hvops.com/articles/ansible-mac-osx/)
 
 ```bash
-$ pkgutil --pkg-info=com.apple.pkg.CLTools_Executables
+$ /usr/sbin/pkgutil --pkg-info=com.apple.pkg.CLTools_Executables
 ```
 
 - already installed
   ```bash
-  $ pkgutil --pkg-info=com.apple.pkg.CLTools_Executables
+  $ /usr/sbin/pkgutil --pkg-info=com.apple.pkg.CLTools_Executables
   package-id: com.apple.pkg.CLTools_Executables
   version: 14.3.1.0.1.1683849156
   volume: /
@@ -595,6 +603,31 @@ $ pkgutil --pkg-info=com.apple.pkg.CLTools_Executables
   $ pkgutil --pkg-info=com.apple.pkg.CLTools_Executables
   No receipt for 'com.apple.pkg.CLTools_Executables' found at '/'.
   ```
+
+```bash
+# all CLTools related packages
+$ /usr/sbin/pkgutil --pkgs | grep -i 'cltools'
+com.apple.pkg.CLTools_SDK_macOS13
+com.apple.pkg.CLTools_SDK_macOS12
+com.apple.pkg.CLTools_Executables
+com.apple.pkg.CLTools_SDK_macOS_LMOS
+com.apple.pkg.CLTools_SDK_macOS14
+com.apple.pkg.CLTools_SDK_macOS_NMOS
+com.apple.pkg.CLTools_SDK_macOS110
+com.apple.pkg.CLTools_SwiftBackDeploy
+com.apple.pkg.CLTools_macOS_SDK
+
+# what is installed in CLTools_Executables (files)
+$ /usr/sbin/pkgutil --files com.apple.pkg.CLTools_Executables
+$ /usr/sbin/pkgutil --files com.apple.pkg.CLTools_Executables 2>/dev/null | command wc -l
+5363
+
+# the root directory of the payload
+$ /usr/sbin/pkgutil --files com.apple.pkg.CLTools_Executables 2>/dev/null | head -3
+Library
+Library/Developer
+Library/Developer/CommandLineTools
+```
 
 ### apple shim
 
