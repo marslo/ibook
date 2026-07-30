@@ -719,65 +719,68 @@ Build version 15C500b
 > $ sudo installer -pkg /Applications/Xcode.app/Contents/Resources/Packages/XcodeSystemResources.pkg -target /
 > ```
 
-- error log
-  ```bash
-  $ /usr/bin/git --version
-  Error loading required libraries. If there is an ongoing installation please wait for it to complete. Otherwise reinstall. (dlopen(@rpath/libxcodebuildLoader.dylib, 0x0001): Symbol not found: _XPCTypeBool
-    Referenced from: <9AE16A95-2414-31C4-BB7F-672E0C9AE66B> /Library/Developer/PrivateFrameworks/CoreDevice.framework/Versions/A/CoreDevice
-    Expected in:     <37B53E42-0118-3C9B-BFA8-73DB82BC3B85> /Library/Apple/System/Library/PrivateFrameworks/Mercury.framework/Versions/A/Mercury)
-  Error loading required libraries. If there is an ongoing installation please wait for it to complete. Otherwise reinstall. (dlopen(@rpath/libxcodebuildLoader.dylib, 0x0001): Symbol not found: _XPCTypeBool
-    Referenced from: <9AE16A95-2414-31C4-BB7F-672E0C9AE66B> /Library/Developer/PrivateFrameworks/CoreDevice.framework/Versions/A/CoreDevice
-    Expected in:     <37B53E42-0118-3C9B-BFA8-73DB82BC3B85> /Library/Apple/System/Library/PrivateFrameworks/Mercury.framework/Versions/A/Mercury)
-  git: error: sh -c '/Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -find git 2> /dev/null' failed with exit code 65280: (null) (errno=No such file or directory)
-  xcode-select: Failed to locate 'git', and no install could be requested (perhaps no UI is present). Please install manually from 'developer.apple.com'.
+![xcode UI startup issue](../../screenshot/osx/xcode-ui-startup-issue.png)
 
-  # or
-  $ /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -find git
-  Error loading required libraries. If there is an ongoing installation please wait for it to complete. Otherwise reinstall. (dlopen(@rpath/libxcodebuildLoader.dylib, 0x0001): Symbol not found: _XPCTypeBool
-    Referenced from: <9AE16A95-2414-31C4-BB7F-672E0C9AE66B> /Library/Developer/PrivateFrameworks/CoreDevice.framework/Versions/A/CoreDevice
-    Expected in:     <37B53E42-0118-3C9B-BFA8-73DB82BC3B85> /Library/Apple/System/Library/PrivateFrameworks/Mercury.framework/Versions/A/Mercury)
+error log
 
-  # or
-  $ /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -find git --version
-  Error loading required libraries. If there is an ongoing installation please wait for it to complete. Otherwise reinstall. (dlopen(@rpath/libxcodebuildLoader.dylib, 0x0001): Symbol not found: _XPCTypeBool
-    Referenced from: <9AE16A95-2414-31C4-BB7F-672E0C9AE66B> /Library/Developer/PrivateFrameworks/CoreDevice.framework/Versions/A/CoreDevice
-    Expected in:     <37B53E42-0118-3C9B-BFA8-73DB82BC3B85> /Library/Apple/System/Library/PrivateFrameworks/Mercury.framework/Versions/A/Mercury)
-  ```
+```bash
+$ /usr/bin/git --version
+Error loading required libraries. If there is an ongoing installation please wait for it to complete. Otherwise reinstall. (dlopen(@rpath/libxcodebuildLoader.dylib, 0x0001): Symbol not found: _XPCTypeBool
+  Referenced from: <9AE16A95-2414-31C4-BB7F-672E0C9AE66B> /Library/Developer/PrivateFrameworks/CoreDevice.framework/Versions/A/CoreDevice
+  Expected in:     <37B53E42-0118-3C9B-BFA8-73DB82BC3B85> /Library/Apple/System/Library/PrivateFrameworks/Mercury.framework/Versions/A/Mercury)
+Error loading required libraries. If there is an ongoing installation please wait for it to complete. Otherwise reinstall. (dlopen(@rpath/libxcodebuildLoader.dylib, 0x0001): Symbol not found: _XPCTypeBool
+  Referenced from: <9AE16A95-2414-31C4-BB7F-672E0C9AE66B> /Library/Developer/PrivateFrameworks/CoreDevice.framework/Versions/A/CoreDevice
+  Expected in:     <37B53E42-0118-3C9B-BFA8-73DB82BC3B85> /Library/Apple/System/Library/PrivateFrameworks/Mercury.framework/Versions/A/Mercury)
+git: error: sh -c '/Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -find git 2> /dev/null' failed with exit code 65280: (null) (errno=No such file or directory)
+xcode-select: Failed to locate 'git', and no install could be requested (perhaps no UI is present). Please install manually from 'developer.apple.com'.
 
-- solution
+# or
+$ /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -find git
+Error loading required libraries. If there is an ongoing installation please wait for it to complete. Otherwise reinstall. (dlopen(@rpath/libxcodebuildLoader.dylib, 0x0001): Symbol not found: _XPCTypeBool
+  Referenced from: <9AE16A95-2414-31C4-BB7F-672E0C9AE66B> /Library/Developer/PrivateFrameworks/CoreDevice.framework/Versions/A/CoreDevice
+  Expected in:     <37B53E42-0118-3C9B-BFA8-73DB82BC3B85> /Library/Apple/System/Library/PrivateFrameworks/Mercury.framework/Versions/A/Mercury)
 
-  > [!NOTE|label:switch xcode-select to xcode]
-  > ```bash
-  > $ sudo xcodebuild -runFirstLaunch
-  > xcode-select: error: tool 'xcodebuild' requires Xcode, but active developer directory '/Library/Developer/CommandLineTools' is a command line tools instance
-  > # fix the issue by switching to Xcode
-  > $ sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
-  > ```
+# or
+$ /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -find git --version
+Error loading required libraries. If there is an ongoing installation please wait for it to complete. Otherwise reinstall. (dlopen(@rpath/libxcodebuildLoader.dylib, 0x0001): Symbol not found: _XPCTypeBool
+  Referenced from: <9AE16A95-2414-31C4-BB7F-672E0C9AE66B> /Library/Developer/PrivateFrameworks/CoreDevice.framework/Versions/A/CoreDevice
+  Expected in:     <37B53E42-0118-3C9B-BFA8-73DB82BC3B85> /Library/Apple/System/Library/PrivateFrameworks/Mercury.framework/Versions/A/Mercury)
+```
 
-  ```bash
-  # fix
-  $ sudo xcodebuild -runFirstLaunch
-  Error loading required libraries. If there is an ongoing installation please wait for it to complete. Otherwise reinstall. (dlopen(@rpath/libxcodebuildLoader.dylib, 0x0001): Symbol not found: _XPCTypeBool
-    Referenced from: <9AE16A95-2414-31C4-BB7F-672E0C9AE66B> /Library/Developer/PrivateFrameworks/CoreDevice.framework/Versions/A/CoreDevice
-    Expected in:     <37B53E42-0118-3C9B-BFA8-73DB82BC3B85> /Library/Apple/System/Library/PrivateFrameworks/Mercury.framework/Versions/A/Mercury)
-  Install Started
-  1%.........20.........40.........60.........80.......Install Succeeded
+solution
 
-  # or with license acceptance + pkg registration
-  $ for pkg in /Applications/Xcode.app/Contents/Resources/Packages/*.pkg; do
-      sudo installer -pkg "${pkg}" -target /
-    done
-  $ sudo xcodebuild -license accept
+> [!NOTE|label:switch xcode-select to xcode]
+> ```bash
+> $ sudo xcodebuild -runFirstLaunch
+> xcode-select: error: tool 'xcodebuild' requires Xcode, but active developer directory '/Library/Developer/CommandLineTools' is a command line tools instance
+> # fix the issue by switching to Xcode
+> $ sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+> ```
 
-  # check
-  $ /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -find git
-  /Applications/Xcode.app/Contents/Developer/usr/bin/git
-  $ /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -find git
-  /Applications/Xcode.app/Contents/Developer/usr/bin/git
+```bash
+# fix
+$ sudo xcodebuild -runFirstLaunch
+Error loading required libraries. If there is an ongoing installation please wait for it to complete. Otherwise reinstall. (dlopen(@rpath/libxcodebuildLoader.dylib, 0x0001): Symbol not found: _XPCTypeBool
+  Referenced from: <9AE16A95-2414-31C4-BB7F-672E0C9AE66B> /Library/Developer/PrivateFrameworks/CoreDevice.framework/Versions/A/CoreDevice
+  Expected in:     <37B53E42-0118-3C9B-BFA8-73DB82BC3B85> /Library/Apple/System/Library/PrivateFrameworks/Mercury.framework/Versions/A/Mercury)
+Install Started
+1%.........20.........40.........60.........80.......Install Succeeded
 
-  $ /usr/bin/xcodebuild -checkFirstLaunchStatus 2>&1 && echo 'yes' || echo 'no'
-  yes
-  ```
+# or with license acceptance + pkg registration
+$ for pkg in /Applications/Xcode.app/Contents/Resources/Packages/*.pkg; do
+    sudo installer -pkg "${pkg}" -target /
+  done
+$ sudo xcodebuild -license accept
+
+# check
+$ /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -find git
+/Applications/Xcode.app/Contents/Developer/usr/bin/git
+$ /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -find git
+/Applications/Xcode.app/Contents/Developer/usr/bin/git
+
+$ /usr/bin/xcodebuild -checkFirstLaunchStatus 2>&1 && echo 'yes' || echo 'no'
+yes
+```
 
 ## download via wget
 

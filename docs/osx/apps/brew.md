@@ -3,13 +3,6 @@
 
 - [brew command](#brew-command)
 - [homebrew installation](#homebrew-installation)
-- [alternative sources](#alternative-sources)
-  - [homebrewCN](#homebrewcn)
-  - [tsinghua (清华)](#tsinghua-%E6%B8%85%E5%8D%8E)
-  - [ustc (中科大)](#ustc-%E4%B8%AD%E7%A7%91%E5%A4%A7)
-  - [ali (阿里)](#ali-%E9%98%BF%E9%87%8C)
-  - [tencent (腾讯)](#tencent-%E8%85%BE%E8%AE%AF)
-  - [homebrew bottles](#homebrew-bottles)
 - [homebrew caskroom installation](#homebrew-caskroom-installation)
 - [brew install](#brew-install)
   - [batch install](#batch-install)
@@ -40,6 +33,13 @@
   - [Error: Unexpected method 'appcast' called on Cask adoptopenjdk-jre](#error-unexpected-method-appcast-called-on-cask-adoptopenjdk-jre)
   - [treesitter.c: error: call to undeclared function 'ts_language_abi_version'](#treesitterc-error-call-to-undeclared-function-ts_language_abi_version)
   - [You have pkgconf installed that was built on macOS 14 but you are running macOS 15.](#you-have-pkgconf-installed-that-was-built-on-macos-14-but-you-are-running-macos-15)
+- [alternative sources](#alternative-sources)
+  - [homebrewCN](#homebrewcn)
+  - [tsinghua (清华)](#tsinghua-%E6%B8%85%E5%8D%8E)
+  - [ustc (中科大)](#ustc-%E4%B8%AD%E7%A7%91%E5%A4%A7)
+  - [ali (阿里)](#ali-%E9%98%BF%E9%87%8C)
+  - [tencent (腾讯)](#tencent-%E8%85%BE%E8%AE%AF)
+  - [homebrew bottles](#homebrew-bottles)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -110,116 +110,6 @@ $ /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/inst
   origin  git@github.com:Homebrew/homebrew-core (push)
   ```
 
-## alternative sources
-
-> [!TIP|label:references:]
-> - [Mac 下 brew 切换为国内源](https://cloud.tencent.com/developer/article/1614039)
-> - [homebrew for additional source](https://frankindev.com/2020/05/15/replace-homebrew-source/)
-
-### [homebrewCN](https://gitee.com/Busch/HomebrewCN)
-```bash
-$ /bin/zsh -c "$(curl -fsSL https://gitee.com/cunkai/HomebrewCN/raw/master/Homebrew.sh)"
-```
-
-- official
-
-  > [!NOTE|label:revert back]
-  > ```bash
-  > $ brew doctor
-  > Please note that these warnings are just used to help the Homebrew maintainers
-  > with debugging if you file an issue. If everything you use Homebrew for is
-  > working fine: please don't worry or file an issue; just ignore this. Thanks!
-  >
-  > Warning: Suspicious https://github.com/Homebrew/brew git origin remote found.
-  > The current git origin is:
-  >   https://mirrors.ustc.edu.cn/brew.git
-  >
-  > With a non-standard origin, Homebrew won't update properly.
-  > You can solve this by setting the origin remote:
-  >   git -C "/usr/local/Homebrew" remote set-url origin https://github.com/Homebrew/brew
-  >
-  > Warning: Suspicious https://github.com/Homebrew/homebrew-core git origin remote found.
-  > The current git origin is:
-  >   https://mirrors.ustc.edu.cn/homebrew-core.git
-  >
-  > With a non-standard origin, Homebrew won't update properly.
-  > You can solve this by setting the origin remote:
-  >   git -C "/usr/local/Homebrew/Library/Taps/homebrew/homebrew-core" remote set-url origin https://github.com/Homebrew/homebrew-core
-  > ```
-
-  ```bash
-  $ brew_source='https://github.com/Homebrew'
-  # brew 程序本身
-  $ git -C "$(brew --repo)" remote set-url origin ${brew_source}/brew.git
-
-  $ git -C "$(brew --repo homebrew/core)" remote set-url origin ${brew_source}/homebrew-core.git
-  $ git -C "$(brew --repo homebrew/cask)" remote set-url origin ${brew_source}/homebrew-cask.git
-  $ git -C "$(brew --repo homebrew/cask-fonts)" remote set-url origin ${brew_source}/homebrew-cask-fonts.git
-  $ git -C "$(brew --repo homebrew/cask-drivers)" remote set-url origin ${brew_source}/homebrew-cask-drivers.git
-
-  $ brew update
-  ```
-
-### tsinghua (清华)
-```bash
-$ brew_source='https://mirrors.tuna.tsinghua.edu.cn/git/homebrew'
-# brew 程序本身
-$ git -C "$(brew --repo)" remote set-url origin ${brew_source}/brew.git
-$ git -C "$(brew --repo homebrew/core)" remote set-url origin ${brew_source}/homebrew-core.git
-$ git -C "$(brew --repo homebrew/cask)" remote set-url origin ${brew_source}/homebrew-cask.git
-$ git -C "$(brew --repo homebrew/cask-fonts)" remote set-url origin ${brew_source}/homebrew-cask-fonts.git
-$ git -C "$(brew --repo homebrew/cask-drivers)" remote set-url origin ${brew_source}/homebrew-cask-drivers.git
-
-$ brew update
-```
-
-### ustc (中科大)
-```bash
-$ brew_source='https://mirrors.ustc.edu.cn'
-# brew 程序本身
-$ git -C "$(brew --repo)" remote set-url origin ${brew_source}/brew.git
-
-$ git -C "$(brew --repo homebrew/core)" remote set-url origin ${brew_source}/homebrew-core.git
-$ git -C "$(brew --repo homebrew/cask)" remote set-url origin ${brew_source}/homebrew-cask.git
-
-$ brew update
-```
-
-### ali (阿里)
-```bash
-$ brew_source='https://mirrors.aliyun.com/homebrew'
-# brew 程序本身
-$ git -C "$(brew --repo)" remote set-url origin ${brew_source}/brew.git
-$ git -C "$(brew --repo homebrew/core)" remote set-url origin ${brew_source}/homebrew-core.git
-
-$ brew update
-```
-
-### tencent (腾讯)
-```bash
-$ brew_source='https://mirrors.cloud.tencent.com/homebrew'
-# brew 程序本身
-$ git -C "$(brew --repo)" remote set-url origin ${brew_source}/brew.git
-
-$ git -C "$(brew --repo homebrew/core)" remote set-url origin ${brew_source}/homebrew-core.git
-$ git -C "$(brew --repo homebrew/cask)" remote set-url origin ${brew_source}/homebrew-cask.git
-$ git -C "$(brew --repo homebrew/cask-fonts)" remote set-url origin ${brew_source}/homebrew-cask-fonts.git
-$ git -C "$(brew --repo homebrew/cask-drivers)" remote set-url origin ${brew_source}/homebrew-cask-drivers.git
-
-$ brew update
-```
-
-### homebrew bottles
-
-> [!NOTE|label:address:]
-> - `https://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles`
-> - `https://mirrors.ustc.edu.cn/homebrew-bottles`
-> - `https://mirrors.aliyun.com/homebrew/homebrew-bottles`
-> - `https://mirrors.cloud.tencent.com/homebrew-bottles`
-
-```bash
-$ export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.cloud.tencent.com/homebrew-bottles
-```
 
 ## homebrew caskroom installation
 ```bash
@@ -1322,4 +1212,115 @@ $ brew reinstall pkgconf
 
 # or
 $ brew reinstall --build-from-source pkgconf
+```
+
+## alternative sources
+
+> [!TIP|label:references:]
+> - [Mac 下 brew 切换为国内源](https://cloud.tencent.com/developer/article/1614039)
+> - [homebrew for additional source](https://frankindev.com/2020/05/15/replace-homebrew-source/)
+
+### [homebrewCN](https://gitee.com/Busch/HomebrewCN)
+```bash
+$ /bin/zsh -c "$(curl -fsSL https://gitee.com/cunkai/HomebrewCN/raw/master/Homebrew.sh)"
+```
+
+- official
+
+  > [!NOTE|label:revert back]
+  > ```bash
+  > $ brew doctor
+  > Please note that these warnings are just used to help the Homebrew maintainers
+  > with debugging if you file an issue. If everything you use Homebrew for is
+  > working fine: please don't worry or file an issue; just ignore this. Thanks!
+  >
+  > Warning: Suspicious https://github.com/Homebrew/brew git origin remote found.
+  > The current git origin is:
+  >   https://mirrors.ustc.edu.cn/brew.git
+  >
+  > With a non-standard origin, Homebrew won't update properly.
+  > You can solve this by setting the origin remote:
+  >   git -C "/usr/local/Homebrew" remote set-url origin https://github.com/Homebrew/brew
+  >
+  > Warning: Suspicious https://github.com/Homebrew/homebrew-core git origin remote found.
+  > The current git origin is:
+  >   https://mirrors.ustc.edu.cn/homebrew-core.git
+  >
+  > With a non-standard origin, Homebrew won't update properly.
+  > You can solve this by setting the origin remote:
+  >   git -C "/usr/local/Homebrew/Library/Taps/homebrew/homebrew-core" remote set-url origin https://github.com/Homebrew/homebrew-core
+  > ```
+
+  ```bash
+  $ brew_source='https://github.com/Homebrew'
+  # brew 程序本身
+  $ git -C "$(brew --repo)" remote set-url origin ${brew_source}/brew.git
+
+  $ git -C "$(brew --repo homebrew/core)" remote set-url origin ${brew_source}/homebrew-core.git
+  $ git -C "$(brew --repo homebrew/cask)" remote set-url origin ${brew_source}/homebrew-cask.git
+  $ git -C "$(brew --repo homebrew/cask-fonts)" remote set-url origin ${brew_source}/homebrew-cask-fonts.git
+  $ git -C "$(brew --repo homebrew/cask-drivers)" remote set-url origin ${brew_source}/homebrew-cask-drivers.git
+
+  $ brew update
+  ```
+
+### tsinghua (清华)
+```bash
+$ brew_source='https://mirrors.tuna.tsinghua.edu.cn/git/homebrew'
+# brew 程序本身
+$ git -C "$(brew --repo)" remote set-url origin ${brew_source}/brew.git
+$ git -C "$(brew --repo homebrew/core)" remote set-url origin ${brew_source}/homebrew-core.git
+$ git -C "$(brew --repo homebrew/cask)" remote set-url origin ${brew_source}/homebrew-cask.git
+$ git -C "$(brew --repo homebrew/cask-fonts)" remote set-url origin ${brew_source}/homebrew-cask-fonts.git
+$ git -C "$(brew --repo homebrew/cask-drivers)" remote set-url origin ${brew_source}/homebrew-cask-drivers.git
+
+$ brew update
+```
+
+### ustc (中科大)
+```bash
+$ brew_source='https://mirrors.ustc.edu.cn'
+# brew 程序本身
+$ git -C "$(brew --repo)" remote set-url origin ${brew_source}/brew.git
+
+$ git -C "$(brew --repo homebrew/core)" remote set-url origin ${brew_source}/homebrew-core.git
+$ git -C "$(brew --repo homebrew/cask)" remote set-url origin ${brew_source}/homebrew-cask.git
+
+$ brew update
+```
+
+### ali (阿里)
+```bash
+$ brew_source='https://mirrors.aliyun.com/homebrew'
+# brew 程序本身
+$ git -C "$(brew --repo)" remote set-url origin ${brew_source}/brew.git
+$ git -C "$(brew --repo homebrew/core)" remote set-url origin ${brew_source}/homebrew-core.git
+
+$ brew update
+```
+
+### tencent (腾讯)
+```bash
+$ brew_source='https://mirrors.cloud.tencent.com/homebrew'
+# brew 程序本身
+$ git -C "$(brew --repo)" remote set-url origin ${brew_source}/brew.git
+
+$ git -C "$(brew --repo homebrew/core)" remote set-url origin ${brew_source}/homebrew-core.git
+$ git -C "$(brew --repo homebrew/cask)" remote set-url origin ${brew_source}/homebrew-cask.git
+$ git -C "$(brew --repo homebrew/cask-fonts)" remote set-url origin ${brew_source}/homebrew-cask-fonts.git
+$ git -C "$(brew --repo homebrew/cask-drivers)" remote set-url origin ${brew_source}/homebrew-cask-drivers.git
+
+$ brew update
+```
+
+### homebrew bottles
+
+> [!NOTE|label:address:]
+> - `https://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles`
+> - `https://mirrors.ustc.edu.cn/homebrew-bottles`
+> - `https://mirrors.aliyun.com/homebrew/homebrew-bottles`
+> - `https://mirrors.cloud.tencent.com/homebrew-bottles`
+
+```bash
+$ export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.cloud.tencent.com/homebrew-bottles
 ```

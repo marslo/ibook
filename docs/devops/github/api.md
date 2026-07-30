@@ -588,13 +588,13 @@ v7.0.0
 ```bash
 # check latest version
 $ for a in actions/checkout actions/setup-python actions/setup-node actions/cache; do
-    latest="$(gh api "repos/$a/releases/latest" --jq '.tag_name' 2>/dev/null)"
+    latest="$(gh api "repos/$a/releases/latest" --jq '.tag_name + "  (" + .published_at + ")"' 2>/dev/null)"
     printf '%-24s latest=%s\n' "$a" "${latest:-<none>}"
   done
-actions/checkout         latest=v7.0.1
-actions/setup-python     latest=v7.0.0
-actions/setup-node       latest=v7.0.0
-actions/cache            latest=v6.1.0
+actions/checkout         latest=v7.0.1  (2026-07-20T15:10:05Z)
+actions/setup-python     latest=v7.0.0  (2026-07-20T03:15:01Z)
+actions/setup-node       latest=v7.0.0  (2026-07-14T02:46:05Z)
+actions/cache            latest=v6.1.0  (2026-06-26T19:17:06Z)
 
 # -- check node using version --
 # $1=repo  $2=ref
