@@ -14,6 +14,7 @@
 - [developer tools](#developer-tools)
 - [troubleshooting](#troubleshooting)
   - [xcode-select: error: tool 'xcodebuild' requires Xcode](#xcode-select-error-tool-xcodebuild-requires-xcode)
+  - [Symbol not found: _XPCTypeBool](#symbol-not-found-_xpctypebool)
 - [download via wget](#download-via-wget)
 - [appendix](#appendix)
   - [xcode](#xcode)
@@ -516,10 +517,31 @@ $ DevToolsSecurity -enable
 
 ### components installation
 
+> [!TIP|label:references:]
+> ```bash
+> $ for pkg in /Applications/Xcode.app/Contents/Resources/Packages/*.pkg; do
+>     test -f "${pkg}" && printf '%-30s package: %s\n' "$(basename ${pkg})" \
+>                         "$( /usr/sbin/installer -pkginfo -verbose -pkg "${pkg}" 2>/dev/null | sed -rn 's/^Package\s+:\s*(.+)$/\1/p' )";
+>   done
+> CoreTypes.pkg                  package: CoreTypes
+> MobileDevice.pkg               package: MobileDevice
+> MobileDeviceDevelopment.pkg    package: MobileDeviceDevelopment
+> XcodeSystemResources.pkg       package: XcodeSystemResources
+>
+> $ for pkg in /Applications/Xcode.app/Contents/Resources/Packages/*.pkg; do
+>     printf '%-30s %s\n' "$( command basename "${pkg}" )" \
+>     "$( /usr/bin/tar -xOf "${pkg}" PackageInfo 2>/dev/null | command grep -oE 'identifier="[^"]*"' | head -1 )"
+>   done
+> CoreTypes.pkg                  identifier="com.apple.pkg.CoreTypes.1940D10"
+> MobileDevice.pkg               identifier="com.apple.pkg.MobileDevice"
+> MobileDeviceDevelopment.pkg    identifier="com.apple.pkg.MobileDeviceDevelopment"
+> XcodeSystemResources.pkg       identifier="com.apple.pkg.XcodeSystemResources"
+> ```
+
 ```bash
 $ for pkg in /Applications/Xcode.app/Contents/Resources/Packages/*.pkg; do
->   sudo installer -pkg "$pkg" -target /;
-> done
+    sudo installer -pkg "${pkg}" -target /;
+  done
 ```
 
 - example:
@@ -532,8 +554,8 @@ $ for pkg in /Applications/Xcode.app/Contents/Resources/Packages/*.pkg; do
   -rw-r--r--   1 root  wheel    83M Sep 30 05:28 MobileDevice.pkg
 
   $ for pkg in /Applications/Xcode.app/Contents/Resources/Packages/*.pkg; do
-  > sudo installer -pkg "$pkg" -target /;
-  > done
+      sudo installer -pkg "${pkg}" -target /;
+    done
   installer: Package name is MobileDevice
   installer: Upgrading at base path /
   installer: The upgrade was successful.
@@ -586,6 +608,74 @@ $ xcodebuild -version
 Xcode 15.2
 Build version 15C500b
 ```
+
+### Symbol not found: _XPCTypeBool
+
+> [!NOTE]
+> `_XPCTypeBool` issue is due to `CoreDevice` (`XcodeSystemResources.pkg`) wasn't been registered. To fix can execute:
+> ```bash
+> $ sudo installer -pkg /Applications/Xcode.app/Contents/Resources/Packages/XcodeSystemResources.pkg -target /
+> ```
+
+- error log
+  ```bash
+  $ /usr/bin/git --version
+  Error loading required libraries. If there is an ongoing installation please wait for it to complete. Otherwise reinstall. (dlopen(@rpath/libxcodebuildLoader.dylib, 0x0001): Symbol not found: _XPCTypeBool
+    Referenced from: <9AE16A95-2414-31C4-BB7F-672E0C9AE66B> /Library/Developer/PrivateFrameworks/CoreDevice.framework/Versions/A/CoreDevice
+    Expected in:     <37B53E42-0118-3C9B-BFA8-73DB82BC3B85> /Library/Apple/System/Library/PrivateFrameworks/Mercury.framework/Versions/A/Mercury)
+  Error loading required libraries. If there is an ongoing installation please wait for it to complete. Otherwise reinstall. (dlopen(@rpath/libxcodebuildLoader.dylib, 0x0001): Symbol not found: _XPCTypeBool
+    Referenced from: <9AE16A95-2414-31C4-BB7F-672E0C9AE66B> /Library/Developer/PrivateFrameworks/CoreDevice.framework/Versions/A/CoreDevice
+    Expected in:     <37B53E42-0118-3C9B-BFA8-73DB82BC3B85> /Library/Apple/System/Library/PrivateFrameworks/Mercury.framework/Versions/A/Mercury)
+  git: error: sh -c '/Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -find git 2> /dev/null' failed with exit code 65280: (null) (errno=No such file or directory)
+  xcode-select: Failed to locate 'git', and no install could be requested (perhaps no UI is present). Please install manually from 'developer.apple.com'.
+
+  # or
+  $ /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -find git
+  Error loading required libraries. If there is an ongoing installation please wait for it to complete. Otherwise reinstall. (dlopen(@rpath/libxcodebuildLoader.dylib, 0x0001): Symbol not found: _XPCTypeBool
+    Referenced from: <9AE16A95-2414-31C4-BB7F-672E0C9AE66B> /Library/Developer/PrivateFrameworks/CoreDevice.framework/Versions/A/CoreDevice
+    Expected in:     <37B53E42-0118-3C9B-BFA8-73DB82BC3B85> /Library/Apple/System/Library/PrivateFrameworks/Mercury.framework/Versions/A/Mercury)
+
+  # or
+  $ /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -find git --version
+  Error loading required libraries. If there is an ongoing installation please wait for it to complete. Otherwise reinstall. (dlopen(@rpath/libxcodebuildLoader.dylib, 0x0001): Symbol not found: _XPCTypeBool
+    Referenced from: <9AE16A95-2414-31C4-BB7F-672E0C9AE66B> /Library/Developer/PrivateFrameworks/CoreDevice.framework/Versions/A/CoreDevice
+    Expected in:     <37B53E42-0118-3C9B-BFA8-73DB82BC3B85> /Library/Apple/System/Library/PrivateFrameworks/Mercury.framework/Versions/A/Mercury)
+  ```
+
+- solution
+
+  > [!NOTE|label:switch xcode-select to xcode]
+  > ```bash
+  > $ sudo xcodebuild -runFirstLaunch
+  > xcode-select: error: tool 'xcodebuild' requires Xcode, but active developer directory '/Library/Developer/CommandLineTools' is a command line tools instance
+  > # fix the issue by switching to Xcode
+  > $ sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+  > ```
+
+  ```bash
+  # fix
+  $ sudo xcodebuild -runFirstLaunch
+  Error loading required libraries. If there is an ongoing installation please wait for it to complete. Otherwise reinstall. (dlopen(@rpath/libxcodebuildLoader.dylib, 0x0001): Symbol not found: _XPCTypeBool
+    Referenced from: <9AE16A95-2414-31C4-BB7F-672E0C9AE66B> /Library/Developer/PrivateFrameworks/CoreDevice.framework/Versions/A/CoreDevice
+    Expected in:     <37B53E42-0118-3C9B-BFA8-73DB82BC3B85> /Library/Apple/System/Library/PrivateFrameworks/Mercury.framework/Versions/A/Mercury)
+  Install Started
+  1%.........20.........40.........60.........80.......Install Succeeded
+
+  # or with license acceptance + pkg registration
+  $ for pkg in /Applications/Xcode.app/Contents/Resources/Packages/*.pkg; do
+      sudo installer -pkg "${pkg}" -target /
+    done
+  $ sudo xcodebuild -license accept
+
+  # check
+  $ /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -find git
+  /Applications/Xcode.app/Contents/Developer/usr/bin/git
+  $ /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -find git
+  /Applications/Xcode.app/Contents/Developer/usr/bin/git
+
+  $ /usr/bin/xcodebuild -checkFirstLaunchStatus 2>&1 && echo 'yes' || echo 'no'
+  yes
+  ```
 
 ## download via wget
 * get cookies.txt
