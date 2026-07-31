@@ -1,56 +1,42 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-  - [Pythonic](#pythonic)
-    - [zip/unzip](#zipunzip)
-    - [in](#in)
-    - [dict & counter](#dict--counter)
-    - [enumerate](#enumerate)
-    - [import local module](#import-local-module)
-    - [args & kwargs](#args--kwargs)
-    - [itertools](#itertools)
-    - [one-line python code](#one-line-python-code)
-    - [slice](#slice)
-    - [chain compare](#chain-compare)
-    - [boolean](#boolean)
-    - [reverse](#reverse)
-    - [join in list](#join-in-list)
-    - [sum & max & min & time](#sum--max--min--time)
-    - [list comprehensions](#list-comprehensions)
-    - [default dict](#default-dict)
-    - [if...else...](#ifelse)
-    - [ternary operator](#ternary-operator)
-    - [dict & zip](#dict--zip)
-  - [hidden features](#hidden-features)
-    - [numbers](#numbers)
-    - [string](#string)
-    - [args](#args)
-    - [conditional assignment](#conditional-assignment)
-    - [list & dics](#list--dics)
-    - [generator & iteration](#generator--iteration)
-    - [statement](#statement)
-    - [funcs](#funcs)
-    - [class & module](#class--module)
-    - [Others](#others)
-  - [PEP8 -- Style Guide for Python Code](#pep8----style-guide-for-python-code)
-    - [indentation](#indentation)
-- [further indentation required as indentation is not distinguishable.](#further-indentation-required-as-indentation-is-not-distinguishable)
-- [more indentation included to distinguish this from the rest.](#more-indentation-included-to-distinguish-this-from-the-rest)
-- [hanging indents should add a level.](#hanging-indents-should-add-a-level)
-    - [maximum line length](#maximum-line-length)
-    - [should a line break before or after a binary operator?](#should-a-line-break-before-or-after-a-binary-operator)
-    - [imports](#imports)
-    - [module level under names](#module-level-under-names)
-    - [whitespace in expressions and statements](#whitespace-in-expressions-and-statements)
-    - [other recommendations](#other-recommendations)
-    - [documentation strings](#documentation-strings)
-    - [Programming Recommendations](#programming-recommendations)
-    - [PEP8 Error/Warning Code](#pep8-errorwarning-code)
-  - [basic](#basic)
-    - [version capability](#version-capability)
-  - [environment](#environment)
-    - [list included modules](#list-included-modules)
-    - [list lib paths](#list-lib-paths)
+- [Pythonic](#pythonic)
+  - [zip/unzip](#zipunzip)
+  - [in](#in)
+  - [dict & counter](#dict--counter)
+  - [enumerate](#enumerate)
+  - [import local module](#import-local-module)
+  - [args & kwargs](#args--kwargs)
+  - [itertools](#itertools)
+  - [one-line python code](#one-line-python-code)
+  - [slice](#slice)
+  - [chain compare](#chain-compare)
+  - [boolean](#boolean)
+  - [reverse](#reverse)
+  - [join in list](#join-in-list)
+  - [sum & max & min & time](#sum--max--min--time)
+  - [list comprehensions](#list-comprehensions)
+  - [default dict](#default-dict)
+  - [if...else...](#ifelse)
+  - [ternary operator](#ternary-operator)
+  - [dict & zip](#dict--zip)
+- [hidden features](#hidden-features)
+  - [numbers](#numbers)
+  - [string](#string)
+  - [args](#args)
+  - [conditional assignment](#conditional-assignment)
+  - [list & dics](#list--dics)
+  - [generator & iteration](#generator--iteration)
+  - [statement](#statement)
+  - [funcs](#funcs)
+  - [class & module](#class--module)
+  - [Others](#others)
+- [basic](#basic)
+  - [version capability](#version-capability)
+- [environment](#environment)
+  - [list included modules](#list-included-modules)
+  - [list lib paths](#list-lib-paths)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -657,41 +643,33 @@ set([0, 1, 4, 16, 9])
 a = [(1,2), (3,4), (5,6)]
 zip(*a)
 # [(1, 3, 5), (2, 4, 6)]
+
+# or
+>>> dict([ ('foo','bar'),('a',1),('b',2) ])
+{'a': 1, 'b': 2, 'foo': 'bar'}
+
+>>> names = ['Bob', 'Marie', 'Alice']
+>>> ages = [23, 27, 36]
+>>> dict(zip(names, ages))
+{'Alice': 36, 'Bob': 23, 'Marie': 27}
+
+# or
+>>> t1 = (0,1,2,3)
+>>> t2 = (7,6,5,4)
+>>> [t1,t2] == zip(*zip(t1,t2))
+True
+
+# or
+In [15]: t1 = (1, 2, 3)
+In [16]: t2 = (4, 5, 6)
+In [17]: dict (zip(t1,t2))
+Out[17]: {1: 4, 2: 5, 3: 6}
+
+# or
+>>> l=[(1,2),(3,4)]
+>>> [a+b for a,b in l ]
+[3,7]
 ```
-
-- or
-  ```python
-  >>> dict([ ('foo','bar'),('a',1),('b',2) ])
-  {'a': 1, 'b': 2, 'foo': 'bar'}
-
-  >>> names = ['Bob', 'Marie', 'Alice']
-  >>> ages = [23, 27, 36]
-  >>> dict(zip(names, ages))
-  {'Alice': 36, 'Bob': 23, 'Marie': 27}
-  ```
-
-- or
-  ```python
-  >>> t1 = (0,1,2,3)
-  >>> t2 = (7,6,5,4)
-  >>> [t1,t2] == zip(*zip(t1,t2))
-  True
-  ```
-
-- or
-  ```python
-  In [15]: t1 = (1, 2, 3)
-  In [16]: t2 = (4, 5, 6)
-  In [17]: dict (zip(t1,t2))
-  Out[17]: {1: 4, 2: 5, 3: 6}
-  ```
-
-- or
-  ```python
-  >>> l=[(1,2),(3,4)]
-  >>> [a+b for a,b in l ]
-  [3,7]
-  ```
 
 #### list & sum
 ```python
@@ -826,58 +804,48 @@ x = [n for n in foo if bar(n)]
 Traceback (most recent call last):
     File "<stdin>", line 1, in <module>
 StopIteration
+
+# or
+def fab(max):
+  a,b = 0,1
+  while a < max:
+    yield a
+    a, b = b, a+b
+
+>>> for i in fab(20):
+...     print( i,",", )
+...
+0 , 1 , 1 , 2 , 3 , 5 , 8 , 13 ,
+
+# or
+>>> i = (1,2,3,4,5,6,7,8,9,10) # or any iterable object
+>>> iterators = [iter(i)] * 2
+>>> iterators[0].next()
+1
+>>> iterators[1].next()
+2
+>>> iterators[0].next()
+3
+
+# or
+def grouper(n, iterable, fillvalue=None):
+  "grouper(3, 'ABCDEFG', 'x') --> ABC DEF Gxx"
+  args = [iter(iterable)] * n
+  return izip_longest(fillvalue=fillvalue, *args)
+
+# or
+>>> from itertools import *
+>>> l = [[1, 2], [3, 4]]
+>>> list(chain(*l))
+[1, 2, 3, 4]
+
+# or
+def create_printers(n):
+  for i in xrange(n):
+    def printer(i=i): # Doesn't work without the i=i
+      print (i)
+    yield printer
 ```
-
-- or
-  ```python
-  def fab(max):
-    a,b = 0,1
-    while a < max:
-      yield a
-      a, b = b, a+b
-
-  >>> for i in fab(20):
-  ...     print( i,",", )
-  ...
-  0 , 1 , 1 , 2 , 3 , 5 , 8 , 13 ,
-  ```
-
-- or
-  ```python
-  >>> i = (1,2,3,4,5,6,7,8,9,10) # or any iterable object
-  >>> iterators = [iter(i)] * 2
-  >>> iterators[0].next()
-  1
-  >>> iterators[1].next()
-  2
-  >>> iterators[0].next()
-  3
-  ```
-
-- or
-  ```python
-  def grouper(n, iterable, fillvalue=None):
-    "grouper(3, 'ABCDEFG', 'x') --> ABC DEF Gxx"
-    args = [iter(iterable)] * n
-    return izip_longest(fillvalue=fillvalue, *args)
-  ```
-
-- or
-  ```python
-  >>> from itertools import *
-  >>> l = [[1, 2], [3, 4]]
-  >>> list(chain(*l))
-  [1, 2, 3, 4]
-  ```
-
-- or
-  ```python
-  def create_printers(n):
-    for i in xrange(n):
-      def printer(i=i): # Doesn't work without the i=i
-        print (i)
-      yield printer
-  ```
 
 ### statement
 #### `for...else...`
@@ -1087,763 +1055,18 @@ root_dir = op.abspath(op.join(op.dirname(__file__), ".."))
 [1, 1]
 >>> foo()
 [1, 1, 1]
-```
-
-- or
-  ```python
-  >>> def foo(x=None):
-  ...     if x is None:
-  ...         x = []
-  ...     x.append(1)
-  ...     print(x)
-  >>> foo()
-  [1]
-  >>> foo()
-  [1]
-  ```
-
-## [PEP8 -- Style Guide for Python Code](https://www.python.org/dev/peps/pep-0008/)
-### indentation
-<table>
-<tr>
-<th> ❌ </th>
-<th> ✅ </th>
-</tr>
-<tr>
-<td valign="middle">
-<pre><code class="language-python">#  arguments on first line forbidden when not using vertical alignment.
-foo = long_function_name(var_one, var_two,
-    var_three, var_four)
-
-# further indentation required as indentation is not distinguishable.
-def long_function_name(
-    var_one, var_two, var_three,
-    var_four):
-    print(var_one)</code></pre>
-</td>
-<td valign="middle">
-<pre><code class="language-python"># aligned with opening delimiter.
-foo = long_function_name(var_one, var_two,
-                         var_three, var_four)
-
-# more indentation included to distinguish this from the rest.
-def long_function_name(
-        var_one, var_two, var_three,
-        var_four):
-    print(var_one)
-
-# hanging indents should add a level.
-foo = long_function_name(
-    var_one, var_two,
-    var_three, var_four)</code></pre>
-</td>
-</tr>
-</table>
-
-#### optional
-```python
-# Hanging indents *may* be indented to other than 4 spaces.
-foo = long_function_name(
-var_one, var_two,
-var_three, var_four)
-```
-
-#### `if` statemant
-```python
-# No extra indentation.
-if (this_is_one_thing and
-that_is_another_thing):
-do_something()
-
-# Add a comment, which will provide some distinction in editors
-# supporting syntax highlighting.
-if (this_is_one_thing and
-that_is_another_thing):
-# Since both conditions are true, we can frobnicate.
-do_something()
-
-# Add some extra indentation on the conditional continuation line.
-if (this_is_one_thing
-and that_is_another_thing):
-do_something()
-```
-
-#### list
-```python
-my_list = [
-1, 2, 3,
-4, 5, 6,
-]
-result = some_function_that_takes_arguments(
-'a', 'b', 'c',
-'d', 'e', 'f',
-)
 
 # or
-my_list = [
-1, 2, 3,
-4, 5, 6,
-]
-result = some_function_that_takes_arguments(
-'a', 'b', 'c',
-'d', 'e', 'f',
-)
+>>> def foo(x=None):
+...     if x is None:
+...         x = []
+...     x.append(1)
+...     print(x)
+>>> foo()
+[1]
+>>> foo()
+[1]
 ```
-
-### maximum line length
-<table>
-<tr>
-<th> ✅ </th>
-</tr>
-<tr>
-<td valign="middle">
-<pre><code class="language-python">with open('/path/to/some/file/you/want/to/read') as file_1, \
-     open('/path/to/some/file/being/written', 'w') as file_2:
-    file_2.write(file_1.read())</code></pre>
-</td>
-</tr>
-</table>
-
-### should a line break before or after a binary operator?
-
-<table>
-<tr>
-<th> ❌ operators sit far away from their operands </th>
-<th> ✅ easy to match operators with operands </th>
-</tr>
-<tr>
-<td valign="middle">
-<pre><code class="language-python">income = (gross_wages +
-          taxable_interest +
-          (dividends - qualified_dividends) -
-          ira_deduction -
-          student_loan_interest)</code></pre>
-</td>
-<td valign="middle">
-<pre><code class="language-python">income = (gross_wages
-          + taxable_interest
-          + (dividends - qualified_dividends)
-          - ira_deduction
-          - student_loan_interest)</code></pre>
-</td>
-</tr>
-</table>
-
-### imports
-<table>
-<tr>
-<th> ❌ </th>
-<th> ❌ bad </th>
-<th> ✅ </th>
-</tr>
-<tr>
-<td valign="middle">
-<pre><code class="language-python">import sys, os</code></pre>
-</td>
-<td valign="middle">
-<pre><code class="language-python">import &lt;module&gt; from *</code></pre>
-</td>
-<td valign="middle">
-<pre><code class="language-python">import os
-import sys</code></pre>
-</td>
-</tr>
-</table>
-
-#### absolute imports are *recommended*
-```python
-import mypkg.sibling
-from mypkg import silbing
-from mypkg.sibling import example
-```
-
-#### explicit relative imports are acceptable
-```python
-from . import sibling
-from .sibling import example
-```
-
-#### import a class from a class-containing module
-```python
-from myclass import MyClass
-from foo.bar.yourclass import YourClass
-```
-
-#### local name classes
-```python
-import myclass
-import foo.bar.yourclass
-
-# use "myclass.MyClass" or "foo.bar.yourclass.YourClass"
-```
-
-### module level under names
-
-{% hint style='tip' %}
-> Module level "dunder" names with two leading and two trailing underscores, such as `__all__`, `__author__`, `__version__`, etc
-{% endhint %}
-
-✅
-```python
-"""This is the example module.
-
-This module does stuff.
-"""
-
-from __future__ import barry_as_FLUFL
-
-__all__ = ['a', 'b', 'c']
-__version__ = '0.1'
-__author__ = 'Cardinal Biggles'
-
-import os
-import sys
-```
-
-### whitespace in expressions and statements
-
-<table>
-<tr>
-<th> ❌ </th>
-<th> ✅ </th>
-</tr>
-<tr>
-<td valign="middle">
-<pre><code class="language-python">spam( ham[ 1 ], { eggs: 2 } )</code></pre>
-</td>
-<td valign="middle">
-<pre><code class="language-python">spam(ham[1], {eggs: 2})</code></pre>
-</td>
-</tr>
-</table>
-
---------
-
-<table>
-<tr>
-<th> ❌ </th>
-<th> ✅ </th>
-</tr>
-<tr>
-<td valign="middle">
-<pre><code class="language-python">if x == 4 : print(x , y) ; x , y = y , x</code></pre>
-</td>
-<td valign="middle">
-<pre><code class="language-python">if x == 4; print(x, y); x, y = y, x</code></pre>
-</td>
-</tr>
-</table>
-
---------
-
-<table>
-<tr>
-<th> ❌ </th>
-<th> ✅ </th>
-</tr>
-<tr>
-<td valign="middle">
-<pre><code class="language-python">ham[lower + offset:upper + offset]
-ham[1: 9], ham[1 :9], ham[1:9 :3]
-ham[lower : : upper]
-ham[ : upper ]</code></pre>
-</td>
-<td valign="middle">
-<pre><code class="language-python">ham[1:9], ham[1:9:3], ham[:9:3], ham[1::3], ham[1:9:]
-ham[lower:upper], ham[lowser:pper:], ham[lower::step]
-ham[lower+offset : upper+offset]
-ham[: upper_fn(x) : step_fn(x)], ham[:: step_fn(x)]
-ham[lower + offset : upper + offset]</code></pre>
-</td>
-</tr>
-</table>
-
---------
-
-<table>
-<tr>
-<th> ❌ </th>
-<th> ✅ </th>
-</tr>
-<tr>
-<td valign="middle">
-<pre><code class="language-python">spam (1)</code></pre>
-</td>
-<td valign="middle">
-<pre><code class="language-python">spam(1)</code></pre>
-</td>
-</tr>
-</table>
-
---------
-
-<table>
-<tr>
-<th> ❌ </th>
-<th> ✅ </th>
-</tr>
-<tr>
-<td valign="middle">
-<pre><code class="language-python">dct ['key'] = lst [index]</code></pre>
-</td>
-<td valign="middle">
-<pre><code class="language-python">dct['key'] = lst[index]</code></pre>
-</td>
-</tr>
-</table>
-
---------
-
-<table>
-<tr>
-<th> ❌ </th>
-<th> ✅ </th>
-</tr>
-<tr>
-<td valign="middle">
-<pre><code class="language-python">x             = 1
-y             = 2
-long_variable = 3</code></pre>
-</td>
-<td valign="middle">
-<pre><code class="language-python">x = 1
-y = 2
-long_variable = 3</code></pre>
-</td>
-</tr>
-</table>
-
-### other recommendations
-
-<table>
-<tr>
-<th> ❌ </th>
-<th> ✅ </th>
-</tr>
-<tr>
-<td valign="middle">
-<pre><code class="language-python">i=i+1
-submitted +=1
-x = x * 2 - 1
-hypot2 = x * x + y * y
-c = (a + b) * (a - b)</code></pre>
-</td>
-<td valign="middle">
-<pre><code class="language-python">i = i + 1
-submitted += 1
-x = x*2 - 1
-hypot2 = x*x + y*y
-c = (a+b) * (a-b)</code></pre>
-</td>
-</tr>
-</table>
-
---------
-
-<table>
-<tr>
-<th> ❌ </th>
-<th> ✅ </th>
-</tr>
-<tr>
-<td valign="middle">
-<pre><code class="language-python">def complex(real, imag = 0.0):
-return magic(r = real, i = imag)</code></pre>
-</td>
-<td valign="middle">
-<pre><code class="language-python">def complex(real, imag=0.0):
-return magic(r=real, i=imag)</code></pre>
-</td>
-</tr>
-</table>
-
---------
-
-<table>
-<tr>
-<th> ❌ </th>
-<th> ✅ </th>
-</tr>
-<tr>
-<td valign="middle">
-<pre><code class="language-python">def munge(input:AnyStr): ...
-def munge()-&gt;PosInt: ...</code></pre>
-</td>
-<td valign="middle">
-<pre><code class="language-python">def munge(input: AnyStr): ...
-def munge() -&gt; AnyStr: ...</code></pre>
-</td>
-</tr>
-</table>
-
---------
-
-<table>
-<tr>
-<th> ❌ </th>
-<th> ✅ </th>
-</tr>
-<tr>
-<td valign="middle">
-<pre><code class="language-python">def munge(input: AnyStr=None): ...
-def munge(input: AnyStr, limit = 1000): ...</code></pre>
-</td>
-<td valign="middle">
-<pre><code class="language-python">def munge(sep: AnyStr = None): ...
-def munge(input: AnyStr, sep: AnyStr = None, limit=1000): ...</code></pre>
-</td>
-</tr>
-</table>
-
-##### rather NO
-```python
-if foo == 'blah': do_blah_thing()
-do_one(); do_two(); do_three()
-```
-
-<table>
-<tr>
-<th> ✅ </th>
-</tr>
-<tr>
-<td valign="middle">
-<pre><code class="language-python">if foo == 'blah':
-    do_blah_thing()
-do_one()
-do_two()
-do_three()</code></pre>
-</td>
-</tr>
-</table>
-
-#### DEFINITELY NO
-```python
-if foo == 'blah': do_blah_thing()
-else: do_non_blah_thing()
-
-try: something()
-finally: cleanup()
-
-do_one(); do_two(); do_three(long, argument,
-                             list, like, this)
-
-if foo == 'blah': one(); two(); three()
-```
-
-<table>
-<tr>
-<th> ✅ </th>
-</tr>
-<tr>
-<td valign="middle">
-<pre><code class="language-python">if foo == 'blah': do_blah_thing()
-for x in lst: total += x
-while t &lt; 10: t = delay()</code></pre>
-</td>
-</tr>
-</table>
-
-### documentation strings
-
-<table>
-<tr>
-<th> ✅ </th>
-</tr>
-<tr>
-<td valign="middle">
-<pre><code class="language-python">"""Return a foobang
-
-Optional plotz says to frobnicate the bizbaz first.
-"""</code></pre>
-</td>
-</tr>
-</table>
-
-### Programming Recommendations
-
-<table>
-<tr>
-<th> ❌ </th>
-<th> ✅ </th>
-</tr>
-<tr>
-<td valign="middle">
-<pre><code class="language-python">if not foo is None:</code></pre>
-</td>
-<td valign="middle">
-<pre><code class="language-python">if foo is not None:</code></pre>
-</td>
-</tr>
-</table>
-
---------
-
-<table>
-<tr>
-<th> ❌ </th>
-<th> ✅ </th>
-</tr>
-<tr>
-<td valign="middle">
-<pre><code class="language-python">f = lambda x: 2*x</code></pre>
-</td>
-<td valign="middle">
-<pre><code class="language-python">def f(x): return 2*x</code></pre>
-</td>
-</tr>
-</table>
-
---------
-
-<table>
-<tr>
-<th> ❌ </th>
-<th> ✅ </th>
-</tr>
-<tr>
-<td valign="middle">
-<pre><code class="language-python">try:
-# Too broad!
-return handle_value(collection[key])
-expect KeyError:
-# Will also catch KeyError raised by handle_value()
-return key_not_found(key)</code></pre>
-</td>
-<td valign="middle">
-<pre><code class="language-python">try:
-value = collection[key]
-except KeyError:
-return key_not_found(key)
-else:
-return handle_value(value)</code></pre>
-</td>
-</tr>
-</table>
-
---------
-
-<table>
-<tr>
-<th> ❌ </th>
-<th> ✅ </th>
-</tr>
-<tr>
-<td valign="middle">
-<pre><code class="language-python">with conn:
-do_stuff_in_transaction(conn)</code></pre>
-</td>
-<td valign="middle">
-<pre><code class="language-python">with conn.begin_transaction():
-do_stuff_in_transaction(conn)</code></pre>
-</td>
-</tr>
-</table>
-
---------
-
-<table>
-<tr>
-<th> ❌ </th>
-<th> ✅ </th>
-</tr>
-<tr>
-<td valign="middle">
-<pre><code class="language-python">def foo(x):
-fi x &gt;= 0:
-return math.sqrt(x)
-
-def bar(x):
-if x &lt; 0:
-return
-return math.sqrt(x)</code></pre>
-</td>
-<td valign="middle">
-<pre><code class="language-python">def foo(x):
-if x &gt;= 0:
-return math.sqrt(x)
-else:
-return None
-
-def bar(x):
-if x &lt; 0:
-return None
-return math.sqrt(x)</code></pre>
-</td>
-</tr>
-</table>
-
---------
-
-<table>
-<tr>
-<th> ❌ </th>
-<th> ✅ </th>
-</tr>
-<tr>
-<td valign="middle">
-<pre><code class="language-python">if foo[:3] == 'bar':</code></pre>
-</td>
-<td valign="middle">
-<pre><code class="language-python">if foo.startwith('bar'):</code></pre>
-</td>
-</tr>
-</table>
-
---------
-
-<table>
-<tr>
-<th> ❌ </th>
-<th> ✅ </th>
-</tr>
-<tr>
-<td valign="middle">
-<pre><code class="language-python">if type(obj) is type(1):</code></pre>
-</td>
-<td valign="middle">
-<pre><code class="language-python">if isinstance(obj, int):</code></pre>
-</td>
-</tr>
-</table>
-
---------
-
-<table>
-<tr>
-<th> ❌ </th>
-<th> ✅ </th>
-</tr>
-<tr>
-<td valign="middle">
-<pre><code class="language-python">if len(seq):
-if not len(seq):</code></pre>
-</td>
-<td valign="middle">
-<pre><code class="language-python">if not seq:
-if seq:</code></pre>
-</td>
-</tr>
-</table>
-
---------
-
-<table>
-<tr>
-<th> ❌ </th>
-<th> ❌ worse </th>
-<th> ✅ </th>
-</tr>
-<tr>
-<td valign="middle">
-<pre><code class="language-python">if greeting == True:</code></pre>
-</td>
-<td valign="middle">
-<pre><code class="language-python">if greeting is True:</code></pre>
-</td>
-<td valign="middle">
-<pre><code class="language-python">if greeting:</code></pre>
-</td>
-</tr>
-</table>
-
---------
-
-### [PEP8 Error/Warning Code](http://pep8.readthedocs.io/en/release-1.7.x/intro.html#error-codes)
-#### E1 Indentation
-* E101    indentation contains mixed spaces and tabs
-* E111    indentation is not a multiple of four
-* E112    expected an indented block
-* E113    unexpected indentation
-* E114    indentation is not a multiple of four (comment)
-* E115    expected an indented block (comment)
-* E116    unexpected indentation (comment)
-* E121 (*^)   continuation line under-indented for hanging indent
-* E122 (^)    continuation line missing indentation or outdented
-* E123 (*)    closing bracket does not match indentation of opening bracket’s line
-* E124 (^)    closing bracket does not match visual indentation
-* E125 (^)    continuation line with same indent as next logical line
-* E126 (*^)   continuation line over-indented for hanging indent
-* E127 (^)    continuation line over-indented for visual indent
-* E128 (^)    continuation line under-indented for visual indent
-* E129 (^)    visually indented line with same indent as next logical line
-* E131 (^)    continuation line unaligned for hanging indent
-* E133 (*)    closing bracket is missing indentation
-
-#### E2 Whitespace
-* E201    whitespace after ‘(‘
-* E202    whitespace before ‘)’
-* E203    whitespace before ‘:’
-* E211    whitespace before ‘(‘
-* E221    multiple spaces before operator
-* E222    multiple spaces after operator
-* E223    tab before operator
-* E224    tab after operator
-* E225    missing whitespace around operator
-* E226 (*)    missing whitespace around arithmetic operator
-* E227    missing whitespace around bitwise or shift operator
-* E228    missing whitespace around modulo operator
-* E231    missing whitespace after ‘,’, ‘;’, or ‘:’
-* E241 (*)    multiple spaces after ‘,’
-* E242 (*)    tab after ‘,’
-* E251    unexpected spaces around keyword / parameter equals
-* E261    at least two spaces before inline comment
-* E262    inline comment should start with ‘# ‘
-* E265    block comment should start with ‘# ‘
-* E266    too many leading ‘#’ for block comment
-* E271    multiple spaces after keyword
-* E272    multiple spaces before keyword
-* E273    tab after keyword
-* E274    tab before keyword
-
-#### E3 Blank line
-* E301    expected 1 blank line, found 0
-* E302    expected 2 blank lines, found 0
-* E303    too many blank lines (3)
-* E304    blank lines found after function decorator
-
-#### E4 Import
-* E401    multiple imports on one line
-* E402    module level import not at top of file
-
-#### E5 Line length
-* E501 (^)    line too long (82 > 79 characters)
-* E502    the backslash is redundant between brackets
-
-#### E7 Statement
-* E701    multiple statements on one line (colon)
-* E702    multiple statements on one line (semicolon)
-* E703    statement ends with a semicolon
-* E704 (*)    multiple statements on one line (def)
-* E711 (^)    comparison to None should be ‘if cond is None:’
-* E712 (^)    comparison to True should be ‘if cond is True:’ or ‘if cond:’
-* E713    test for membership should be ‘not in’
-* E714    test for object identity should be ‘is not’
-* E721 (^)    do not compare types, use ‘isinstance()’
-* E731    do not assign a lambda expression, use a def
-
-#### E9 Runtime
-* E901    SyntaxError or IndentationError
-* E902    IOError
-
-#### W1 Indentation warning
-* W191    indentation contains tabs
-
-#### W2 Whitespace warning
-* W291    trailing whitespace
-* W292    no newline at end of file
-* W293    blank line contains whitespace
-
-#### W3 Blank line warning
-* W391    blank line at end of file
-
-#### W5 Line break warning
-* W503    line break occurred before a binary operator
-
-#### W6 Deprecation warning
-* W601    .has_key() is deprecated, use ‘in’
-* W602    deprecated form of raising exception
-* W603    ‘<>’ is deprecated, use ‘!=’
-* W604    backticks are deprecated, use ‘repr()’
 
 ## basic
 ### version capability
