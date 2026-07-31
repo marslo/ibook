@@ -1,10 +1,8 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [version capability](#version-capability)
-- [environment](#environment)
-  - [list included modules](#list-included-modules)
-  - [list lib paths](#list-lib-paths)
+- [operators](#operators)
+  - [tips](#tips)
 - [Positional notation](#positional-notation)
   - [to Binary](#to-binary)
   - [to Octal](#to-octal)
@@ -14,53 +12,53 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-
-## version capability
-
-#### Supported Ubuntu and Python Versions
+## operators
 
 > [!NOTE|label:references:]
-> - [Ubuntu releases](https://ubuntu.com/about/release-cycle)
-> - NOTE: Python2.7 (all), Python 3.6 (bionic), Python 3.8 (focal), Python 3.10 (jammy) are not provided by deadsnakes as upstream ubuntu provides those packages.
+> - [A Byte of Python - Operators and Expressions](https://python.swaroopch.com/op_exp.html)
 
-|      -      | UBUNTU 18.04 ( BIONIC ) | UBUNTU 20.04 ( FOCAL ) | UBUNTU 22.04 ( JAMMY ) |
-|:-----------:|:-----------------------:|:----------------------:|:----------------------:|
-|  python 2.3 |            ✔            |                        |                        |
-|  python 2.4 |            ✔            |                        |                        |
-|  python 2.5 |            ✔            |                        |                        |
-|  python 2.6 |            ✔            |                        |                        |
-|  python 2.7 |            ✔            |                        |                        |
-|  python 3.1 |            ✔            |                        |                        |
-|  python 3.2 |            ✔            |                        |                        |
-|  python 3.3 |            ✔            |                        |                        |
-|  python 3.4 |            ✔            |                        |                        |
-|  python 3.5 |            ✔            |            ✔           |                        |
-|  python 3.6 |            ✔            |            ✔           |                        |
-|  python 3.7 |            ✔            |            ✔           |            ✔           |
-|  python 3.8 |            ✔            |            ✔           |            ✔           |
-|  python 3.9 |            ✔            |            ✔           |            ✔           |
-| python 3.10 |            ✔            |            ✔           |            ✔           |
-| python 3.11 |            ✔            |            ✔           |            ✔           |
-| python 3.12 |            ✔            |            ✔           |            ✔           |
+| OPERATOR | DESCRIPTION                                  | EXAMPLE                                 |
+|----------|----------------------------------------------|-----------------------------------------|
+| `/`      | division (除法)                              | `2.5 == 5 / 2`                          |
+| `//`     | floor division (整除/向下取整)               | `2 == 5 // 2`<br>`-3 == 5 // -2`        |
+| `%`      | modulus (取余)                               | `1 == 5 % 2`                            |
+| `<<`     | left shift (按位左移) `x << y == x * 2ʸ`     | `8 == 2 << 2`                           |
+| `<<`     | right shift (按位右移) `x >> y == x // 2ʸ`   | `2 == 8 >> 2`                           |
+| `&`      | bitwise AND (按位与 - 有0则0, 全1为1)        | `3 & 5 == 1`<br>`0011 & 0101 == 0001`   |
+| `|`      | bitwise OR (按位或 - 有1则1, 全0则0)         | `3 | 5 == 7`<br>`0011 | 0101 == 0111`   |
+| `^`      | bitwise XOR (按位异或 - 相同为0, 不同为1)    | `3 ^ 5 == 6`<br>`0011 ^ 0101 == 0110`   |
+| `~`      | bitwise NOT (按位取反 - 0变1, 1变0)<br> `~x` | `~3 == -4`<br>`~0011 == 1100`           |
+| `not`    | logical NOT (逻辑非)                         | `not True == False`                     |
+| `and`    | logical AND (逻辑与)                         | `True and False == False`               |
+| `or`     | logical OR (逻辑或)                          | `True or False == True`                 |
 
-
-## environment
-### list included modules
 ```python
-$ python -c 'help("modules")'
+# single number (XOR) - find the numbers that appear an odd number of times in the list
+>>> result = 0
+>>> list(result := result ^ num for num in [2, 3, 4, 3, 4])
+>>> result
+2
 
-Please wait a moment while I gather a list of all available modules...
-
-__future__          _warnings           graphlib            runpy
-_abc                _weakref            grp                 sched
-_aix_support        _weakrefset         gzip                secrets
-...
+# encryption and decryption (XOR) - any two of the three numbers xor together to give the third
+>>> 10 ^ 3
+9
+>> 9 ^ 3
+10
+>>> 10 ^ 9
+3
 ```
 
-### list lib paths
+### tips
+
 ```python
-$ python -c 'import sys; print (sys.path)'
-['', '/usr/lib/python39.zip', '/usr/lib/python3.8', '/usr/lib/python3.8/lib-dynload', '/usr/local/lib/python3.8/dist-packages', '/usr/lib/python3/dist-packages']
+# `var = var operation expression` is equivalent to `var operation= expression`
+a += 1      # == `a = a + 1`
+a -= 1      # == `a = a - 1`
+a *= 2      # == `a = a * 2`
+
+# var operation var operation var == ( var operation var ) and ( var operation var ) and ( ... )
+1 < x < 10         # == `(1 < x) and (x < 10)`
+5 in [5] is True   # == `(5 in [5]) and ([5] is True)` - result is False
 ```
 
 ## [Positional notation](https://en.wikipedia.org/wiki/Positional_notation)
@@ -79,15 +77,13 @@ $ python -c 'import sys; print (sys.path)'
   '0b10'
   >>> bin(10)
   '0b1010'
-  ```
 
-  - or
-    ```python
-    >>> format( 3, 'b' )
-    '11'
-    >>> format( 15, 'b' )
-    '1111'
-    ```
+  # or
+  >>> format( 3, 'b' )
+  '11'
+  >>> format( 15, 'b' )
+  '1111'
+  ```
 
 -  hexadecimal to binary
   ```python
@@ -110,15 +106,13 @@ $ python -c 'import sys; print (sys.path)'
   ```python
   >>> oct(8)
   '0o10'
-  ```
 
-  - or
-    ```python
-    >>> format( 15, 'o' )
-    '17'
-    >>> format( 8, 'o' )
-    '10'
-    ```
+  # or
+  >>> format( 15, 'o' )
+  '17'
+  >>> format( 8, 'o' )
+  '10'
+  ```
 
 - hexadecimal to octal
   ```python
@@ -174,19 +168,15 @@ $ python -c 'import sys; print (sys.path)'
   '0xf'
   >>> hex(66)
   '0x42'
+
+  # or
+  >>> format( 15, 'x' )
+  'f'
+
+  # or - https://stackoverflow.com/a/10218221/2940319
+  >>> '%x' % 15
+  'f'
   ```
-
-  - [or](https://stackoverflow.com/a/16414603/2940319)
-    ```python
-    >>> format( 15, 'x' )
-    'f'
-    ```
-
-  - [or](https://stackoverflow.com/a/10218221/2940319)
-    ```python
-    >>> '%x' % 15
-    'f'
-    ```
 
 ## [The Big Book of Small Python Projects](https://inventwithpython.com/bigbookpython/)
 
