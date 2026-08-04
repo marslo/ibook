@@ -20,6 +20,8 @@
   - [install](#install)
   - [config](#config)
   - [usage](#usage)
+  - [claude](#claude)
+    - [troubleshooting](#troubleshooting)
 - [tips](#tips)
   - [chatgpt](#chatgpt-1)
 
@@ -558,6 +560,24 @@ $ wget -qO- https://gh.io/copilot-install  | bash
 
 > [!NOTE|label:references:]
 > - [Customize GitHub Copilot CLI](https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot)
+
+## claude
+
+### troubleshooting
+
+- `SELF_SIGNED_CERT_IN_CHAIN`
+
+  > [!NOTE|label:error message]
+  > ```
+  > Unable to connect to Anthropic services
+  > Failed to connect to platform.claude.com: SELF_SIGNED_CERT_IN_CHAIN
+  > SSL certificate error (SELF_SIGNED_CERT_IN_CHAIN). If you are behind a corporate proxy or TLS-intercepting firewall, set NODE_EXTRA_CA_CERTS to your CA bundle path, or ask IT to allowlist *.anthropic.com. Run /doctor for details.
+  > See https://code.claude.com/docs/en/network-config
+  > ```
+
+  ```bash
+  $ NODE_TLS_REJECT_UNAUTHORIZED=0 claude
+  ```
 
 # tips
 ## chatgpt

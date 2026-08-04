@@ -283,6 +283,96 @@ $ openssl rsa -in key.pem -out key.pem
 
 ### convert from windows `certmgr.msc`
 
+> [!NOTE|label:export with powershell script (base64 decoding) - run as administrator:]
+> generate base64 encoded crt file with powershell script automatically:
+> ```powershell
+> $TargetDir = "C:\certs\"                 # define the target directory to export the certs
+> $CertName  = 'Company Root CA*'          # define the cert name to match
+> if (!(Test-Path $TargetDir)) { New-Item -ItemType Directory -Path $TargetDir | Out-Null }
+>
+> # scan both stores (same merged view as certmgr.msc), filter by subject, dedup by thumbprint
+> $Certs = Get-ChildItem -Path Cert:\CurrentUser\Root, Cert:\LocalMachine\Root |
+>          Where-Object { $_.Subject -like "CN=$CertName" } |
+>          Sort-Object -Property Thumbprint -Unique
+>
+> if (-not $Certs) { Write-Warning "no cert matched '$CertName'"; return }
+>
+> foreach ($Cert in $Certs) {
+>     $CleanName = $Cert.Subject -replace '[^a-zA-Z0-9_-]', '_'
+>     $CleanName = $CleanName.Substring(0, [System.Math]::Min(40, $CleanName.Length))
+>     $FilePath  = Join-Path $TargetDir "$CleanName-$($Cert.Thumbprint).crt"
+>     $Base64    = [System.Convert]::ToBase64String($Cert.RawData, "InsertLineBreaks")                # base-64 encoded - no need to convert to crt again
+>     Set-Content -Path $FilePath -Value "-----BEGIN CERTIFICATE-----`r`n$Base64`r`n-----END CERTIFICATE-----" -Encoding Ascii
+>     Write-Host "exported: $FilePath"
+> }
+> ```
+> verify:
+> ```powershell
+> > openssl x509 -in "C:\certs\CN_Company_Root_CA_V1-96D31D8654A54852988A057BB4BDDF6D075F16DC.crt" -noout -subject -fingerprint
+> subject=CN = Company Root CA V1
+> SHA1 Fingerprint=96:D3:1D:86:**:**:**:**:**:**:**:**:**:**:**:6D:07:5F:16:DC
+> ```
+
+<!--sec data-title="export multiple and create bundle pem" data-id="section0" data-show=true data-collapse=true ces-->
+export multiple and create bundle pem (run as administrator):
+```powershell
+$TargetDir   = "C:\certs\"
+$CertPattern = '^CN=Company (Root|SC Issuing) CA V*'          # match Root CA + SC Issuing CA
+$BundlePath  = Join-Path $TargetDir "company-ca-bundle.pem"   # merged output
+if (!(Test-Path $TargetDir)) { New-Item -ItemType Directory -Path $TargetDir | Out-Null }
+
+$Stores = 'Cert:\CurrentUser\Root', 'Cert:\LocalMachine\Root',
+          'Cert:\CurrentUser\CA',   'Cert:\LocalMachine\CA'
+
+$Certs = Get-ChildItem -Path $Stores |
+         Where-Object { $_.Subject -match $CertPattern } |
+         Sort-Object -Property Thumbprint -Unique
+
+if (-not $Certs) { Write-Warning "no cert matched '$CertPattern'"; return }
+
+$now       = Get-Date
+$PemBlocks = @()                                              # collect valid certs for the bundle
+
+foreach ($Cert in $Certs) {
+    # skip expired / not-yet-valid certs
+    if ($Cert.NotAfter -lt $now) {
+        Write-Warning ("skip EXPIRED     : {0} [{1}] expired {2:yyyy-MM-dd}" -f $Cert.Subject, $Cert.Thumbprint, $Cert.NotAfter)
+        continue
+    }
+    if ($Cert.NotBefore -gt $now) {
+        Write-Warning ("skip NOT-YET-VALID: {0} [{1}] valid from {2:yyyy-MM-dd}" -f $Cert.Subject, $Cert.Thumbprint, $Cert.NotBefore)
+        continue
+    }
+
+    $CleanName = $Cert.Subject -replace '[^a-zA-Z0-9_-]', '_'
+    $CleanName = $CleanName.Substring(0, [System.Math]::Min(40, $CleanName.Length))
+    $FilePath  = Join-Path $TargetDir "$CleanName-$($Cert.Thumbprint).crt"
+    $Base64    = [System.Convert]::ToBase64String($Cert.RawData, "InsertLineBreaks")
+    $Pem       = "-----BEGIN CERTIFICATE-----`r`n$Base64`r`n-----END CERTIFICATE-----"
+
+    # 1) per-cert file
+    Set-Content -Path $FilePath -Value $Pem -Encoding Ascii
+    Write-Host ("exported: {0}  (expires {1:yyyy-MM-dd})" -f $FilePath, $Cert.NotAfter)
+
+    # 2) accumulate for the merged bundle
+    $PemBlocks += $Pem
+}
+
+# write the merged bundle (overwrite each run)
+if ($PemBlocks.Count -gt 0) {
+    Set-Content -Path $BundlePath -Value ($PemBlocks -join "`r`n") -Encoding Ascii
+    Write-Host ("bundle  : {0}  ({1} certs)" -f $BundlePath, $PemBlocks.Count)
+} else {
+    Write-Warning "no valid cert exported; bundle not created"
+}
+```
+
+and setup `NODE_EXTRA_CA_CERTS` environment variable if necessary:
+```powershell
+setx NODE_EXTRA_CA_CERTS "C:\certs\company-ca-bundle.pem"
+```
+<!--endsec-->
+
 1. <kbd>win</kbd> + <kbd>r</kbd> -> `certmgr.msc`
 1. `Certifacts - Current User` -> `Trusted Root Certification Authorities` -> `Certificates` -> the wanted CA
 1. right-click -> `open` or double-click

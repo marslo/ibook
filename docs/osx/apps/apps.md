@@ -26,6 +26,7 @@
   - [mac cli](#mac-cli)
   - [screensaver](#screensaver)
   - [others](#others)
+- [check appstore version](#check-appstore-version)
 - [troubleshooting](#troubleshooting)
   - [`failed to connect to raw.githubusercontent.com port 443: connection refused`](#failed-to-connect-to-rawgithubusercontentcom-port-443-connection-refused)
   - [failure in `brew search` for cask formula](#failure-in-brew-search-for-cask-formula)
@@ -1034,6 +1035,17 @@ $ export PATH="${RUBY_GEM_HOME}/bin"
   $ istats enable all
   $ istats all
   ```
+
+## check appstore version
+
+```bash
+bundleId=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$HOME/Applications/Bob.app/Contents/Info.plist")
+trackId=$(curl -s "https://itunes.apple.com/lookup?bundleId=${bundleId}&country=cn" | jq -r '.results[0].trackId')
+latestVersion=$(curl -s "https://itunes.apple.com/lookup?id=${trackId}&country=cn" | jq -r '.results[0].version')
+
+# or search via bundleId
+trackId=$(curl -s "https://itunes.apple.com/lookup?bundleId=${bundleId}&country=cn" | jq -r '.results[] | select(.kind=="mac-software") | .version')
+```
 
 ## troubleshooting
 ### [`failed to connect to raw.githubusercontent.com port 443: connection refused`](https://www.cnblogs.com/Dylansuns/p/12309847.html)
