@@ -37,6 +37,7 @@
 - [environment](#environment)
   - [list included modules](#list-included-modules)
   - [list lib paths](#list-lib-paths)
+  - [list script path](#list-script-path)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -1113,4 +1114,10 @@ _aix_support        _weakrefset         gzip                secrets
 ```python
 $ python -c 'import sys; print( sys.path )'
 ['', '/usr/lib/python39.zip', '/usr/lib/python3.8', '/usr/lib/python3.8/lib-dynload', '/usr/local/lib/python3.8/dist-packages', '/usr/lib/python3/dist-packages']
+```
+
+### list script path
+```bash
+$ python3 -c "import sysconfig; print(sysconfig.get_path('scripts'))"
+/opt/homebrew/bin
 ```

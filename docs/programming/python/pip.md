@@ -373,7 +373,7 @@ true
 > [!NOTE|label:references:]
 > - [Configuration](https://pip.pypa.io/en/stable/topics/configuration/)
 
-| flag                        | pip.conf (under `[install]`)    | pip.config (under `[global]`)  |
+| FLAG                        | pip.conf (under `[install]`)    | pip.config (under `[global]`)  |
 |-----------------------------|---------------------------------|--------------------------------|
 | `--ignore-installed`        | `ignore-installed = true`       | -                              |
 | `--no-dependencies`         | `no-dependencies = yes`         | -                              |
@@ -424,24 +424,54 @@ true
 ## [authentication](https://pip.pypa.io/en/stable/topics/authentication/)
 
 ### [keyring](https://pip.pypa.io/en/stable/topics/authentication/#keyring-support)
+
+| OPTION             | VALUE                          |
+|--------------------|--------------------------------|
+| `keyring-provider` | `subprocess`, `import`, `auto` |
+
 ```bash
 # install
 $ python3 -m pip install keyring
+$ python3 -m pip install --user 'keyring[completion]'
 
-# setup
-$ keyring set "https://artifactory.domain.com/artifactory/api/pypi/pypi-local/simple" marslo
+# config
+$ pip config set --user global.keyring-provider import
+$ pip config set --user global.keyring-provider auto
+$ pip config set --user global.keyring-provider subprocess
+
+# setup keyring
+#                                                                 artifactory MUST ends with `/` for keyring setup
+#                                                                                   v
+$ keyring set "https://artifactory.domain.com/artifactory/api/pypi/pypi-local/simple/" marslo
 Password for 'marslo' in 'https://artifactory.domain.com/artifactory/api/pypi/pypi-local/simple':
-$ echo -n 'TOKEN' | keyring set "https://artifactory.domain.com/artifactory/api/pypi/devops-local/simple" marslo
+$ echo -n 'cm************************************************************ly' | keyring set "https://artifactory.domain.com/artifactory/api/pypi/devops-local/simple/" marslo
 
 # get password
-$ keyring get "https://artifactory.domain.com/artifactory/api/pypi/pypi-local/simple" marslo
+$ keyring get "https://artifactory.domain.com/artifactory/api/pypi/pypi-local/simple/" marslo
 cm************************************************************ly
-$ security find-generic-password -s "https://artifactory.domain.com/artifactory/api/pypi/pypi-local/simple" -a marslo -w
+$ security find-generic-password -s "https://artifactory.domain.com/artifactory/api/pypi/pypi-local/simple/" -a marslo -w
 cm************************************************************ly
 
 # install
-$ python3 -m pip install --upgrade --user <PKG_NAME> --keyring-provider subprocess --extra-index-url https://artifactory.domain.com/artifactory/api/pypi/pypi-local/simple --break-system-packages
+#
+$ python3 -m pip install --upgrade --user <PKG_NAME> --keyring-provider auto --extra-index-url https://artifactory.domain.com/artifactory/api/pypi/pypi-local/simple --break-system-packages
 ```
+
+> [!TIP|label:subprocess 401:]
+> when installing the internal package from Artifactory, using `--keyring-provider subprocess` caused `Keyring provider set: disabled`, so no credentials were sent. Artifactory returned `401`<br>
+>
+> **reason**: keyring lives in `/opt/homebrew/bin`, and pip's `sysconfig.get_path('scripts')` is also `/opt/homebrew/bin`.<br>
+> The subprocess provider has an anti-recursion guard:
+>
+>> if the keyring it finds is inside pip's own scripts dir, pip strips that dir from PATH and searches again
+>
+> the re-search found nothing → provider set to `disabled` → no credentials sent → `401`
+>> ```bash
+>> $ python3 -c "import sysconfig; print(sysconfig.get_path('scripts'))"
+>> /opt/homebrew/bin
+>> ```
+>
+> **solution**: use `--keyring-provider import` or `--keyring-provider auto` instead of `subprocess`
 
 ## tricky
 ### argcomplete
@@ -455,7 +485,7 @@ $ grep bash_completion.sh ~/.bash_profile ~/.bashrc
 /Users/marslo/.bash_profile:  [[ -r "$(brew --prefix)/etc/profile.d/bash_completion.sh"      ]] && source "$(brew --prefix)/etc/profile.d/bash_completion.sh"
 
 # enable completion for pipx
-echo 'eval "$(register-python-argcomplete pipx)"' >> ~/.bashrc
+$ echo 'eval "$(register-python-argcomplete pipx)"' >> ~/.bashrc
 ```
 
 ### [get size of installed pip package](https://stackoverflow.com/a/60850841/2940319)
