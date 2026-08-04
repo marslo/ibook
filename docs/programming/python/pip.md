@@ -3,7 +3,7 @@
 
 - [installation](#installation)
   - [install pip](#install-pip)
-  - [cache dir and clean caches](#cache-dir-and-clean-caches)
+  - [cache](#cache)
   - [for global user (or non user)](#for-global-user-or-non-user)
   - [re-install package in `site.USER_BASE`](#re-install-package-in-siteuser_base)
   - [setup default python version](#setup-default-python-version)
@@ -17,7 +17,8 @@
   - [options](#options)
   - [list all configs](#list-all-configs)
   - [samples](#samples)
-  - [Authentication](#authentication)
+- [authentication](#authentication)
+  - [keyring](#keyring)
 - [tricky](#tricky)
   - [argcomplete](#argcomplete)
   - [get size of installed pip package](#get-size-of-installed-pip-package)
@@ -77,22 +78,26 @@ $ curl https://bootstrap.pypa.io/get-pip.py | python - 'pip==8.0.0'
 ```bash
 $ cd /path/to/install/home/Scripts
 $ easy_install pip
-```
-- [or](https://pypi.org/project/ez_setup/#modal-close)
-  ```bash
-  $ curl -fsSL https://files.pythonhosted.org/packages/ba/2c/743df41bd6b3298706dfe91b0c7ecdc47f2dc1a3104abeb6e9aa4a45fa5d/ez_setup-0.9.tar.gz | tar xzf - -C .
-  $ python ez_setup-0.9/ez_setup.py pip
-  ```
 
-### [cache dir and clean caches](https://stackoverflow.com/a/61762308/2940319)
+# or: https://pypi.org/project/ez_setup/#modal-close
+$ curl -fsSL https://files.pythonhosted.org/packages/ba/2c/743df41bd6b3298706dfe91b0c7ecdc47f2dc1a3104abeb6e9aa4a45fa5d/ez_setup-0.9.tar.gz | tar xzf - -C .
+$ python ez_setup-0.9/ez_setup.py pip
+```
+
+### [cache](https://stackoverflow.com/a/61762308/2940319)
 - clean cache (`[pip cache](https://pip.pypa.io/en/stable/reference/pip_cache/)`)
   ```bash
   $ pip cache purge
   $ pip cache remove matplotlib
+
+  # list info
+  $ python3 -m pip cache info
   ```
+
 - set no cache (`[pip config](https://pip.pypa.io/en/stable/reference/pip_config/)`)
   ```bash
-  $ pip install --no-cache-dir <pkg-name>
+  $ pip install --no-cache-dir <PKG_NAME>
+  $ python3 -m pip install --upgrade --no-cache-dir --force-reinstall <PKG_NAME>
 
   # or
   $ pip config set global.cache-dir false
@@ -146,8 +151,8 @@ $ defaults write com.apple.versioner.python Version 3.9
 
 ```bash
 $ pip config list
-global.extra-index-url='https://private.artifactory.com/artifactory/api/pypi/pypi-dev/simple'
-global.index-url='https://private.artifactory.com/artifactory/api/pypi/tools/simple'
+global.extra-index-url='https://artifactory.domain.com/artifactory/api/pypi/pypi-dev/simple'
+global.index-url='https://artifactory.domain.com/artifactory/api/pypi/tools/simple'
 ```
 
 ### [list pip package with url](https://stackoverflow.com/a/46838082/2940319)
@@ -343,62 +348,42 @@ env:
 global:
   /etc/xdg/pip/pip.conf, exists: False
   /etc/pip.conf, exists: True
-    global.index-url: https://private.artifactory.com/artifactory/api/pypi/tools/simple
+    global.index-url: https://artifactory.domain.com/artifactory/api/pypi/tools/simple
 site:
   /usr/pip.conf, exists: False
 user:
   /home/marslo/.pip/pip.conf, exists: False
   /home/marslo/.config/pip/pip.conf, exists: False
+
+# or
+$ pip config -v list
+For variant 'global', will try loading '/opt/homebrew/share/pip:/Library/Application Support/pip/pip.conf'
+For variant 'user', will try loading '/Users/marslo/.pip/pip.conf'
+For variant 'user', will try loading '/Users/marslo/.config/pip/pip.conf'
+For variant 'site', will try loading '/opt/homebrew/opt/python@3.13/Frameworks/Python.framework/Versions/3.13/pip.conf'
+:env:.break-system-packages='true'
+global.break-system-package='true'
+
+$ echo "${PIP_BREAK_SYSTEM_PACKAGES}"
+true
 ```
-
-- or
-  ```bash
-  $ pip config -v list
-  For variant 'global', will try loading '/opt/homebrew/share/pip:/Library/Application Support/pip/pip.conf'
-  For variant 'user', will try loading '/Users/marslo/.pip/pip.conf'
-  For variant 'user', will try loading '/Users/marslo/.config/pip/pip.conf'
-  For variant 'site', will try loading '/opt/homebrew/opt/python@3.13/Frameworks/Python.framework/Versions/3.13/pip.conf'
-  :env:.break-system-packages='true'
-  global.break-system-package='true'
-
-  $ echo $PIP_BREAK_SYSTEM_PACKAGES
-  true
-  ```
 
 ### samples
 
 > [!NOTE|label:references:]
 > - [Configuration](https://pip.pypa.io/en/stable/topics/configuration/)
 
-- `--ignore-installed`
-  ```bash
-  [install]
-  ignore-installed = true
-  ```
+| flag                        | pip.conf (under `[install]`)    | pip.config (under `[global]`)  |
+|-----------------------------|---------------------------------|--------------------------------|
+| `--ignore-installed`        | `ignore-installed = true`       | -                              |
+| `--no-dependencies`         | `no-dependencies = yes`         | -                              |
+| `--no-compile`              | `no-compile = yes`              | -                              |
+| `--no-warn-script-location` | `no-warn-script-location = yes` | -                              |
+| `--no-cache-dir`            | -                               | `no-cache-dir = yes`           |
+| `--break-system-packages`   | -                               | `break-system-packages = true` |
+| `--user`                    | -                               | `user = true`                  |
+| `--extra-index-url <HOST>`  | -                               | `extra-index-url = <HOST>`     |
 
-- `--no-dependencies`
-  ```bash
-  [install]
-  no-dependencies = yes
-  ```
-
-- `--no-compile`
-  ```bash
-  [install]
-  no-compile = yes
-  ```
-
-- `--no-warn-script-location`
-  ```bash
-  [install]
-  no-warn-script-location = yes
-  ```
-
-- `--no-cache-dir`
-  ```bash
-  [global]
-  no-cache-dir = yes
-  ```
 
 - `--verbose` and `--quiet`
 
@@ -436,7 +421,27 @@ user:
       http://mirror2.example.com
   ```
 
-### [Authentication](https://pip.pypa.io/en/stable/topics/authentication/)
+## [authentication](https://pip.pypa.io/en/stable/topics/authentication/)
+
+### [keyring](https://pip.pypa.io/en/stable/topics/authentication/#keyring-support)
+```bash
+# install
+$ python3 -m pip install keyring
+
+# setup
+$ keyring set "https://artifactory.domain.com/artifactory/api/pypi/pypi-local/simple" marslo
+Password for 'marslo' in 'https://artifactory.domain.com/artifactory/api/pypi/pypi-local/simple':
+$ echo -n 'TOKEN' | keyring set "https://artifactory.domain.com/artifactory/api/pypi/devops-local/simple" marslo
+
+# get password
+$ keyring get "https://artifactory.domain.com/artifactory/api/pypi/pypi-local/simple" marslo
+cm************************************************************ly
+$ security find-generic-password -s "https://artifactory.domain.com/artifactory/api/pypi/pypi-local/simple" -a marslo -w
+cm************************************************************ly
+
+# install
+$ python3 -m pip install --upgrade --user <PKG_NAME> --keyring-provider subprocess --extra-index-url https://artifactory.domain.com/artifactory/api/pypi/pypi-local/simple --break-system-packages
+```
 
 ## tricky
 ### argcomplete
