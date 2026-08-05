@@ -287,10 +287,52 @@ $ pip-autoremove <package-name> -y
 
 ## config
 
+> [!TIP|label:config files and priority:]
+>
+> | TYPE   | LOCATION                                                                         | COMMENTS                       |
+> | ------ | -------------------------------------------------------------------------------- | ------------------------------ |
+> | global | `${HOMEBREW_PREFIX}/share/pip/pip.conf`                                          | for `--global`                 |
+> | global | `/Library/Application Support/pip/pip.conf`                                      | for `--global`                 |
+> | site   | `${HOMEBREW_OPT}/python@3.14/Frameworks/Python.framework/Versions/3.14/pip.conf` | for `--site`                   |
+> | site   | `${VIRTUAL_ENV}/pip.conf`                                                        | for `--site`, venv config file |
+> | user   | `~/.pip/pip.conf`                                                                | for `--user`, legacy config    |
+> | user   | `~/.config/pip/pip.conf`                                                         | for `--user`, XDG config path  |
+
+- when `pip config set` ( without `--global` or `--site` ), the config will write into `~/.config/pip/pip.conf` (XDG config path)
+
+  > [!NOTE|label:priority:]
+  > - priority: **xdg_config_file** ( `~/.config/pip/pip.conf` ) > **legacy_config_file** (`~/.pip/pip.config`)
+  > - because of: [`kinds.USER: [legacy_config_file, new_config_file]`](https://github.com/pypa/pip/blob/main/src/pip/_internal/configuration.py#L84) and [`return parsers[-1]`](https://github.com/pypa/pip/blob/main/src/pip/_internal/configuration.py#L386C9-L386C27)
+
+- when config conflict
+
+  > [!NOTE|label:priority:]
+  > - priority: **command line** > **environment variable** > **site config file** > **user config file** > **global config file**
+  > - because of : [`OVERRIDE_ORDER`](https://github.com/pypa/pip/blob/main/src/pip/_internal/configuration.py#L45)
+  >   ```python
+  >   kinds = enum(
+  >       USER="user",       # User Specific
+  >       GLOBAL="global",   # System Wide
+  >       SITE="site",       # [Virtual] Environment Specific
+  >       ENV="env",         # from PIP_CONFIG_FILE
+  >       ENV_VAR="env-var", # from Environment Variables
+  >   )
+  >   OVERRIDE_ORDER = kinds.GLOBAL, kinds.USER, kinds.SITE, kinds.ENV, kinds.ENV_VAR       # the latter covers the former
+  >   ```
+
+| PRIORITY | TYPE              | SOURCE                                                                     |
+| -------- | ----------------- | -------------------------------------------------------------------------- |
+| highest  | command line flag | i.e.: `--keyring-provider`                                                 |
+| ↑        | ENV_VAR           | i.e.: `PIP_*`                                                              |
+| ↑        | ENV               | ENV configured in `PIP_CONFIG_FILE`                                        |
+| ↑        | SITE              | i.e.: `${VIRTUAL_ENV}/pip.conf`                                            |
+| ↑        | USER              | `~/.config/pip/pip.conf` > `~/.pip/pip.conf`                               |
+| lowest   | GLOBAL            | `/Library/Application Support/pip/...`, `/opt/homebrew/share/pip/pip.conf` |
+
 ### [options](https://pip.pypa.io/en/latest/cli/pip_install/#options)
 
 | PARAMETER                    | VALUE                         | ENVIRONMENT VARIABLE                                              |
-|------------------------------|-------------------------------|-------------------------------------------------------------------|
+| ---------------------------- | ----------------------------- | ----------------------------------------------------------------- |
 | `-r`, `--requirement`        | `<file>`                      | `PIP_REQUIREMENT`                                                 |
 | `-c`, `--constraint`         | `<file>`                      | `PIP_CONSTRAINT`                                                  |
 | `--no-deps`                  | -                             | `PIP_NO_DEPS`, `PIP_NO_DEPENDENCIES`                              |
@@ -458,20 +500,32 @@ $ python3 -m pip install --upgrade --user <PKG_NAME> --keyring-provider auto --e
 ```
 
 > [!TIP|label:subprocess 401:]
-> when installing the internal package from Artifactory, using `--keyring-provider subprocess` caused `Keyring provider set: disabled`, so no credentials were sent. Artifactory returned `401`<br>
+> **Whenever pip resolves keyring through the CLI (provider `subprocess`, or `auto` once the in-process import fails), it _REFUSES_ a keyring executable located in its own scripts directory.**
 >
 > **reason**: keyring lives in `/opt/homebrew/bin`, and pip's `sysconfig.get_path('scripts')` is also `/opt/homebrew/bin`.<br>
-> The subprocess provider has an anti-recursion guard:
+> The subprocess provider has an anti-recursion guard - [pip/_internal/network/auth.py](https://github.com/pypa/pip/blob/main/src/pip/_internal/network/auth.py#L201-L236)
 >
->> if the keyring it finds is inside pip's own scripts dir, pip strips that dir from PATH and searches again
->
-> the re-search found nothing → provider set to `disabled` → no credentials sent → `401`
+> CLI (`/opt/homebrew/bin/keyring`) starts with scripts directory (`/opt/homebrew/bin`) → excluded the scripts directory from PATH (`/opt/homebrew/bin`) → keyring not found → provider set to `disabled` → no credentials sent → `401`
 >> ```bash
+>> $ python3 -c "import shutil; print( shutil.which('keyring') )"
+>> /opt/homebrew/bin/keyring
 >> $ python3 -c "import sysconfig; print(sysconfig.get_path('scripts'))"
 >> /opt/homebrew/bin
 >> ```
 >
-> **solution**: use `--keyring-provider import` or `--keyring-provider auto` instead of `subprocess`
+> **solution**
+> - use `--keyring-provider import` or `--keyring-provider auto` instead of `subprocess`
+>   ```bash
+>   $ python3 -m pip config set global.keyring-provider auto
+>   ```
+> - pip install with `--user`
+>   ```bash
+>   $ python3 -m pip install --user keyring
+>   ```
+> - pipx install to `~/.local/bin`
+>   ```bash
+>   $ pipx install keyring
+>   ```
 
 ## tricky
 ### argcomplete

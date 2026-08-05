@@ -14,6 +14,7 @@
   - [check formula](#check-formula)
   - [check formula config files](#check-formula-config-files)
   - [update and cleanup](#update-and-cleanup)
+  - [check dependency list](#check-dependency-list)
   - [brew debug](#brew-debug)
   - [paths](#paths)
   - [list the packages installed from taps](#list-the-packages-installed-from-taps)
@@ -684,6 +685,35 @@ $ rm -rf ~/Library/Logs/Homebrew/*
 
 # locks
 $ rm -rf $(brew --prefix)/var/homebrew/locks/*
+```
+
+### check dependency list
+
+```bash
+$ /opt/homebrew/bin/brew uses --installed python@3.13
+git-filter-repo                               python-tk@3.13                                vint
+
+$ brew reinstall vint git-filter-repo
+==> Downloading bottle manifests
+✔︎ Bottle Manifest vint (0.3.21_2)                                                           Downloaded   18.8KB/ 18.8KB
+✔︎ Bottle Manifest git-filter-repo (2.47.0)                                                  Downloaded    7.3KB/  7.3KB
+==> Fetching downloads for: vint and git-filter-repo
+✔︎ Bottle vint (0.3.21_2)                                                                    Downloaded  366.4KB/366.4KB
+✔︎ Bottle git-filter-repo (2.47.0)                                                           Downloaded  101.9KB/101.9KB
+==> Reinstalling vint
+==> Pouring vint--0.3.21_2.arm64_tahoe.bottle.7.tar.gz
+🦍  /opt/homebrew/Cellar/vint/0.3.21_2: 188 files, 2MB
+==> Running `brew cleanup vint`...
+==> Reinstalling git-filter-repo
+==> Pouring git-filter-repo--2.47.0.all.bottle.1.tar.gz
+🦍  /opt/homebrew/Cellar/git-filter-repo/2.47.0: 9 files, 361.5KB
+==> Running `brew cleanup git-filter-repo`...
+==> Installation times
+vint                      0.075 s
+git-filter-repo           0.007 s
+
+$ /opt/homebrew/bin/brew uses --installed python@3.13
+python-tk@3.13
 ```
 
 ### brew debug

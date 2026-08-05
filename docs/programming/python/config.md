@@ -5,6 +5,7 @@
   - [command completion](#command-completion)
   - [with pyenv](#with-pyenv)
   - [install from source code](#install-from-source-code)
+  - [upgrade python in osx](#upgrade-python-in-osx)
 - [environment in MacOS](#environment-in-macos)
   - [`pip.conf`](#pipconf)
   - [pip config file](#pip-config-file)
@@ -223,6 +224,41 @@ $ pyenv versions
   ```bash
   $ sudo update-alternatives --install /usr/bin/python3 python3 /usr/local/bin/python3.8 99
   ```
+
+### upgrade python in osx
+
+#### homebrew
+
+> [!NOTE|label:references:]
+> **verify dependents** → **rebuild** → **remove the old python**
+
+```bash
+# who still depends on the old python
+$ brew uses --installed python@3.14
+
+# rebuild/re-bind to the new python
+$ brew reinstall <formula1> <formula2> ...
+
+# re-verify until empty
+$ brew uses --installed python@3.14              # goal: empty or just python-tk@3.14
+
+# drop companion packages + the old python
+$ brew uninstall python-tk@3.14
+$ brew autoremove
+$ brew uninstall python@3.14
+```
+
+#### pipx
+
+```bash
+# upgrade packages with new python
+$ pipx reinstall-all --python python3.15
+
+# the shared venv's interpreter is invalid → pipx rebuilds it on the new python
+$ pipx repair --python python3.15
+$ pipx upgrade-shared
+$ command cat ~/.local/pipx/shared/pyvenv.cfg | grep -E '^(home|version)'   # should show the new minor
+```
 
 ## environment in MacOS
 ### `pip.conf`
