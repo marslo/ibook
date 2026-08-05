@@ -6,7 +6,7 @@
   - [with pyenv](#with-pyenv)
   - [install from source code](#install-from-source-code)
   - [upgrade in osx](#upgrade-in-osx)
-- [environment in MacOS](#environment-in-macos)
+- [environment in osx](#environment-in-osx)
   - [`pip.conf`](#pipconf)
   - [pip config file](#pip-config-file)
   - [list python path](#list-python-path)
@@ -22,6 +22,8 @@
 - [python IDLE in MacOS Big Sure](#python-idle-in-macos-big-sure)
   - [`IDLE quit unexpectedly`](#idle-quit-unexpectedly)
   - [Python may not be configured for Tk](#python-may-not-be-configured-for-tk)
+- [venv](#venv)
+  - [PS1](#ps1)
   - [init and setup](#init-and-setup)
   - [install packages](#install-packages)
 
@@ -37,15 +39,13 @@
 ### [command completion](https://pip.pypa.io/en/stable/user_guide/#command-completion)
 ```bash
 $ python -m pip completion --bash >> ~/.bashrc
+
+# or
+$ python -m pip completion --bash >> ~/.profile
+
+# or
+$ eval "$(pip completion --bash)"
 ```
-- or
-  ```bash
-  $ python -m pip completion --bash >> ~/.profile
-  ```
-- or
-  ```bash
-  $ eval "`pip completion --bash`"
-  ```
 
 ### with pyenv
 ```bash
@@ -271,31 +271,36 @@ $ python3.15 -m pip install --user -r ~/py-user-pkgs.txt
 $ python3.15 -m pip install --user --upgrade pip
 ```
 
-## environment in MacOS
+## environment in osx
 ### `pip.conf`
 
 {% hint style='tip' %}
-> `pip.conf` load priority
-> - MacOS : `/Library/Application Support/pip/pip.conf` > `~/.config/pip/pip.conf` > `~/.pip/pip.conf`
+> `pip.conf` load priority - [`OVERRIDE_ORDER`](https://github.com/pypa/pip/blob/main/src/pip/_internal/configuration.py#L45)<br>
+> **command line** > **environment variable** > **site config file** > **user config file** > **global config file**
+>
+> ```python
+> OVERRIDE_ORDER = kinds.GLOBAL, kinds.USER, kinds.SITE, kinds.ENV, kinds.ENV_VAR       # the latter covers the former
+> ```
+>
+> check more details in [pip » config](./pip.md#config)
 {% endhint %}
 
-- user: `~/.pip/pip.conf` & `~/.config/pip/pip.conf`
-- global: `/Library/Application Support/pip/pip.conf`
-- list config:
-  ```bash
-  $ pip config list [ -v ]
-  global.index-url='https://artifactory.sample.com/artifactory/api/pypi/tools/simple'
-  ```
-  - details
-    ```bash
-    $ pip config list -v
-    For variant 'global', will try loading '/Library/Application Support/pip/pip.conf'
-    For variant 'user', will try loading '/Users/marslo/.pip/pip.conf'
-    For variant 'user', will try loading '/Users/marslo/.config/pip/pip.conf'
-    For variant 'site', will try loading '/usr/local/opt/python@3.10/Frameworks/Python.framework/Versions/3.10/pip.conf'
-    global.extra-index-url='https://artifactory.sample.com/artifactory/api/pypi/myPrivate'
-    global.index-url='https://artifactory.sample.com/artifactory/api/pypi/pypi/simple'
-    ```
+```bash
+# list config
+$ pip config list [-v]
+global.index-url='https://artifactory.sample.com/artifactory/api/pypi/tools/simple'
+
+# details
+$ pip config list -v
+For variant 'global', will try loading '/Library/Application Support/pip/pip.conf'
+For variant 'user', will try loading '/Users/marslo/.pip/pip.conf'
+For variant 'user', will try loading '/Users/marslo/.config/pip/pip.conf'
+For variant 'site', will try loading '/usr/local/opt/python@3.10/Frameworks/Python.framework/Versions/3.10/pip.conf'
+global.extra-index-url='https://artifactory.sample.com/artifactory/api/pypi/myPrivate'
+global.index-url='https://artifactory.sample.com/artifactory/api/pypi/pypi/simple'
+
+$ pip config debug [-vvv]
+```
 
 - [`PIP_CONF_FILE`](https://pip.pypa.io/en/stable/user_guide/#configuration)
   ```bash
@@ -305,12 +310,10 @@ $ python3.15 -m pip install --user --upgrade pip
 - upgrade all outdated modules
   ```bash
   $ pip install --upgrade --user $(pip list --outdated | sed 1,2d | awk '{print $1}' | xargs)
-  ```
 
-  - with exclude
-    ```bash
-    $ pip3.9 install --upgrade --user $(pip3.9 list --outdated | sed 1,2d | awk '{print $1}' | grep -vw 'docker\|rich')
-    ```
+  # with exclude
+  $ pip3.9 install --upgrade --user $(pip3.9 list --outdated | sed 1,2d | awk '{print $1}' | grep -vw 'docker\|rich')
+  ```
 
 ### [pip config file](https://pip.pypa.io/en/stable/topics/configuration/#pip-config-file)
 - naming
@@ -335,15 +338,16 @@ $ python3.15 -m pip install --user --upgrade pip
   ignore-installed = true
   no-dependencies = yes
   ```
-  - add
-    ```
-    [global]
-    no-cache-dir = false
 
-    [install]
-    no-compile = no
-    no-warn-script-location = false
-    ```
+- add
+  ```
+  [global]
+  no-cache-dir = false
+
+  [install]
+  no-compile = no
+  no-warn-script-location = false
+  ```
 
 - repeatable options
   ```
@@ -377,22 +381,23 @@ $ python -vvEsS -c "import sys; print sys.path"
 
 ### [python site]()
 - macos
-```bash
-# -- HOMEBREW_PREFIX --
-$ echo "$(brew --prefix)"
-/opt/homebrew
 
-$ python3 -c "import site; print (site.getsitepackages())"
-['/opt/homebrew/opt/python@3.13/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages']
+  ```bash
+  # -- HOMEBREW_PREFIX --
+  $ echo "$(brew --prefix)"
+  /opt/homebrew
 
-$ python3 -c "import site; print (site.getusersitepackages())"
-/Users/marslo/Library/Python/3.13/lib/python/site-packages
+  $ python3 -c "import site; print (site.getsitepackages())"
+  ['/opt/homebrew/opt/python@3.13/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages']
 
-$ readlink /Users/marslo/Library/Python/3.13/lib/python/site-packages
+  $ python3 -c "import site; print (site.getusersitepackages())"
+  /Users/marslo/Library/Python/3.13/lib/python/site-packages
 
-$ readlink -f /opt/homebrew/opt/python@3.13/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages
-/opt/homebrew/lib/python3.13/site-packages
-```
+  $ readlink /Users/marslo/Library/Python/3.13/lib/python/site-packages
+
+  $ readlink -f /opt/homebrew/opt/python@3.13/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages
+  /opt/homebrew/lib/python3.13/site-packages
+  ```
 
 ### python libs
 #### MacOS
@@ -412,21 +417,20 @@ $ readlink -f /opt/homebrew/opt/python@3.13/Frameworks/Python.framework/Versions
   drwx------ 5 marslo staff 160 Oct 12 21:17 /Users/marslo/Library/Python/3.7/
   drwx------ 5 marslo staff 160 Oct 27 19:24 /Users/marslo/Library/Python/3.8/
   drwx------ 5 marslo staff 160 Oct 27 19:24 /Users/marslo/Library/Python/3.9/
+
+  # example
+  $ /usr/bin/python -c 'import site; print(site.USER_BASE)'
+  /Users/marslo/Library/Python/2.7
+
+  $ /usr/local/bin/python3.9 -c 'import site; print(site.USER_BASE)'
+  /Users/marslo/Library/Python/3.9
+
+  $ /usr/local/bin/python3.6 -c 'import sysconfig; print(sysconfig.get_paths()["purelib"])'
+  /usr/lib/python3.6/site-packages
   ```
 
-  - example:
-    ```bash
-    $ /usr/bin/python -c 'import site; print(site.USER_BASE)'
-    /Users/marslo/Library/Python/2.7
-
-    $ /usr/local/bin/python3.9 -c 'import site; print(site.USER_BASE)'
-    /Users/marslo/Library/Python/3.9
-
-    $ /usr/local/bin/python3.6 -c 'import sysconfig; print(sysconfig.get_paths()["purelib"])'
-    /usr/lib/python3.6/site-packages
-    ```
-
 #### linux
+
 > references:
 > - [How do I find the location of my Python site-packages directory](https://stackoverflow.com/a/46071447/2940319)
 
@@ -450,28 +454,25 @@ sys.path = [
 USER_BASE: '/home/marslo/.local' (exists)
 USER_SITE: '/home/marslo/.local/lib/python3.6/site-packages' (doesn't exist)
 ENABLE_USER_SITE: True
+
+# check particular lib
+$ python -c "import os as _; print(_.__file__)"
+/usr/lib64/python3.6/os.py
+
+$ python -c "import setuptools as _; print(_.__path__)"
+['/usr/lib/python3.6/site-packages/setuptools']
 ```
-
-- check particular lib
-  ```bash
-  $ python -c "import os as _; print(_.__file__)"
-  /usr/lib64/python3.6/os.py
-
-  $ python -c "import setuptools as _; print(_.__path__)"
-  ['/usr/lib/python3.6/site-packages/setuptools']
-  ```
 
 ### multiple versions
 #### get current working version
 ```bash
 $ CFLAGS=-I$(brew --prefix)/include LDFLAGS=-L$(brew --prefix)/lib pip --version
 pip 20.2.4 from /Users/marslo/Library/Python/3.8/lib/python/site-packages/pip (python 3.8)
+
+# or
+$ $(brew --prefix)/opt/python/libexec/bin/python -V
+Python 3.8.6
 ```
-- or
-  ```bash
-  $ $(brew --prefix)/opt/python/libexec/bin/python -V
-  Python 3.8.6
-  ```
 
 #### upgrade particular modules
 ```bash
@@ -484,44 +485,41 @@ Installing collected packages: pip
     Uninstalling pip-20.2.3:
       Successfully uninstalled pip-20.2.3
 Successfully installed pip-20.2.4
+
+# upgrade to previous version
+$ pip install --upgrade --no-cache-dir --pre pip
 ```
-  - upgrade to previous version
-  ```bash
-  $ pip install --upgrade --no-cache-dir --pre pip
-  ```
 
 #### install all older version modules
 ```bash
 $ /usr/local/bin/python3.8 -m pip freeze > pip3.8-requirements.txt
 $ sudo -H /usr/local/bin/python3.9 -m pip install --pre -r pip3.8-requirements.txt
+
+# reference
+$ CFLAGS=-I$(brew --prefix)/include LDFLAGS=-L$(brew --prefix)/lib pip freeze
+beautifulsoup4==4.9.1
+certifi==2020.6.20
+cffi==1.14.1
+chardet==3.0.4
+click==7.1.2
+click-config-file==0.6.0
+colorama==0.4.3
+...
+
+# or
+$ pip list --outdate --format=freeze
+docker==4.2.2
+rich==3.0.5
+
+$ pip list -o --format columns
+Package Version Latest Type
+------- ------- ------ -----
+docker  4.2.2   4.3.1  wheel
+rich    3.0.5   9.1.0  whee
+
+$ pip list --outdate --format=json
+[{"name": "docker", "version": "4.2.2", "latest_version": "4.3.1", "latest_filetype": "wheel"}, {"name": "rich", "version": "3.0.5", "latest_version": "9.1.0", "latest_filetype": "wheel"}]
 ```
-- reference:
-  ```bash
-  $ CFLAGS=-I$(brew --prefix)/include LDFLAGS=-L$(brew --prefix)/lib pip freeze
-  beautifulsoup4==4.9.1
-  certifi==2020.6.20
-  cffi==1.14.1
-  chardet==3.0.4
-  click==7.1.2
-  click-config-file==0.6.0
-  colorama==0.4.3
-  ...
-  ```
-  - or
-    ```bash
-    $ pip list --outdate --format=freeze
-    docker==4.2.2
-    rich==3.0.5
-
-    $ pip list -o --format columns
-    Package Version Latest Type
-    ------- ------- ------ -----
-    docker  4.2.2   4.3.1  wheel
-    rich    3.0.5   9.1.0  whee
-
-    $ pip list --outdate --format=json
-    [{"name": "docker", "version": "4.2.2", "latest_version": "4.3.1", "latest_filetype": "wheel"}, {"name": "rich", "version": "3.0.5", "latest_version": "9.1.0", "latest_filetype": "wheel"}]
-    ```
 
 ## version change
 
@@ -530,60 +528,51 @@ $ sudo -H /usr/local/bin/python3.9 -m pip install --pre -r pip3.8-requirements.t
 {% endhint %}
 
 ### setup default python
-- via `ln`
-  ```bash
-  $ unlink /usr/local/opt/python
-  $ ln -sf /usr/local/Cellar/python@3.10/3.10.4 /usr/local/opt/python
 
-  $ unlink /usr/local/bin/python
-  $ ln -sf /usr/local/Cellar/python@3.10/3.10.4/bin/python3.10 /usr/local/bin/python3
-  $ ln -sf /usr/local/Cellar/python@3.10/3.10.4/bin/python3.10 /usr/local/bin/python
+```bash
+# via `ln`
+$ unlink /usr/local/opt/python
+$ ln -sf /usr/local/Cellar/python@3.10/3.10.4 /usr/local/opt/python
 
-  $ export PYTHONUSERBASE="$(/usr/local/opt/python/libexec/bin/python -c 'import site; print(site.USER_BASE)')"
-  $ export PYTHON3='/usr/local/opt/python/libexec/bin'
-  $ export PATH="$PYTHONUSERBASE/bin:${PYTHON3}:$PATH"
-  ```
+$ unlink /usr/local/bin/python
+$ ln -sf /usr/local/Cellar/python@3.10/3.10.4/bin/python3.10 /usr/local/bin/python3
+$ ln -sf /usr/local/Cellar/python@3.10/3.10.4/bin/python3.10 /usr/local/bin/python
 
-- via [`brew link`](https://stackoverflow.com/a/61560541/2940319)
-  ```bash
-  $ brew link python3 python@3.10 --overwrite
-  ```
-  - example
-    ```bash
-    $ python3 --version
-    Python 3.9.13
+$ export PYTHONUSERBASE="$(/usr/local/opt/python/libexec/bin/python -c 'import site; print(site.USER_BASE)')"
+$ export PYTHON3='/usr/local/opt/python/libexec/bin'
+$ export PATH="$PYTHONUSERBASE/bin:${PYTHON3}:$PATH"
 
-    $ brew link python3 python@3.10 --overwrite
-    Warning: Already linked: /usr/local/Cellar/python@3.9/3.9.13_1
-    To relink, run:
-      brew unlink python@3.9 && brew link python@3.9
-    Linking /usr/local/Cellar/python@3.10/3.10.4... 24 symlinks created.
+# `brew link` - https://stackoverflow.com/a/61560541/2940319
+$ brew link python3 python@3.10 --overwrite
+# example
+$ python3 --version
+Python 3.9.13
 
-    If you need to have this software first in your PATH instead consider running:
-      echo 'export PATH="/usr/local/opt/python@3.10/bin:$PATH"' >> /Users/marslo/.bash_profile
+$ brew link python3 python@3.10 --overwrite
+Warning: Already linked: /usr/local/Cellar/python@3.9/3.9.13_1
+To relink, run:
+  brew unlink python@3.9 && brew link python@3.9
+Linking /usr/local/Cellar/python@3.10/3.10.4... 24 symlinks created.
 
-    $ python3 --version
-    Python 3.10.4
-    ```
+If you need to have this software first in your PATH instead consider running:
+  echo 'export PATH="/usr/local/opt/python@3.10/bin:$PATH"' >> /Users/marslo/.bash_profile
 
-- via [`default`](https://github.com/Homebrew/homebrew-cask/issues/52128#issuecomment-424680522)
-  ```bash
-  $ defaults write com.apple.versioner.python Version 3.8
-  ```
-  - get default version
-    ```bash
-    $ defaults read com.apple.versioner.python Version
-    ```
-  - example
-    ```bash
-    $ defaults read com.apple.versioner.python Version
-    3.9
+$ python3 --version
+Python 3.10.4
 
-    $ defaults write com.apple.versioner.python Version 3.10
+# via `default` - https://github.com/Homebrew/homebrew-cask/issues/52128#issuecomment-424680522
+$ defaults write com.apple.versioner.python Version 3.8
+# get default version
+$ defaults read com.apple.versioner.python Version
+# example
+$ defaults read com.apple.versioner.python Version
+3.9
 
-    $ defaults read com.apple.versioner.python Version
-    3.10
-    ```
+$ defaults write com.apple.versioner.python Version 3.10
+
+$ defaults read com.apple.versioner.python Version
+3.10
+```
 
 ### modules re-installation
 ```bash
@@ -600,23 +589,23 @@ $ export PYTHONPATH="/usr/local/lib/python3.10/site-packages"
 
 ## extension
 ### [clear windows](https://gist.github.com/tonidy/1175133)
-- download
-  ```bash
-  $ curl -o /Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/idlelib/ClearWindow.py https://bugs.python.org/file14303/ClearWindow.py
-  ```
-- configure
-  ```bash
-  $ cat >> /Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/idlelib/config-extensions.def < EOF
 
-  [ClearWindow]
+```bash
+# download
+$ curl -o /Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/idlelib/ClearWindow.py https://bugs.python.org/file14303/ClearWindow.py
 
-  enable=1
-  enable_editor=0
-  enable_shell=1
-  [ClearWindow_cfgBindings]
-  clear-window=<Command-Key-l>
-  EOF
-  ```
+# configure
+$ cat >> /Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/idlelib/config-extensions.def < EOF
+
+[ClearWindow]
+
+enable=1
+enable_editor=0
+enable_shell=1
+[ClearWindow_cfgBindings]
+clear-window=<Command-Key-l>
+EOF
+```
 
 ## python IDLE in MacOS Big Sure
 ### `IDLE quit unexpectedly`
@@ -707,10 +696,10 @@ ModuleNotFoundError: No module named '_tkinter'
 
   $ brew install python-tk@3.10
   ==> Downloading https://ghcr.io/v2/homebrew/core/python-tk/3.10/manifests/3.10.4
-######################################################################## 100.0%
+  ######################################################################## 100.0%
   ==> Downloading https://ghcr.io/v2/homebrew/core/python-tk/3.10/blobs/sha256:6a937be1fd531589ef7f9b4d971cb91ee7549d99f7f1aaf97f0fc3c0911f1c5d
   ==> Downloading from https://pkg-containers.githubusercontent.com/ghcr1/blobs/sha256:6a937be1fd531589ef7f9b4d971cb91ee7549d99f7f1aaf97f0fc3c0911f1c5d?s
-######################################################################## 100.0%
+  ######################################################################## 100.0%
   ==> Pouring python-tk@3.10--3.10.4.monterey.bottle.tar.gz
   ==> Caveats
   python-tk@3.10 is keg-only, which means it was not symlinked into /usr/local,
@@ -759,37 +748,36 @@ $ _venv_info "(\033[38;5;6;3m%s\033[0m)"
 
 [![pyvenv ps1](../../screenshot/python/pyvenv-ps1.png)](../../screenshot/python/pyvenv-ps1.png)
 
-- or using `PROMPT_COMMAND`
-  ```bash
-  $ cat ~/.bashrc
-  # for venv info
-  function _venv_info() {
-    local printf_format=' [%s]'
-    local venv=''
-    [[ $# -eq 1 ]] && printf_format="$1"
-    [[ -n "${VIRTUAL_ENV}" ]] && venv="${VIRTUAL_ENV##*/}"
-    if [[ -n "${venv}" ]]; then
-      # shellcheck disable=SC2059
-      printf -- "${printf_format}" "${venv}"
-    fi
-  }
+```bash
+# or using `PROMPT_COMMAND`
+$ cat ~/.bashrc
+# for venv info
+function _venv_info() {
+  local printf_format=' [%s]'
+  local venv=''
+  [[ $# -eq 1 ]] && printf_format="$1"
+  [[ -n "${VIRTUAL_ENV}" ]] && venv="${VIRTUAL_ENV##*/}"
+  if [[ -n "${venv}" ]]; then
+    # shellcheck disable=SC2059
+    printf -- "${printf_format}" "${venv}"
+  fi
+}
 
-  export VIRTUAL_ENV_DISABLE_PROMPT=1
-  COL_SD_PURPLE='\[\033[38;5;98;3m\]'
-  COL_SD_GREEN='\[\033[32;2m\]'
-  COL_NONE='\[\033[0m\]'
-  COL_DEFAULT="\[\033[38;5;240m\]"
-  COL_RESET='\[\033[1m\]'
+export VIRTUAL_ENV_DISABLE_PROMPT=1
+COL_SD_PURPLE='\[\033[38;5;98;3m\]'
+COL_SD_GREEN='\[\033[32;2m\]'
+COL_NONE='\[\033[0m\]'
+COL_DEFAULT="\[\033[38;5;240m\]"
+COL_RESET='\[\033[1m\]'
 
-  PS1="\\n${COL_RESET}${COL_DEFAULT}(\\u@\\h${COL_RESET} \\w${COL_RESET}${COL_DEFAULT}) "
-  PS1+="\$(__git_ps1 \"- (${COL_SD_GREEN}%s${COL_NONE}${COL_DEFAULT}) \")"
-  PS1+="\$(_venv_info \"- (${COL_SD_PURPLE}%s${COL_NONE}${COL_DEFAULT}) \")"
-  PS1+="\\$ ${COL_NONE}"
-  export PS1
-  ```
+PS1="\\n${COL_RESET}${COL_DEFAULT}(\\u@\\h${COL_RESET} \\w${COL_RESET}${COL_DEFAULT}) "
+PS1+="\$(__git_ps1 \"- (${COL_SD_GREEN}%s${COL_NONE}${COL_DEFAULT}) \")"
+PS1+="\$(_venv_info \"- (${COL_SD_PURPLE}%s${COL_NONE}${COL_DEFAULT}) \")"
+PS1+="\\$ ${COL_NONE}"
+export PS1
+```
 
-  [![full ps1 with pyenv and `__git_ps1`](../../screenshot/python/pyenv-full-ps1.png)](../../screenshot/python/pyenv-full-ps1.png)
-
+[![full ps1 with pyenv and `__git_ps1`](../../screenshot/python/pyenv-full-ps1.png)](../../screenshot/python/pyenv-full-ps1.png)
 
 ### init and setup
 
@@ -818,19 +806,19 @@ $ source ~/.venv/rmk/bin/activate
 $ deactivate
 ```
 
-- [tips for `g:python3_host_prog` in nvim](https://vi.stackexchange.com/q/44770/7389)
-  ```vim
-  let g:python3_host_prog = expand( substitute(system('command -v python3'), '\n\+$', '', '') )
-  ```
+[tips for `g:python3_host_prog` in nvim](https://vi.stackexchange.com/q/44770/7389)
+```vim
+let g:python3_host_prog = expand( substitute(system('command -v python3'), '\n\+$', '', '') )
+```
 
-- [check status](https://blog.csdn.net/Long_xu/article/details/135117395)
-  ```bash
-  $ pip config -v list
-  For variant 'global', will try loading '/Library/Application Support/pip/pip.conf'
-  For variant 'user', will try loading '/Users/marslo/.pip/pip.conf'
-  For variant 'user', will try loading '/Users/marslo/.config/pip/pip.conf'
-  For variant 'site', will try loading '/Users/marslo/.venv/rmk/pip.conf'
-  ```
+[check status](https://blog.csdn.net/Long_xu/article/details/135117395)
+```bash
+$ pip config -v list
+For variant 'global', will try loading '/Library/Application Support/pip/pip.conf'
+For variant 'user', will try loading '/Users/marslo/.pip/pip.conf'
+For variant 'user', will try loading '/Users/marslo/.config/pip/pip.conf'
+For variant 'site', will try loading '/Users/marslo/.venv/rmk/pip.conf'
+```
 
 ### install packages
 
