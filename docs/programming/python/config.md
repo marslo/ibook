@@ -5,7 +5,7 @@
   - [command completion](#command-completion)
   - [with pyenv](#with-pyenv)
   - [install from source code](#install-from-source-code)
-  - [upgrade python in osx](#upgrade-python-in-osx)
+  - [upgrade in osx](#upgrade-in-osx)
 - [environment in MacOS](#environment-in-macos)
   - [`pip.conf`](#pipconf)
   - [pip config file](#pip-config-file)
@@ -225,7 +225,7 @@ $ pyenv versions
   $ sudo update-alternatives --install /usr/bin/python3 python3 /usr/local/bin/python3.8 99
   ```
 
-### upgrade python in osx
+### upgrade in osx
 
 #### homebrew
 
@@ -258,6 +258,17 @@ $ pipx reinstall-all --python python3.15
 $ pipx repair --python python3.15
 $ pipx upgrade-shared
 $ command cat ~/.local/pipx/shared/pyvenv.cfg | grep -E '^(home|version)'   # should show the new minor
+```
+
+#### pip
+
+```bash
+# snapshot in older python
+$ python3.14 -m pip list --user --format=freeze > ~/py-user-pkgs.txt
+
+# re-install in new python and upgrade pip
+$ python3.15 -m pip install --user -r ~/py-user-pkgs.txt
+$ python3.15 -m pip install --user --upgrade pip
 ```
 
 ## environment in MacOS
