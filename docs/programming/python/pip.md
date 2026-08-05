@@ -25,6 +25,7 @@
 - [pipx](#pipx)
   - [setup pipx](#setup-pipx)
   - [show info](#show-info)
+  - [check health](#check-health)
   - [examples](#examples)
 - [troubleshooting](#troubleshooting)
 
@@ -688,6 +689,7 @@ $ pip list |
 
 > [!NOTE|label:references:]
 > - [pipx](https://pipx.pypa.io/stable/)
+> - [How pipx works](https://pipx.pypa.io/stable/explanation/how-pipx-works.html)
 
 ### setup pipx
 ```bash
@@ -707,6 +709,16 @@ $ python3 -m pip install --user --upgrade pipx
 ### show info
 ```bash
 $ pipx environment
+$ pipx environment --value PIPX_VENV_CACHEDIR
+$ pipx environment --value PIPX_LOG_DIR
+$ pipx environment --value PIPX_TRASH_DIR
+$ pipx environment --value PIPX_HOME
+```
+
+### check health
+
+```bash
+$ pipx health
 ```
 
 ### [examples](https://pipx.pypa.io/stable/examples/)
@@ -716,31 +728,51 @@ $ pipx environment
   $ pipx install --python python3.10 pycowsay
   $ pipx install --python 3.12 pycowsay
   $ pipx install --fetch-missing-python --python 3.12 pycowsay
-  $ pipx install git+https://github.com/psf/black
-  $ pipx install git+https://github.com/psf/black.git@branch-name
-  $ pipx install git+https://github.com/psf/black.git@git-hash
-  $ pipx install git+ssh://<username>@<private-repo-domain>/<path-to-package.git>
+
+  # install from source control
+  $ pipx install git+https://github.com/psf/black.git
+  $ pipx install git+ssh://git@github.com/psf/black
+  $ pipx install git+https://github.com/psf/black.git@branch
+  $ pipx install git+https://github.com/psf/black.git@ce14fa8b497bae2b50ec48b3bd7022573a59cdb1
   $ pipx install https://github.com/psf/black/archive/18.9b0.zip
+
   $ pipx install black[d]
   $ pipx install --preinstall ansible-lint --preinstall mitogen ansible-core
   $ pipx install 'black[d] @ git+https://github.com/psf/black.git@branch-name'
   $ pipx install --suffix @branch-name 'black[d] @ git+https://github.com/psf/black.git@branch-name'
   $ pipx install --include-deps jupyter
+
+  # install with pip args
   $ pipx install --pip-args='--pre' poetry
   $ pipx install --pip-args='--index-url=<private-repo-host>:<private-repo-port> --trusted-host=<private-repo-host>:<private-repo-port>' private-repo-package
-  $ pipx install --index-url https://test.pypi.org/simple/ --pip-args='--extra-index-url https://pypi.org/simple/' some-package
+
   $ pipx --global install pycowsay
+
+  # install from local
   $ pipx install .
   $ pipx install path/to/some-project
+
+  # with private index
+  $ pipx install my-package --index-url https://my-index.example.com/simple/
+  $ pipx install my-package --index-url https://test.pypi.org/simple/ --pip-args='--extra-index-url https://pypi.org/simple/'
+  $ pipx install my-package --pip-args="--extra-index-url https://my-index.example.com/simple/"
+  $ pipx install my-package --pip-args="--index-url https://my-index.example.com/simple/ --trusted-host my-index.example.com"
+  # -- with pip environment variable --
+  $ export PIP_INDEX_URL=https://my-index.example.com/simple/
+  $ export PIP_TRUSTED_HOST=my-index.example.com
+  $ pipx install my-private-package
+
+  # install offline
+  $ pipx install my-package --pip-args="--no-index --find-links /path/to/wheels"
   ```
 
-- [pipx install-all](https://pipx.pypa.io/stable/examples/#pipx-install-all-example)
+- [pipx install-all](https://pipx.pypa.io/stable/reference/examples.html#install-all)
   ```bash
   $ pipx list --json > pipx.json
   $ pipx instal-all pipx.json
   ```
 
-- [pipx run](https://pipx.pypa.io/stable/examples/#pipx-run-examples)
+- [pipx run](https://pipx.pypa.io/stable/how-to/run-scripts.html)
   ```bash
   $ pipx run BINARY  # latest version of binary is run with python3
   $ pipx run --spec PACKAGE==2.0.0 BINARY  # specific version of package is run
@@ -768,7 +800,7 @@ $ pipx environment
   $ pipx inject ptpython requests pendulum
   ```
 
-- [pipx upgrade-shared](https://pipx.pypa.io/stable/examples/#pipx-upgrade-shared-examples)
+- [pipx upgrade-shared](https://pipx.pypa.io/stable/reference/examples.html#upgrade-shared)
   ```bash
   $ pipx upgrade-shared
   $ pipx upgrade-shared --pip-args=pip==24.0
@@ -807,6 +839,7 @@ $ pipx environment
     note: If you believe this is a mistake, please contact your Python installation or OS distribution provider. You can override this, at the risk of breaking your Python installation or OS, by passing --break-system-packages.
     hint: See PEP 668 for the detailed specification.
     ```
+
   - solution: [ignore by pip.config](https://stackoverflow.com/a/75722775/2940319)
 
     > [!TIP|label:rerefences:]
