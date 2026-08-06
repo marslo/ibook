@@ -10,6 +10,7 @@
 - [advanced paste](#advanced-paste)
   - [remove the last newline character when pasting](#remove-the-last-newline-character-when-pasting)
 - [broadcast input](#broadcast-input)
+- [copy mode](#copy-mode)
 - [AI](#ai)
   - [configure](#configure)
   - [shortcut](#shortcut)
@@ -23,9 +24,19 @@
 > [!NOTE|label:references:]
 > - [squarism/iTerm2.md](https://gist.github.com/squarism/ae3613daf5c01a98ba3a)
 
-| SHORTCUT                    | DESCRIPTION                   |
-|-----------------------------|-------------------------------|
-| <kbd>⌘</kbd> + <kbd>u</kbd> | background transparent toggle |
+| SHORTCUT                                                                 | DESCRIPTION                               |
+| ------------------------------------------------------------------------ | ----------------------------------------- |
+| <kbd>⌘</kbd> + <kbd>u</kbd>                                              | background transparent toggle             |
+|                                                                          |                                           |
+| <kbd>⇧</kbd> + <kbd>⌥</kbd> + <kbd>⌘</kbd> + <kbd>i</kbd>                | send input to current session only        |
+| <kbd>⇧</kbd> + <kbd>⌘</kbd> + <kbd>i</kbd>                               | broadcast input to all panes in all tabs  |
+| <kbd>⌥</kbd> + <kbd>⌘</kbd> + <kbd>i</kbd>                               | broadcast input to all panes in the tab   |
+| <kbd>⌃</kbd> + <kbd>⌥</kbd> + <kbd>⇧</kbd> + <kbd>⌘</kbd> + <kbd>i</kbd> | toggle broadcast input to current session |
+|                                                                          |                                           |
+| <kbd>⌘</kbd> + <kbd>⇧</kbd> + <kbd>c</kbd>                               | toggle copy mode                          |
+|                                                                          |                                           |
+| <kbd>⌘</kbd> + <kbd>y</kbd>                                              | engage Artificial Intelligence            |
+| <kbd>⇧</kbd> + <kbd>⌘</kbd> + <kbd>.</kbd>                               | engage Artificial Intelligence            |
 
 ## integrate terminal in Alfred
 
@@ -340,6 +351,62 @@ $ defaults read com.googlecode.iterm2 PasteSpecialSubstitution
 
 ![broadcast input](../../screenshot/iterm2/iterm2-broadcast.gif)
 
+## copy mode
+
+> [!NOTE|label:references:]
+> - [Copy Mode](https://iterm2.com/documentation-copymode.html)
+> - [iTerm2 Mouseless Copy](https://kevinjalbert.com/iterm2-mouseless-copy/)
+
+enable copy mode by pressing <kbd>⌘</kbd> + <kbd>⇧</kbd> + <kbd>c</kbd>
+
+changing modes
+
+| SHORTCUT                                                                             | ACTION                                   |
+| ------------------------------------------------------------------------------------ | ---------------------------------------- |
+| <kbd>⌃</kbd> + <kbd>␣</kbd>                                                          | stop selecting                           |
+| <kbd>⌃</kbd> + <kbd>v</kbd>                                                          | toggle rectangular selection (列模式)    |
+| <kbd>␣</kbd>, <kbd>v</kbd>                                                           | toggle selection by character (字符模式) |
+| <kbd>V</kbd>                                                                         | toggle selection by line (行模式)        |
+| <kbd>⎋</kbd>, <kbd>q</kbd>, <kbd>⌃</kbd> + <kbd>c</kbd>, <kbd>⌃</kbd> + <kbd>q</kbd> | exit copy mode                           |
+
+movement
+
+| SHORTCUT                                                                                            | ACTION                                                    |
+| --------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
+| <kbd>j</kbd>, <kbd>↓</kbd>                                                                          | move down one line                                        |
+| <kbd>k</kbd>, <kbd>↑</kbd>                                                                          | move up one line                                          |
+| <kbd>h</kbd>, <kbd>←</kbd>                                                                          | move left one char                                        |
+| <kbd>l</kbd>, <kbd>→</kbd>                                                                          | move right one char                                       |
+|                                                                                                     |                                                           |
+| <kbd>⌥</kbd> + <kbd>←</kbd>, <kbd>⌥</kbd> + <kbd>b</kbd>, <kbd>⇧</kbd> + <kbd>⇥</kbd>, <kbd>b</kbd> | move left one word                                        |
+| <kbd>⌥</kbd> + <kbd>→</kbd>, <kbd>⌥</kbd> + <kbd>f</kbd>, <kbd>⇥</kbd>, <kbd>w</kbd>                | move right one word                                       |
+| <kbd>B</kbd>                                                                                        | move back one word, treating symbols as part of a word    |
+| <kbd>W</kbd>                                                                                        | move forward one word, treating symbols as part of a word |
+| <kbd>[</kbd>                                                                                        | move to previous mark ( + shell integration )             |
+| <kbd>]</kbd>                                                                                        | move to next mark ( + shell integration )                 |
+|                                                                                                     |                                                           |
+| <kbd>⌃</kbd> + <kbd>b</kbd>, <kbd>⇞</kbd>                                                           | move up one screen                                        |
+| <kbd>⌃</kbd> + <kbd>f</kbd>, <kbd>⇟</kbd>                                                           | move down one screen                                      |
+| <kbd>H</kbd>                                                                                        | move to top of visible area                               |
+| <kbd>M</kbd>                                                                                        | move to middle of visible area                            |
+| <kbd>L</kbd>                                                                                        | move to bottom of visible area                            |
+|                                                                                                     |                                                           |
+| <kbd>^</kbd>, <kbd>⌥</kbd> + <kbd>m</kbd>                                                           | move to start of indentation
+| <kbd>0</kbd>                                                                                        | move to start of line                                     |
+| <kbd>$</kbd>                                                                                        | move to end of line                                       |
+| <kbd>⏎</kbd>                                                                                        | move to start of next line                                |
+|                                                                                                     |                                                           |
+| <kbd>g</kbd>                                                                                        | move to the start                                         |
+| <kbd>G</kbd>                                                                                        | move to the end                                           |
+
+other commands
+
+| SHORTCUT                                  | ACTION                                   |
+| ----------------------------------------- | ---------------------------------------- |
+| <kbd>o</kbd>                              | swap cursor and other selection endpoint |
+| <kbd>⌃</kbd> + <kbd>k</kbd>, <kbd>y</kbd> | copy selection to pasteboard             |
+
+
 ## AI
 
 > [!NOTE|label:references:]
@@ -380,9 +447,9 @@ $ defaults write com.googlecode.iterm2 AIHotKey -int 121
 ### shortcut
 
 |                  SHORTCUT                  | DESCRIPTION                    |
-|:------------------------------------------:|--------------------------------|
-|         <kbd>⌘</kbd> + <kbd>y</kbd>        | Engage Artificial Intelligence |
-| <kbd>⇧</kbd> + <kbd>⌘</kbd> + <kbd>.</kbd> | Engage Artificial Intelligence |
+| :----------------------------------------: | ------------------------------ |
+|         <kbd>⌘</kbd> + <kbd>y</kbd>        | engage Artificial Intelligence |
+| <kbd>⇧</kbd> + <kbd>⌘</kbd> + <kbd>.</kbd> | engage Artificial Intelligence |
 
 
 - ⌘ + y
@@ -399,19 +466,19 @@ $ defaults write com.googlecode.iterm2 AIHotKey -int 121
   ![ai shortcut - 4](../../screenshot/iterm2/ai/iterm2-ai-4.png)
 
 | SHORTCUT                                   | DESCRIPTION                |
-|--------------------------------------------|----------------------------|
-| <kbd>^</kbd> + <kbd>⇧</kbd> + <kbd>↑</kbd> | Add cursor above           |
-| <kbd>^</kbd> + <kbd>⇧</kbd> + <kbd>↓</kbd> | Add cursor below           |
-| <kbd>^</kbd> + <kbd>⇧</kbd> + click        | Add cursor                 |
-| <kbd>⌥</kbd> + drag                        | Add cursors                |
-| <kbd>⌘</kbd> + <kbd>Y</kbd>                | Natural language AI lookup |
-| <kbd>⌘</kbd> + <kbd>F</kbd>                | Open Find bar              |
-| <kbd>⌥</kbd> + <kbd>⌘</kbd> + <kbd>V</kbd> | Open in Advanced Paste     |
-| <kbd>⌘</kbd> + click                       | Open in explainshell.com   |
-| <kbd>⇧</kbd> + <kbd>↩</kbd>                | Send contents or selection |
-| <kbd>⌥</kbd> + <kbd>⇧</kbd> + <kbd>↩</kbd> | Send command at cursor     |
-| <kbd>⌥</kbd> + <kbd>↩</kbd>                | Enqueue command at cursor  |
-| <kbd>⇧</kbd> + <kbd>⌘</kbd> + <kbd>;</kbd> | View command history       |
+| ------------------------------------------ | -------------------------- |
+| <kbd>^</kbd> + <kbd>⇧</kbd> + <kbd>↑</kbd> | add cursor above           |
+| <kbd>^</kbd> + <kbd>⇧</kbd> + <kbd>↓</kbd> | add cursor below           |
+| <kbd>^</kbd> + <kbd>⇧</kbd> + click        | add cursor                 |
+| <kbd>⌥</kbd> + drag                        | add cursors                |
+| <kbd>⌘</kbd> + <kbd>Y</kbd>                | natural language AI lookup |
+| <kbd>⌘</kbd> + <kbd>F</kbd>                | open Find bar              |
+| <kbd>⌥</kbd> + <kbd>⌘</kbd> + <kbd>V</kbd> | open in Advanced Paste     |
+| <kbd>⌘</kbd> + click                       | open in explainshell.com   |
+| <kbd>⇧</kbd> + <kbd>↩</kbd>                | send contents or selection |
+| <kbd>⌥</kbd> + <kbd>⇧</kbd> + <kbd>↩</kbd> | send command at cursor     |
+| <kbd>⌥</kbd> + <kbd>↩</kbd>                | enqueue command at cursor  |
+| <kbd>⇧</kbd> + <kbd>⌘</kbd> + <kbd>;</kbd> | view command history       |
 
 ## [iTerm2 Python REPL](https://iterm2.com/python-api/tutorial/running.html)
 ```bash
