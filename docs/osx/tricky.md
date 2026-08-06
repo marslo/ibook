@@ -46,6 +46,7 @@
   - [launch iOS simulator](#launch-ios-simulator)
   - [show startup launch apps](#show-startup-launch-apps)
   - [check detail diskage usage](#check-detail-diskage-usage)
+  - [check User-level TCC permissions database](#check-user-level-tcc-permissions-database)
 - [notch](#notch)
   - [reduce the menu bar item spacing](#reduce-the-menu-bar-item-spacing)
 
@@ -1519,6 +1520,314 @@ $ sudo fs_usage
 21:03:47  select       0.000004   privoxy
 ...
 ```
+
+### check User-level TCC permissions database
+
+| auth_value | MEANING                                          | DESCRIPTION                                        |
+| :--------: | ------------------------------------------------ | -------------------------------------------------- |
+|     `0`    | Denied (拒绝/未决)                               | the app is denied access to the service            |
+|     `1`    | Unknown                                          | state undetermined (rarely seen)                   |
+|     `2`    | Allowed/Authorized (已允许)                      | the app is allowed access to the service           |
+|     `3`    | Limited/Restricted (受限)                        | the app is allowed access but with limitations     |
+|     `4`    | Auth pending / awaiting user prompt (待用户确认) | the app is awaiting user input to determine access |
+|     `5`    | elevated / requires authorization (需鉴权)       | the app is requires elevated privileges            |
+
+```bash
+# check all permissions
+$ sqlite3 ~/Library/Application\ Support/com.apple.TCC/TCC.db "SELECT service,client,auth_value FROM access;"
+
+# check permissions for CleanMyMac5
+$ sqlite3 ~/Library/Application\ Support/com.apple.TCC/TCC.db "SELECT service,client,auth_value FROM access WHERE client LIKE '%CleanMyMac5%';"
+╭────────────────────────────────────────┬────────────────────────┬────────────╮
+│                service                 │         client         │ auth_value │
+╞════════════════════════════════════════╪════════════════════════╪════════════╡
+│ kTCCServiceBluetoothAlways             │ com.macpaw.CleanMyMac5 │          2 │
+│ kTCCServiceSystemPolicyDownloadsFolder │ com.macpaw.CleanMyMac5 │          2 │
+│ kTCCServiceSystemPolicyAppData         │ com.macpaw.CleanMyMac5 │          5 │
+│ kTCCServiceSystemPolicyDocumentsFolder │ com.macpaw.CleanMyMac5 │          2 │
+│ kTCCServiceSystemPolicyDesktopFolder   │ com.macpaw.CleanMyMac5 │          2 │
+│ kTCCServicePhotos                      │ com.macpaw.CleanMyMac5 │          2 │
+╰────────────────────────────────────────┴────────────────────────┴────────────╯
+
+# check permissions for Calendar
+$ sqlite3 ~/Library/Application\ Support/com.apple.TCC/TCC.db "SELECT service,client,auth_value FROM access WHERE client LIKE '%Calendar%';"
+```
+
+<!--sec data-title="sqlite3 tcc.db" data-id="section7" data-show=true data-collapse=true ces-->
+
+```bash
+$ sqlite3 ~/Library/Application\ Support/com.apple.TCC/TCC.db "SELECT service,client,auth_value FROM access;"
+╭──────────────────────────────────────────┬───────────────────────────────────────────────────────────────────────────────────────────────────┬────────────╮
+│                 service                  │                                              client                                               │ auth_value │
+╞══════════════════════════════════════════╪═══════════════════════════════════════════════════════════════════════════════════════════════════╪════════════╡
+│ kTCCServiceLiverpool                     │ com.apple.assistant.assistantd                                                                    │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.securityd                                                                               │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.transparencyd                                                                           │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.triald                                                                                  │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.syncdefaultsd                                                                           │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.imagent                                                                                 │          2 │
+│ kTCCServiceLiverpool                     │ /System/Library/PrivateFrameworks/UsageTracking.framework/Versions/A/UsageTrackingAgent           │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.routined                                                                                │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.passd                                                                                   │          2 │
+│ kTCCServiceUbiquity                      │ com.apple.weather.widget                                                                          │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.voicebankingd                                                                           │          0 │
+│ kTCCServiceLiverpool                     │ /System/Library/PrivateFrameworks/TextToSpeechVoiceBankingSupport.framework/Support/voicebankingd │          2 │
+│ kTCCServiceUbiquity                      │ com.apple.weather                                                                                 │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.stocks                                                                                  │          2 │
+│ kTCCServiceUbiquity                      │ com.apple.stocks.detailintents                                                                    │          2 │
+│ kTCCServiceUbiquity                      │ com.apple.finder                                                                                  │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.callhistory.sync-helper                                                                 │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.findmy.findmylocateagent                                                                │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.siriknowledged                                                                          │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.avatarsd                                                                                │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.amsengagementd                                                                          │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.Passbook                                                                                │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.shortcuts                                                                               │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.StatusKitAgent                                                                          │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.knowledge-agent                                                                         │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.icloud.searchpartyuseragent                                                             │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.icloud.fmfd                                                                             │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.willowd                                                                                 │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.donotdisturbd                                                                           │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.identityservicesd                                                                       │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.suggestd                                                                                │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.sociallayerd                                                                            │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.Safari                                                                                  │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.UsageTrackingAgent                                                                      │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.cloudpaird                                                                              │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.textinput.KeyboardServices                                                              │          2 │
+│ kTCCServiceFocusStatus                   │ com.microsoft.Outlook                                                                             │          2 │
+│ kTCCServiceUbiquity                      │ com.apple.Safari                                                                                  │          2 │
+│ kTCCServiceMicrophone                    │ us.zoom.xos                                                                                       │          2 │
+│ kTCCServiceSystemPolicyDownloadsFolder   │ com.tinyspeck.slackmacgap                                                                         │          2 │
+│ kTCCServiceMicrophone                    │ com.tinyspeck.slackmacgap                                                                         │          2 │
+│ kTCCServiceCamera                        │ com.tinyspeck.slackmacgap                                                                         │          2 │
+│ kTCCServiceBluetoothAlways               │ com.google.Chrome                                                                                 │          2 │
+│ kTCCServiceWebBrowserPublicKeyCredential │ com.google.Chrome                                                                                 │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.protectedcloudstorage.protectedcloudkeysyncing                                          │          2 │
+│ kTCCServiceAppleEvents                   │ us.zoom.pluginagent                                                                               │          2 │
+│ kTCCServiceSystemPolicyDownloadsFolder   │ com.googlecode.iterm2                                                                             │          2 │
+│ kTCCServiceSystemPolicyDesktopFolder     │ com.googlecode.iterm2                                                                             │          2 │
+│ kTCCServiceUbiquity                      │ com.apple.identityservicesd                                                                       │          2 │
+│ kTCCServiceUbiquity                      │ com.apple.imagent                                                                                 │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.Maps                                                                                    │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.biomesyncd                                                                              │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.appleaccountd                                                                           │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.gamed                                                                                   │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.security.cuttlefish                                                                     │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.ScreenTimeAgent                                                                         │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.upload-request-proxy.com.apple.photos.cloud                                             │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.cloudphotod                                                                             │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.bluetoothuserd                                                                          │          2 │
+│ kTCCServiceLiverpool                     │ /System/Library/PrivateFrameworks/iCloudNotification.framework/iCloudNotificationAgent            │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.iCloudNotificationAgent                                                                 │          2 │
+│ kTCCServiceUbiquity                      │ com.apple.universalcontrol                                                                        │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.stocks.widget                                                                           │          2 │
+│ kTCCServiceSystemPolicyDocumentsFolder   │ com.googlecode.iterm2                                                                             │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.accessibility.heard                                                                     │          2 │
+│ kTCCServiceFileProviderDomain            │ com.googlecode.iterm2                                                                             │          2 │
+│ kTCCServicePhotos                        │ com.googlecode.iterm2                                                                             │          2 │
+│ kTCCServiceAddressBook                   │ com.googlecode.iterm2                                                                             │          2 │
+│ kTCCServiceReminders                     │ com.googlecode.iterm2                                                                             │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.systempreferences.AppleIDSettings                                                       │          2 │
+│ kTCCServiceCalendar                      │ com.googlecode.iterm2                                                                             │          2 │
+│ kTCCServiceBluetoothAlways               │ com.macpaw.CleanMyMac5                                                                            │          2 │
+│ kTCCServiceSystemPolicyDownloadsFolder   │ com.macpaw.CleanMyMac5                                                                            │          2 │
+│ kTCCServiceSystemPolicyAppData           │ com.macpaw.CleanMyMac5                                                                            │          5 │
+│ kTCCServiceSystemPolicyDocumentsFolder   │ com.macpaw.CleanMyMac5                                                                            │          2 │
+│ kTCCServiceSystemPolicyDesktopFolder     │ com.macpaw.CleanMyMac5                                                                            │          2 │
+│ kTCCServiceAddressBook                   │ com.runningwithcrayons.Alfred                                                                     │          2 │
+│ kTCCServiceUbiquity                      │ com.apple.iBooksX                                                                                 │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.iBooksX                                                                                 │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.iBooks.BookDataStoreService                                                             │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.iad-cloudkit                                                                            │          2 │
+│ kTCCServiceReminders                     │ com.ScooterSoftware.BeyondCompare                                                                 │          2 │
+│ kTCCServiceWebBrowserPublicKeyCredential │ com.google.Chrome.canary                                                                          │          2 │
+│ kTCCServiceBluetoothAlways               │ com.google.Chrome.canary                                                                          │          2 │
+│ kTCCServiceSystemPolicyAppData           │ com.googlecode.iterm2                                                                             │          5 │
+│ kTCCServiceAppleEvents                   │ net.lowreal.KeyCast                                                                               │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.mlhost.CloudWorker                                                                      │          2 │
+│ kTCCServiceAudioCapture                  │ us.zoom.xos                                                                                       │          2 │
+│ kTCCServiceUbiquity                      │ com.apple.MobileSMS                                                                               │          2 │
+│ kTCCServiceFocusStatus                   │ com.apple.MobileSMS                                                                               │          0 │
+│ kTCCServiceUbiquity                      │ com.apple.TextEdit                                                                                │          2 │
+│ kTCCServiceAppleEvents                   │ com.googlecode.iterm2                                                                             │          2 │
+│ kTCCServiceAppleEvents                   │ com.runningwithcrayons.Alfred                                                                     │          2 │
+│ kTCCServiceFileProviderDomain            │ com.ScooterSoftware.BeyondCompare                                                                 │          2 │
+│ kTCCServiceSystemPolicyDesktopFolder     │ com.Snipaste                                                                                      │          2 │
+│ kTCCServiceUbiquity                      │ com.apple.Preview                                                                                 │          2 │
+│ kTCCServiceUbiquity                      │ com.microsoft.Outlook                                                                             │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.stickersd                                                                               │          2 │
+│ kTCCServiceUbiquity                      │ com.apple.controlcenter                                                                           │          2 │
+│ kTCCServiceCamera                        │ us.zoom.xos                                                                                       │          2 │
+│ kTCCServiceSystemPolicyDesktopFolder     │ com.hezongyidev.Bob                                                                               │          2 │
+│ kTCCServiceUbiquity                      │ com.app77.pwsafemac                                                                               │          2 │
+│ kTCCServiceSystemPolicyDesktopFolder     │ com.microsoft.OneDrive                                                                            │          2 │
+│ kTCCServiceSystemPolicyDocumentsFolder   │ com.microsoft.OneDrive                                                                            │          2 │
+│ kTCCServiceSystemPolicyDesktopFolder     │ com.ScooterSoftware.BeyondCompare                                                                 │          2 │
+│ kTCCServiceBluetoothAlways               │ com.logi.ghub                                                                                     │          2 │
+│ kTCCServiceSystemPolicyAppBundles        │ com.googlecode.iterm2                                                                             │          2 │
+│ kTCCServiceAppleEvents                   │ com.runningwithcrayons.Alfred                                                                     │          2 │
+│ kTCCServiceAppleEvents                   │ com.googlecode.iterm2                                                                             │          2 │
+│ kTCCServiceAddressBook                   │ com.stairways.keyboardmaestro.editor                                                              │          2 │
+│ kTCCServiceAppleEvents                   │ com.stairways.keyboardmaestro.editor                                                              │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.stocks.detailintents                                                                    │          2 │
+│ kTCCServiceBluetoothAlways               │ com.better365.menubar                                                                             │          2 │
+│ kTCCServiceAppleEvents                   │ com.better365.menubar                                                                             │          2 │
+│ kTCCServiceCalendar                      │ com.bjango.istatmenus.status                                                                      │          2 │
+│ kTCCServiceSystemPolicyDownloadsFolder   │ com.ScooterSoftware.BeyondCompare                                                                 │          2 │
+│ kTCCServiceCamera                        │ com.microsoft.rdc.macos                                                                           │          2 │
+│ kTCCServiceMicrophone                    │ com.microsoft.rdc.macos                                                                           │          2 │
+│ kTCCServiceAddressBook                   │ com.sogou.inputmethod.sogou                                                                       │          2 │
+│ kTCCServiceSystemPolicyAppBundles        │ com.sogou.SogouInstaller                                                                          │          2 │
+│ kTCCServiceCamera                        │ com.helloresolven.GIF-Brewery-3                                                                   │          2 │
+│ kTCCServiceMicrophone                    │ com.helloresolven.GIF-Brewery-3                                                                   │          2 │
+│ kTCCServiceMicrophone                    │ com.google.Chrome                                                                                 │          2 │
+│ kTCCServiceAppleEvents                   │ com.pilotmoon.popclip-setapp                                                                      │          2 │
+│ kTCCServiceAppleEvents                   │ com.pilotmoon.popclip-setapp                                                                      │          2 │
+│ kTCCServiceLiverpool                     │ com.wiheads.paste-setapp                                                                          │          2 │
+│ kTCCServicePhotos                        │ com.microsoft.Powerpoint                                                                          │          2 │
+│ kTCCServicePhotos                        │ com.macpaw.CleanMyMac5                                                                            │          2 │
+│ kTCCServiceFileProviderDomain            │ com.ScooterSoftware.BeyondCompare                                                                 │          2 │
+│ kTCCServiceUbiquity                      │ com.apple.Photos                                                                                  │          2 │
+│ kTCCServiceSystemPolicyDocumentsFolder   │ com.ScooterSoftware.BeyondCompare                                                                 │          2 │
+│ kTCCServiceUbiquity                      │ com.apple.mail                                                                                    │          2 │
+│ kTCCServiceAppleEvents                   │ com.runningwithcrayons.Alfred                                                                     │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.mail                                                                                    │          2 │
+│ kTCCServiceSystemPolicyDesktopFolder     │ com.google.Chrome                                                                                 │          2 │
+│ kTCCServiceSystemPolicyDownloadsFolder   │ com.Snipaste                                                                                      │          2 │
+│ kTCCServiceBluetoothAlways               │ com.bjango.istatmenus                                                                             │          2 │
+│ kTCCServiceBluetoothAlways               │ com.bjango.istatmenus.status                                                                      │          2 │
+│ kTCCServiceSystemPolicyDocumentsFolder   │ com.microsoft.VSCode                                                                              │          2 │
+│ kTCCServiceSystemPolicyDesktopFolder     │ com.microsoft.VSCode                                                                              │          2 │
+│ kTCCServiceUbiquity                      │ com.soggywaffles.paintbrush                                                                       │          2 │
+│ kTCCServiceBluetoothAlways               │ com.okta.mobile                                                                                   │          2 │
+│ kTCCServiceCamera                        │ com.google.Chrome                                                                                 │          2 │
+│ kTCCServiceSystemPolicyDownloadsFolder   │ com.google.Chrome                                                                                 │          0 │
+│ kTCCServiceUbiquity                      │ com.apple.QuickTimePlayerX                                                                        │          2 │
+│ kTCCServiceSystemPolicyDocumentsFolder   │ com.Snipaste                                                                                      │          2 │
+│ kTCCServiceFileProviderDomain            │ com.Snipaste                                                                                      │          2 │
+│ kTCCServiceUbiquity                      │ com.apple.stocks                                                                                  │          2 │
+│ kTCCServiceSystemPolicyDesktopFolder     │ /opt/homebrew/Cellar/openjdk/23.0.2/libexec/openjdk.jdk/Contents/Home/bin/java                    │          2 │
+│ kTCCServiceUbiquity                      │ com.apple.iWork.Numbers                                                                           │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.iWork.Numbers                                                                           │          2 │
+│ kTCCServiceFileProviderDomain            │ com.ScooterSoftware.BeyondCompare                                                                 │          2 │
+│ kTCCServiceSystemPolicyAppData           │ com.ScooterSoftware.BeyondCompare                                                                 │          5 │
+│ kTCCServiceSystemPolicyRemovableVolumes  │ com.logi.ghub                                                                                     │          2 │
+│ kTCCServiceCamera                        │ com.microsoft.Powerpoint                                                                          │          2 │
+│ kTCCServiceFileProviderDomain            │ com.microsoft.Powerpoint                                                                          │          2 │
+│ kTCCServiceSystemPolicyDesktopFolder     │ org.vim.MacVim                                                                                    │          2 │
+│ kTCCServiceSystemPolicyNetworkVolumes    │ org.mozilla.firefox                                                                               │          2 │
+│ kTCCServiceMicrophone                    │ com.microsoft.Powerpoint                                                                          │          2 │
+│ kTCCServiceSystemPolicyDesktopFolder     │ com.paloaltonetworks.GlobalProtect.client                                                         │          2 │
+│ kTCCServiceSystemPolicyDocumentsFolder   │ com.paloaltonetworks.GlobalProtect.client                                                         │          2 │
+│ kTCCServiceSystemPolicyDownloadsFolder   │ com.paloaltonetworks.GlobalProtect.client                                                         │          2 │
+│ kTCCServiceFileProviderDomain            │ com.paloaltonetworks.GlobalProtect.client                                                         │          2 │
+│ kTCCServiceReminders                     │ com.paloaltonetworks.GlobalProtect.client                                                         │          2 │
+│ kTCCServiceCamera                        │ com.google.Chrome.canary                                                                          │          2 │
+│ kTCCServiceMicrophone                    │ com.google.Chrome.canary                                                                          │          2 │
+│ kTCCServiceMicrophone                    │ cn.better365.ishot                                                                                │          2 │
+│ kTCCServiceCamera                        │ cn.better365.ishot                                                                                │          2 │
+│ kTCCServiceCamera                        │ cn.better365.iShotPro                                                                             │          2 │
+│ kTCCServiceFileProviderDomain            │ com.todesktop.230313mzl4w4u92                                                                     │          2 │
+│ kTCCServiceSystemPolicyDownloadsFolder   │ com.todesktop.230313mzl4w4u92                                                                     │          2 │
+│ kTCCServiceSystemPolicyDocumentsFolder   │ com.todesktop.230313mzl4w4u92                                                                     │          2 │
+│ kTCCServiceSystemPolicyDesktopFolder     │ com.todesktop.230313mzl4w4u92                                                                     │          2 │
+│ kTCCServiceAppleEvents                   │ com.googlecode.iterm2                                                                             │          2 │
+│ kTCCServiceSystemPolicyDesktopFolder     │ org.spyder-ide.Spyder-6                                                                           │          2 │
+│ kTCCServiceSystemPolicyDocumentsFolder   │ org.spyder-ide.Spyder-6                                                                           │          2 │
+│ kTCCServiceSystemPolicyDownloadsFolder   │ org.spyder-ide.Spyder-6                                                                           │          2 │
+│ kTCCServiceFileProviderDomain            │ org.spyder-ide.Spyder-6                                                                           │          2 │
+│ kTCCServiceMicrophone                    │ dev.warp.Warp-Stable                                                                              │          0 │
+│ kTCCServiceFileProviderDomain            │ dev.warp.Warp-Stable                                                                              │          2 │
+│ kTCCServiceFileProviderDomain            │ dev.warp.Warp-Stable                                                                              │          0 │
+│ kTCCServiceReminders                     │ dev.warp.Warp-Stable                                                                              │          2 │
+│ kTCCServiceCalendar                      │ dev.warp.Warp-Stable                                                                              │          4 │
+│ kTCCServiceSystemPolicyDesktopFolder     │ dev.warp.Warp-Stable                                                                              │          2 │
+│ kTCCServiceSystemPolicyAppData           │ dev.warp.Warp-Stable                                                                              │          5 │
+│ kTCCServicePhotos                        │ dev.warp.Warp-Stable                                                                              │          2 │
+│ kTCCServiceAddressBook                   │ dev.warp.Warp-Stable                                                                              │          2 │
+│ kTCCServiceSystemPolicyDownloadsFolder   │ dev.warp.Warp-Stable                                                                              │          2 │
+│ kTCCServiceSystemPolicyDocumentsFolder   │ dev.warp.Warp-Stable                                                                              │          2 │
+│ kTCCServiceLiverpool                     │ com.moleskine.overlap                                                                             │          2 │
+│ kTCCServiceCalendar                      │ com.moleskine.overlap                                                                             │          2 │
+│ kTCCServiceLiverpool                     │ com.moleskine.overlap.IntentsExtension                                                            │          2 │
+│ kTCCServiceLiverpool                     │ com.moleskine.overlap.Widgets-Extension                                                           │          2 │
+│ kTCCServiceFileProviderDomain            │ com.microsoft.Word                                                                                │          2 │
+│ kTCCServiceFileProviderDomain            │ com.microsoft.Excel                                                                               │          2 │
+│ kTCCServiceSystemPolicyDownloadsFolder   │ com.tencent.qq                                                                                    │          2 │
+│ kTCCServiceAppleEvents                   │ com.hezongyidev.Bob                                                                               │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.shortcuts.events                                                                        │          2 │
+│ kTCCServiceUbiquity                      │ com.apple.shortcuts                                                                               │          2 │
+│ kTCCServiceBluetoothAlways               │ org.chromium.Chromium                                                                             │          2 │
+│ kTCCServiceFileProviderDomain            │ com.microsoft.VSCode                                                                              │          2 │
+│ kTCCServiceSystemPolicyDownloadsFolder   │ com.microsoft.VSCode                                                                              │          2 │
+│ kTCCServiceFocusStatus                   │ com.microsoft.OneDrive                                                                            │          2 │
+│ kTCCServiceSystemPolicyDesktopFolder     │ /opt/homebrew/Cellar/openjdk/24.0.1/libexec/openjdk.jdk/Contents/Home/bin/java                    │          2 │
+│ kTCCServiceUbiquity                      │ com.apple.Spotlight                                                                               │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.CloudTelemetryService.xpc                                                               │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.mstreamd                                                                                │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.homeenergyd                                                                             │          2 │
+│ kTCCServiceSystemPolicyDesktopFolder     │ /opt/homebrew/Cellar/openjdk/24.0.2/libexec/openjdk.jdk/Contents/Home/bin/java                    │          2 │
+│ kTCCServiceLiverpool                     │ io.sipapp.Sip-paddle                                                                              │          2 │
+│ kTCCServiceWebBrowserPublicKeyCredential │ org.mozilla.firefox                                                                               │          2 │
+│ kTCCServiceSystemPolicyDownloadsFolder   │ com.adobe.Reader                                                                                  │          2 │
+│ kTCCServiceSystemPolicyDownloadsFolder   │ org.vim.MacVim                                                                                    │          2 │
+│ kTCCServiceSystemPolicyDesktopFolder     │ /opt/homebrew/Cellar/openjdk/25/libexec/openjdk.jdk/Contents/Home/bin/java                        │          2 │
+│ kTCCServiceBluetoothAlways               │ com.crowdstrike.falcon.App                                                                        │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.accessibility.AccessibilityUIServer                                                     │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.amsaccountsd                                                                            │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.contacts.postersyncd                                                                    │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.frauddefensed                                                                           │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.musicrecognition.mac                                                                    │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.aiml.mlpt.FedStats.MLHostPlugin                                                         │          2 │
+│ kTCCServiceMicrophone                    │ cn.better365.iShotPro                                                                             │          2 │
+│ kTCCServiceUbiquity                      │ /System/Library/PrivateFrameworks/VoiceShortcuts.framework/Versions/A/Support/siriactionsd        │          2 │
+│ kTCCServiceBluetoothAlways               │ us.zoom.xos                                                                                       │          2 │
+│ kTCCServiceSystemPolicyDesktopFolder     │ /opt/homebrew/Cellar/openjdk/25.0.1/libexec/openjdk.jdk/Contents/Home/bin/java                    │          2 │
+│ kTCCServiceSystemPolicyDesktopFolder     │ com.apple.Automator                                                                               │          2 │
+│ kTCCServiceSystemPolicyDownloadsFolder   │ com.tencent.xinWeChat                                                                             │          2 │
+│ kTCCServiceAddressBook                   │ com.apple.iWork.Numbers                                                                           │          2 │
+│ kTCCServiceSystemPolicyAppData           │ net.element26.outlookmsgviewer                                                                    │          5 │
+│ kTCCServiceLiverpool                     │ com.apple.homeeventsd                                                                             │          2 │
+│ kTCCServiceMediaLibrary                  │ com.todesktop.230313mzl4w4u92                                                                     │          2 │
+│ kTCCServiceFileProviderDomain            │ com.todesktop.230313mzl4w4u92                                                                     │          2 │
+│ kTCCServiceSystemPolicyDesktopFolder     │ /opt/homebrew/Cellar/openjdk/25.0.2/libexec/openjdk.jdk/Contents/Home/bin/java                    │          2 │
+│ kTCCServiceSystemPolicyAppData           │ us.zoom.pluginagent                                                                               │          5 │
+│ kTCCServiceSystemPolicyAppData           │ com.microsoft.VSCode                                                                              │          5 │
+│ kTCCServiceMicrophone                    │ com.tencent.xinWeChat                                                                             │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.ScreenTimeSettingsAgent                                                                 │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.businessservicesd                                                                       │          2 │
+│ kTCCServiceAppleEvents                   │ com.docker.docker                                                                                 │          2 │
+│ kTCCServiceSystemPolicyAppData           │ org.vim.MacVim                                                                                    │          5 │
+│ kTCCServiceSystemPolicyDocumentsFolder   │ com.apple.Terminal                                                                                │          2 │
+│ kTCCServiceSystemPolicyDownloadsFolder   │ com.apple.Terminal                                                                                │          2 │
+│ kTCCServiceSystemPolicyDesktopFolder     │ com.apple.Terminal                                                                                │          2 │
+│ kTCCServiceSystemPolicyAppBundles        │ com.apple.Terminal                                                                                │          0 │
+│ kTCCServiceAppleEvents                   │ com.todesktop.230313mzl4w4u92                                                                     │          2 │
+│ kTCCServiceSystemPolicyNetworkVolumes    │ com.todesktop.230313mzl4w4u92                                                                     │          2 │
+│ kTCCServiceSystemPolicyDesktopFolder     │ /opt/homebrew/Cellar/openjdk/26.0.1/libexec/openjdk.jdk/Contents/Home/bin/java                    │          2 │
+│ kTCCServiceFileProviderDomain            │ com.jgraph.drawio.desktop                                                                         │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.imtransferagent                                                                         │          2 │
+│ kTCCServiceSystemPolicyDocumentsFolder   │ org.python.python                                                                                 │          2 │
+│ kTCCServiceSystemPolicyAppBundles        │ com.todesktop.230313mzl4w4u92                                                                     │          0 │
+│ kTCCServiceFileProviderDomain            │ com.anthropic.claudefordesktop                                                                    │          2 │
+│ kTCCServiceSystemPolicyDownloadsFolder   │ com.anthropic.claudefordesktop                                                                    │          2 │
+│ kTCCServiceSystemPolicyDesktopFolder     │ com.anthropic.claudefordesktop                                                                    │          2 │
+│ kTCCServiceSystemPolicyDocumentsFolder   │ com.anthropic.claudefordesktop                                                                    │          2 │
+│ kTCCServiceLiverpool                     │ com.apple.aiml.mlpt.FedStats.MLHostPluginClassB                                                   │          2 │
+│ kTCCServiceSystemPolicyAppData           │ com.anthropic.claude-code                                                                         │          5 │
+│ kTCCServiceAppleEvents                   │ com.todesktop.230313mzl4w4u92                                                                     │          2 │
+│ kTCCServiceSystemPolicyDesktopFolder     │ com.anthropic.claude-code                                                                         │          2 │
+│ kTCCServiceMicrophone                    │ com.anthropic.claudefordesktop                                                                    │          2 │
+│ kTCCServiceSystemPolicyAppData           │ com.microsoft.OneDrive                                                                            │          5 │
+│ kTCCServiceSystemPolicyAppData           │ /Library/PrivilegedHelperTools/com.microsoft.autoupdate.helper                                    │          5 │
+│ kTCCServiceMicrophone                    │ com.todesktop.230313mzl4w4u92                                                                     │          0 │
+│ kTCCServiceSystemPolicyAppBundles        │ com.google.GoogleUpdater                                                                          │          2 │
+│ kTCCServiceSystemPolicyAppData           │ com.todesktop.230313mzl4w4u92                                                                     │          5 │
+╰──────────────────────────────────────────┴───────────────────────────────────────────────────────────────────────────────────────────────────┴────────────╯
+```
+<!--endsec-->
 
 ## notch
 
