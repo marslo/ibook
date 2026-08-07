@@ -6,7 +6,9 @@
   - [with pyenv](#with-pyenv)
   - [install from source code](#install-from-source-code)
   - [upgrade in osx](#upgrade-in-osx)
-- [environment in osx](#environment-in-osx)
+- [environment variables](#environment-variables)
+  - [`PYTHONNOUSERSITE` — user site-packages toggle](#pythonnousersite--user-site-packages-toggle)
+- [config in osx](#config-in-osx)
   - [`pip.conf`](#pipconf)
   - [pip config file](#pip-config-file)
   - [list python path](#list-python-path)
@@ -271,7 +273,64 @@ $ python3.15 -m pip install --user -r ~/py-user-pkgs.txt
 $ python3.15 -m pip install --user --upgrade pip
 ```
 
-## environment in osx
+## environment variables
+
+> [!NOTE|label:references:]
+> - [1.2. Environment variables](https://docs.python.org/3/using/cmdline.html#environment-variables)
+> - show details:
+>   ```bash
+>   $ python --help-env
+>   $ $ python --help-xoptions
+>   ```
+
+| VARIABLE                  | DESCRIPTION                                                                  | OPTIONS                                                     |
+| ------------------------- | ---------------------------------------------------------------------------- | ----------------------------------------------------------- |
+| `PYTHONHOME`              | set the location of the standard Python libraries                            | `<prefix>/lib/pythonX.Y`                                    |
+| `PYTHONPATH`              | ':'-separated list of directories prefixed to the default module search path | -                                                           |
+| `PYTHONSAFEPATH`          | don't prepend a potentially unsafe path to sys.path                          | -                                                           |
+| `PYTHONSTARTUP`           | file executed on interactive startup                                         | -                                                           |
+| `PYTHONPLATLIBDIR`        | override `sys.platlibdir`                                                    | -                                                           |
+| `PYTHONOPTIMIZE`          | enable level 1 optimizations                                                 | `-O`                                                        |
+| `PYTHONDEBUG`             | enable parser debug mode                                                     | `-d`                                                        |
+| `PYTHONINSPECT`           | inspect interactively after running script                                   | `-i`                                                        |
+| `PYTHONUNBUFFERED`        | disable stdout/stderr buffering                                              | `-u`                                                        |
+| `PYTHONVERBOSE`           | trace import statements                                                      | `-v`                                                        |
+| `PYTHONDONTWRITEBYTECODE` | don't write .pyc files                                                       | `-B`                                                        |
+| `PYTHONPYCACHEPREFIX`     | root directory for bytecode cache (pyc) files                                | `-X pycache_prefix`                                         |
+| `PYTHONIOENCODING`        | encoding[:errors] used for stdin/stdout/stderr                               | -                                                           |
+| `PYTHONNOUSERSITE`        | disable user site directory                                                  | `-s`                                                        |
+| `PYTHONUSERBASE`          | defines the user base directory                                              | `site.USER_BASE`                                            |
+| `PYTHONWARNINGS`          | warning control                                                              | `-W`                                                        |
+| `PYTHONDEVMODE`           | enable Python Development Mode                                               | `-X dev`                                                    |
+| `PYTHONUTF8`              | control the UTF-8 mode                                                       | `-X utf8`<br>`1`: enable; `0`: disable                      |
+| `PYTHON_COLORS`           | enable/disable colored output in the interpreter                             | `1`: enable; `0`: disable                                   |
+| `PYTHONCASEOK`            | ignore case in 'import' statements (Windows)                                 | -                                                           |
+| `PYTHON_BASIC_REPL`       | use the traditional parser-based REPL                                        | -                                                           |
+|                           |                                                                              |                                                             |
+| `PYTHONDUMPREFS`          | dump objects and reference counts after shutting down the interpreter        | -                                                           |
+| `PYTHONBREAKPOINT`        | disables the default debugger if set to `0`                                  | `0`: disable                                                |
+| `PYTHONFAULTHANDLER`      | dump the Python traceback on fatal errors                                    | `-X faulthandler`                                           |
+| `PYTHONASYNCIODEBUG`      | enable asyncio debug mode                                                    | -                                                           |
+| `PYTHON_CPU_COUNT`        | override the return value of `os.cpu_count()`                                | `-X cpu_count=N`;`-X cpu_count=default`: cancels overriding |
+
+### `PYTHONNOUSERSITE` — user site-packages toggle
+
+Controls whether the per-user site-packages directory (PEP 370) is added to [`sys.path`](https://docs.python.org/3/library/sys.html#sys.path) at interpreter startup. Equivalent CLI switch: `python -s`.
+
+| `PYTHONNOUSERSITE` value                                                                                                                                 | `site.ENABLE_USER_SITE` | Effect on `sys.path`            |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------- | ------------------------------- |
+| unset, empty string, or any value that parses to the integer `0` (`0`, `00`, `000`, `+0`, `-0`, leading-whitespace `␣0`)                                 | `True` (default)        | user site-packages **retained** |
+| any other value — nonzero integer (`1`, `-1`), non-numeric token (`false`, `true`, `x`), or non-integer literal (`0.0`, `0x0`, trailing-whitespace `0␣`) | `False`                 | user site-packages **excluded** |
+
+> [!NOTE]
+> The value is evaluated by CPython's `_Py_str_to_int` (base-10 integer parse):
+> - a successful parse to `0` leaves the feature untouched; a nonzero result
+> - a parse failure is coerced to `1`, which disables the user scheme.
+> Counterintuitively, `PYTHONNOUSERSITE=false` **disables** it while `PYTHONNOUSERSITE=0` does **not**.
+> <br>
+> **Guidance:** use `PYTHONNOUSERSITE=1` to disable; simply leave it unset to keep the default. Do not rely on `=0` to "enable" — it reads like an off-switch.
+
+## config in osx
 ### `pip.conf`
 
 {% hint style='tip' %}
