@@ -10,7 +10,6 @@
   - [`PYTHONNOUSERSITE` — user site-packages toggle](#pythonnousersite--user-site-packages-toggle)
 - [config in osx](#config-in-osx)
   - [`pip.conf`](#pipconf)
-  - [pip config file](#pip-config-file)
   - [list python path](#list-python-path)
   - [python site](#python-site)
   - [python libs](#python-libs)
@@ -252,6 +251,13 @@ $ brew uninstall python@3.14
 
 #### pipx
 
+> [!NOTE|label:`No module named pip` on `upgrade[-all]`]
+> pipx creates each app venv with `--without-pip` and shares `pip`/`setuptools` from a single venv (`~/.local/pipx/shared`), wired into every app venv via a `pipx_shared.pth` file.
+> After a Python minor bump the shared venv is rebuilt under the new `pythonX.Y`, yet any app venv whose interpreter still runs keeps its **old** `.pth` (e.g. still pointing at the now-deleted `.../shared/lib/python3.14/site-packages`) → `pipx upgrade[-all]` then fails with `No module named pip`. Note **only `reinstall-all` rewrites that `.pth`**:
+> - `pipx repair` — rebuilds only venvs whose interpreter **cannot run**, so it **skips** these.
+> - `pipx upgrade-shared` — rebuilds the shared venv only; it does **not** touch the app `.pth`.
+> - `pipx reinstall-all` — recreates every app venv, writing a fresh `.pth` on the new python.
+
 ```bash
 # upgrade packages with new python
 $ pipx reinstall-all --python python3.15
@@ -260,6 +266,35 @@ $ pipx reinstall-all --python python3.15
 $ pipx repair --python python3.15
 $ pipx upgrade-shared
 $ command cat ~/.local/pipx/shared/pyvenv.cfg | grep -E '^(home|version)'   # should show the new minor
+```
+
+```bash
+# detect: app venvs whose shared .pth points to a now-missing pythonX.Y dir (exactly the ones that fail `pipx upgrade[-all]` with "No module named pip")
+$ for f in ~/.local/pipx/venvs/*/lib/python*/site-packages/pipx_shared.pth; do
+    d=$(command cat "$f"); [[ -d "$d" ]] || printf '%s -> %s (MISSING)\n' "$f" "$d";
+  done
+# ── or ───
+$ cd "${HOME}/.local/pipx/venvs"
+$ for v in commitizen pylint pdf2docx typos ansible poetry thonny pdfminer-six pre-commit terminal-colors; do
+    for pth in "${v}"/lib/python*/site-packages/pipx_shared.pth; do
+      if [[ -f "${pth}" ]]; then
+        target=$(command cat "${pth}")
+        [[ -d "${target}" ]] && status=OK || status=MISSING
+        printf '%-16s -> %s  [%s]\n' "${v}" "${target}" "${status}"
+      else
+        printf '%-16s -> (no pipx_shared.pth)\n' "${v}"
+      fi
+    done
+  done
+
+# fix
+# rewrites the .pth with reinstall-all
+$ pipx reinstall-all --python python3.15
+# ── or ──
+$ new=$(basename ~/.local/pipx/shared/lib/python3.*)          # e.g. python3.15
+$ for f in ~/.local/pipx/venvs/*/lib/python*/site-packages/pipx_shared.pth; do
+    sed -i '' -E "s#(/shared/lib/)python3\.[0-9]+#\1${new}#" "$f";
+  done
 ```
 
 #### pip
@@ -341,7 +376,9 @@ Controls whether the per-user site-packages directory (PEP 370) is added to [`sy
 > OVERRIDE_ORDER = kinds.GLOBAL, kinds.USER, kinds.SITE, kinds.ENV, kinds.ENV_VAR       # the latter covers the former
 > ```
 >
-> check more details in [pip » config](./pip.md#config)
+> check more details in [pip » config](./pip.md#config)<br>
+> references:
+> - [pip config file](https://pip.pypa.io/en/stable/topics/configuration/#pip-config-file)
 {% endhint %}
 
 ```bash
@@ -374,8 +411,7 @@ $ pip config debug [-vvv]
   $ pip3.9 install --upgrade --user $(pip3.9 list --outdated | sed 1,2d | awk '{print $1}' | grep -vw 'docker\|rich')
   ```
 
-### [pip config file](https://pip.pypa.io/en/stable/topics/configuration/#pip-config-file)
-- naming
+- index-url
   ```
   [global]
   timeout = 60
