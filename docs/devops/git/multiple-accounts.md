@@ -7,6 +7,8 @@
 - [with https](#with-https)
   - [gitconfig](#gitconfig-1)
   - [setup .git-credentials](#setup-git-credentials)
+- [PATTERN FORMAT](#pattern-format)
+  - [git wildmatch (PATHNAME mode — hasconfig / includeIf / gitignore)](#git-wildmatch-pathname-mode--hasconfig--includeif--gitignore)
 - [git hook and alias](#git-hook-and-alias)
   - [git hook](#git-hook)
   - [git alias](#git-alias)
@@ -194,6 +196,46 @@ $ printf "protocol=https\nhost=github.com\nusername=john@work.com\n" | git crede
 $ printf "protocol=https\nhost=github.com\nusername=john@work.com\n" | git credential-store --file ~/.gitconfig.d/.git-credentials get
 ```
 
+## PATTERN FORMAT
+
+> [!NOTE|label:references:]
+> - [PATTERN FORMAT](https://git-scm.com/docs/gitignore#_pattern_format) · [wildmatch.c](https://github.com/git/git/blob/master/wildmatch.c)
+> - [fnmatch syntax - github](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/creating-rulesets-for-a-repository#using-fnmatch-syntax)
+> - [fnmatch in ruby](https://ruby-doc.org/core-2.5.1/File.html#method-c-fnmatch)
+
+
+### git wildmatch (PATHNAME mode — hasconfig / includeIf / gitignore)
+
+> [!TIP]
+> - `*` never matches `/`. Regex equivalents (anchored, `/`-aware):
+> - **KEY POINT**: `**/` allows *any number* of `/`, so it is `([^/]*/)*`
+
+| TOKEN | MEANING                                     | REGEX EQUIVALENT |
+| ----- | ------------------------------------------- | ---------------- |
+| `*`   | run of non-slash chars (within one segment) | `[^/]*`          |
+| `?`   | exactly one non-slash char                  | `[^/]`           |
+| `*/`  | exactly **one** segment, then `/`           | `[^/]*/`         |
+| `**/` | **zero or more** segments (any depth)       | `([^/]*/)*`      |
+| `/**` | everything below (trailing)                 | `/.*`            |
+
+| GOAL                              | GLOB  | REGEX       | CROSSES `/` | EXAMPLE — PATTERN → MATCHING INPUT                                              |
+| --------------------------------- | ----- | ----------- | ----------- | ------------------------------------------------------------------------------- |
+| fill chars **inside one segment** | `*`   | `[^/]*`     | 0           | `github*.com` → `github.com`, `github-marslo.com`                               |
+| match **one** non-slash char      | `?`   | `[^/]`      | 0           | `*.com?marslo` → matches the `:` in `github.com:marslo`                         |
+| skip **exactly one** segment      | `*/`  | `[^/]*/`    | 1           | `*/marslo/**` → `github.com/marslo/x`                                           |
+| skip **any number** of segments   | `**/` | `([^/]*/)*` | 0 or more   | `**/marslo/**` → `https://github.com/marslo/x`, `ssh://git@github.com/marslo/x` |
+
+> [!NOTE|label:sample script and result]
+> [* iMarslo ─ git-wildmatch-match.sh](https://github.com/marslo/mytools/blob/main/itool/git-wildmatch-match.sh)
+> ```bash
+> PATTERN                      https?://      git@..:        git@-marslo:   ssh://git@     ssh://git@-marslo:
+> *github.com?marslo/**                         Y
+> **/marslo/**                   Y                                            Y              Y
+> **:marslo/**                                  Y              Y
+> **/*github*.com/marslo/**      Y                                            Y              Y
+> *github*.com?marslo/**                        Y              Y
+> ```
+
 ## git hook and alias
 
 > [!NOTE]
@@ -270,10 +312,13 @@ esac
 
 ```bash
 #!/usr/bin/env bash
-# ~/.git-templates/hooks/post-checkout
 
+[ -z "$(git config remote.origin.url)" ] && exit 0
+
+# only run on the first checkout after cloning
+# if [[ "$3" = '1' ]]; then
 if [[ "$1" = "0000000000000000000000000000000000000000" || "$3" = '1' ]]; then
-  ~/.git-templates/set-git-user.sh
+  ~/.marslo/gitconfig.d/bin/set-git-user.sh
 fi
 
 # vim:tabstop=2:softtabstop=2:shiftwidth=2:expandtab:filetype=sh:

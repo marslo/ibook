@@ -41,6 +41,8 @@
   - [zivyangll/git-blame.vim](#zivyangllgit-blamevim)
 - [troubleshooting](#troubleshooting-1)
   - [airline](#airline)
+- [tips](#tips)
+  - [force using HTTPS for vim-plug](#force-using-https-for-vim-plug)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -651,73 +653,73 @@ highlight link SyntasticStyleWarningSign GruvboxPurpleSign
 > - [Ways to configure Coc (Neoclide / coc.nvim)](https://www.reddit.com/r/vim/comments/ip6vpf/ways_to_configure_coc_neoclide_cocnvim/)
 > - [* coc-example-config.vim](https://github.com/neoclide/coc.nvim/blob/master/doc/coc-example-config.vim)
 
-- initialize
 
-  ```bash
-  $ pip install jedi
-  ```
+```bash
+# initialize
+$ pip install jedi
+```
 
-  ```vim
-  " install
-  Plug 'neoclide/coc.nvim', { 'branch': 'release' }
+```vim
+" install
+Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 
-  " neoclide/coc.nvim
-  set updatetime=300
-  set signcolumn=yes
-  let g:coc_global_extensions = [
-    \   'coc-sh',
-    \   'coc-groovy', 'coc-java',
-    \   'coc-json',
-    \   'coc-css', 'coc-htmlhint', 'coc-html-css-support',
-    \   'coc-pyright',
-    \   'coc-snippets',
-    \   'coc-docker',
-    \   'coc-emoji'
-    \ ]
-  function! CheckBackspace() abort
-    let col = col('.') - 1
-    return !col || getline('.')[col - 1]  =~# '\s'
-  endfunction
-  function! ShowDocumentation()
-    if CocAction('hasProvider', 'hover')
-      call CocActionAsync('doHover')
-    else
-      call feedkeys('K', 'in')
-    endif
-  endfunction
-  autocmd FileType json syntax match Comment +\/\/.\+$+
-  autocmd FileType html let b:coc_root_patterns = ['.git', '.env', 'tailwind.config.js', 'tailwind.config.cjs']
-  inoremap <silent><expr> <DOWN>
-        \ coc#pum#visible() ? coc#pum#next(1) : CheckBackspace()
-        \                   ? "\<DOWN>" : coc#refresh()
-  inoremap <expr><UP> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
-  inoremap <silent><expr> <C-M>
-       \ coc#pum#visible() ? coc#pum#confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
-  command! -nargs=0 OR  :call CocActionAsync('runCommand', 'editor.action.organizeImport')
-  nmap     <silent>[g   <Plug>(coc-diagnostic-prev)
-  nmap     <silent>]g   <Plug>(coc-diagnostic-next)
-  nmap     <silent>gd   <Plug>(coc-definition)
-  nmap     <silent>gy   <Plug>(coc-type-definition)
-  nmap     <silent>gi   <Plug>(coc-implementation)
-  nmap     <silent>gr   <Plug>(coc-references)
-  nnoremap <silent>K    :call ShowDocumentation()<CR>
-  nmap     <leader>cl   <Plug>(coc-codelens-action)
-  " coc-snippets ( ctrl-j )
-  imap <C-l> <Plug>(coc-snippets-expand)
-  vmap <C-j> <Plug>(coc-snippets-select)
-  let g:coc_snippet_next = '<c-j>'
-  let g:coc_snippet_prev = '<c-k>'
-  imap <C-j> <Plug>(coc-snippets-expand-jump)
-  inoremap <silent><expr> <C-j>
-        \ pumvisible() ? coc#_select_confirm() :
-        \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
-        \ CheckBackSpace() ? "\<TAB>" :
-        \ coc#refresh()
-  function! CheckBackSpace() abort
-    let col = col('.') - 1
-    return !col || getline('.')[col - 1]  =~# '\s'
-  endfunction
-  ```
+" neoclide/coc.nvim
+set updatetime=300
+set signcolumn=yes
+let g:coc_global_extensions = [
+  \   'coc-sh',
+  \   'coc-groovy', 'coc-java',
+  \   'coc-json',
+  \   'coc-css', 'coc-htmlhint', 'coc-html-css-support',
+  \   'coc-pyright',
+  \   'coc-snippets',
+  \   'coc-docker',
+  \   'coc-emoji'
+  \ ]
+function! CheckBackspace() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+function! ShowDocumentation()
+  if CocAction('hasProvider', 'hover')
+    call CocActionAsync('doHover')
+  else
+    call feedkeys('K', 'in')
+  endif
+endfunction
+autocmd FileType json syntax match Comment +\/\/.\+$+
+autocmd FileType html let b:coc_root_patterns = ['.git', '.env', 'tailwind.config.js', 'tailwind.config.cjs']
+inoremap <silent><expr> <DOWN>
+      \ coc#pum#visible() ? coc#pum#next(1) : CheckBackspace()
+      \                   ? "\<DOWN>" : coc#refresh()
+inoremap <expr><UP> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
+inoremap <silent><expr> <C-M>
+     \ coc#pum#visible() ? coc#pum#confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+command! -nargs=0 OR  :call CocActionAsync('runCommand', 'editor.action.organizeImport')
+nmap     <silent>[g   <Plug>(coc-diagnostic-prev)
+nmap     <silent>]g   <Plug>(coc-diagnostic-next)
+nmap     <silent>gd   <Plug>(coc-definition)
+nmap     <silent>gy   <Plug>(coc-type-definition)
+nmap     <silent>gi   <Plug>(coc-implementation)
+nmap     <silent>gr   <Plug>(coc-references)
+nnoremap <silent>K    :call ShowDocumentation()<CR>
+nmap     <leader>cl   <Plug>(coc-codelens-action)
+" coc-snippets ( ctrl-j )
+imap <C-l> <Plug>(coc-snippets-expand)
+vmap <C-j> <Plug>(coc-snippets-select)
+let g:coc_snippet_next = '<c-j>'
+let g:coc_snippet_prev = '<c-k>'
+imap <C-j> <Plug>(coc-snippets-expand-jump)
+inoremap <silent><expr> <C-j>
+      \ pumvisible() ? coc#_select_confirm() :
+      \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+      \ CheckBackSpace() ? "\<TAB>" :
+      \ coc#refresh()
+function! CheckBackSpace() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+```
 
 - open configure file ( `coc-settings.json` )
 
@@ -2475,3 +2477,53 @@ nnoremap <Leader>ebb :<C-u>call gitblame#echo()<CR>
   $ cd ${iRCHOME}/utils/fonts
   $ ./install.sh
   ```
+
+# tips
+
+## force using HTTPS for vim-plug
+
+> [!NOTE|label:references:]
+> if setup the following gitconfig, git will use `git@github.com` (ssh protocol)
+> ```bash
+> git config url."git@github.com:".insteadOf "https://github.com/"
+> ```
+> And if SSH to GitHub is unstable ( e.g.:   a corporate security appliance near the network edge intermittently injects spoofed TCP RST packets — forged to look like they come from GitHub (but exposed by a mismatched TTL) — into outbound port‑22 sessions, tearing them down mid‑handshake, while HTTPS (443) is left untouched )
+> using `https://git::@github.com` instead of `https://github.com` can avoid the problem ─ `https://git::@github.com` will not be impacted by the git config `insteadOf` setting
+
+<!--
+A corporate inline security device intermittently forges RST packets to kill outbound SSH (port 22) to GitHub; HTTPS (443) is unaffected — so it's the network, not GitHub, concurrency, or auth.
+GitHub SSH fails intermittently because something on the corporate network injects fake "connection reset" packets into port‑22 traffic to GitHub, which HTTPS avoids entirely.
+```bash
+# terminal-1
+$ sudo tcpdump -n -i en0 -vv -tttt 'tcp port 22' > /tmp/tcpdump-ssh22.log 2>&1
+
+# terminal-2
+$ for i in $(seq 30); do ssh -o BatchMode=yes -o ConnectTimeout=6 -T git@github.com >/dev/null 2>&1 || echo "fail $i"; done
+```
+-->
+
+```vim
+" for new installation, using `https://git::@github.com` instead of `https://github.com`
+let g:plug_url_format = 'https://git::@github.com/%s.git'
+```
+
+```bash
+# update all exists plugins to `https://git::@github.com`
+$ for d in ~/.vim/plugged/*/; do
+    u="$( git -C "${d}" config --get remote.origin.url 2>/dev/null )" || continue;
+    case "${u}" in
+      https://github.com/*) git -C "${d}" remote set-url origin "https://git::@github.com/${u#https://github.com/}" ;;
+    esac;
+  done
+
+# revert
+$ for d in ~/.vim/plugged/*/; do
+    u="$( git -C "${d}" config --get remote.origin.url 2>/dev/null )" || continue;
+    case "${u}" in
+      https://git::@github.com/*) git -C "${d}" remote set-url origin "https://github.com/${u#https://git::@github.com/}" ;;
+    esac;
+  done
+
+# check result
+$ for d in ~/.vim/plugged/*/; do git -C "${d}" config --get remote.origin.url; done
+```
