@@ -7,6 +7,7 @@
   - [exiftool](#exiftool)
   - [sips - images](#sips---images)
   - [identify - images](#identify---images)
+- [migrate apps](#migrate-apps)
 - [copy path](#copy-path)
   - [copy STDOUT into clipboard](#copy-stdout-into-clipboard)
   - [copy path from finder](#copy-path-from-finder)
@@ -204,6 +205,85 @@ Image:
   Endianness: Undefined
   Depth: 16-bit
   ...
+```
+
+## migrate apps
+
+> [!NOTE|label:references:]
+> ```
+> "APP.app" is damaged and can't be opened. You should move it to the Trash
+> ```
+> root cause:<br>
+> `scp -r` flattened the symlinks inside `Sparkle.framework` into duplicate real files (the links are no longer links), which broke the code-signature seal and made Gatekeeper flag the app as "damaged."
+
+```bash
+# ── with ditto ────────────────────
+# source server
+$ ditto -c -k --keepParent ~/Applications/<APP>.app <APP>.zip
+# target server
+$ scp <source>:/path/to/<APP>.zip .
+$ ditto -x -k ./<APP>.zip ~/Applications/
+
+# ── with rsync ────────────────────
+$ rsync -a <source>:~/Applications/<APP>.app ~/Applications/
+
+# ── tar + ssh ────────────────────
+$ ssh <source> 'cd ~/Application && tar czf - <APP>.app' | tar xzf - -C ~/Applications/
+```
+
+```bash
+# verify
+$ spctl -a -vvv -t exec ~/Applications/<APP>.app
+/Users/marslo/Applications/<APP>.app: accepted
+source=Notarized Developer ID
+origin=Developer ID Application: Lei Liu (CTW3P64G5P)
+```
+
+> [!NOTE|label:resource fork, Finder information, or similar detritus not allowed:]
+> - error message:
+>   ```
+>   resource fork, Finder information, or similar detritus not allowed
+>   Disallowed xattr com.apple.FinderInfo found on .../Updater.app
+>   ```
+> - check more [xattr](#xattr)
+
+```bash
+# ── error ──────────
+$ codesign --verify --deep --strict --verbose=2 ~/Applications/<APP>.app
+--prepared:/Users/marslo/Applications/<APP>.app/Contents/Frameworks/Sparkle.framework/Versions/Current/.
+--prepared:/Users/marslo/Applications/<APP>.app/Contents/Frameworks/libswift_Concurrency.dylib
+--validated:/Users/marslo/Applications/<APP>.app/Contents/Frameworks/libswift_Concurrency.dylib
+--prepared:/Users/marslo/Applications/<APP>.app/Contents/Frameworks/Sparkle.framework/Versions/Current/Autoupdate
+--validated:/Users/marslo/Applications/<APP>.app/Contents/Frameworks/Sparkle.framework/Versions/Current/Autoupdate
+--prepared:/Users/marslo/Applications/<APP>.app/Contents/Frameworks/Sparkle.framework/Versions/Current/Updater.app
+--prepared:/Users/marslo/Applications/<APP>.app/Contents/Frameworks/Sparkle.framework/Versions/Current/XPCServices/Installer.xpc
+--prepared:/Users/marslo/Applications/<APP>.app/Contents/Frameworks/Sparkle.framework/Versions/Current/XPCServices/Downloader.xpc
+/Users/marslo/Applications/<APP>.app: resource fork, Finder information, or similar detritus not allowed
+In subcomponent: /Users/marslo/Applications/<APP>.app/Contents/Frameworks/Sparkle.framework/Versions/Current/Updater.app
+file with invalid attached data: Disallowed xattr com.apple.FinderInfo found on /Users/marslo/Applications/<APP>.app/Contents/Frameworks/Sparkle.framework/Versions/Current/Updater.app
+
+# ── fix ────────────
+$ xattr -rd com.apple.FinderInfo ~/Applications/<APP>.app
+$ xattr -rd com.apple.ResourceFork ~/Applications/<APP>.app
+# or clear all ( recursive + clear )
+$ xattr -rc ~/Applications/<APP>.app
+
+# ── result ────────
+$ codesign --verify --deep --strict --verbose=2 ~/Applications/<APP>.app
+--prepared:/Users/marslo/Applications/<APP>.app/Contents/Frameworks/Sparkle.framework/Versions/Current/.
+--prepared:/Users/marslo/Applications/<APP>.app/Contents/Frameworks/libswift_Concurrency.dylib
+--validated:/Users/marslo/Applications/<APP>.app/Contents/Frameworks/libswift_Concurrency.dylib
+--prepared:/Users/marslo/Applications/<APP>.app/Contents/Frameworks/Sparkle.framework/Versions/Current/XPCServices/Downloader.xpc
+--prepared:/Users/marslo/Applications/<APP>.app/Contents/Frameworks/Sparkle.framework/Versions/Current/Autoupdate
+--validated:/Users/marslo/Applications/<APP>.app/Contents/Frameworks/Sparkle.framework/Versions/Current/Autoupdate
+--prepared:/Users/marslo/Applications/<APP>.app/Contents/Frameworks/Sparkle.framework/Versions/Current/Updater.app
+--validated:/Users/marslo/Applications/<APP>.app/Contents/Frameworks/Sparkle.framework/Versions/Current/XPCServices/Downloader.xpc
+--prepared:/Users/marslo/Applications/<APP>.app/Contents/Frameworks/Sparkle.framework/Versions/Current/XPCServices/Installer.xpc
+--validated:/Users/marslo/Applications/<APP>.app/Contents/Frameworks/Sparkle.framework/Versions/Current/XPCServices/Installer.xpc
+--validated:/Users/marslo/Applications/<APP>.app/Contents/Frameworks/Sparkle.framework/Versions/Current/Updater.app
+--validated:/Users/marslo/Applications/<APP>.app/Contents/Frameworks/Sparkle.framework/Versions/Current/.
+/Users/marslo/Applications/<APP>.app: valid on disk
+/Users/marslo/Applications/<APP>.app: satisfies its Designated Requirement
 ```
 
 ## copy path
