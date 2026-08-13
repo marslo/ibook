@@ -275,6 +275,7 @@
     * [others](tools/app/others.md)
 * [quotes](quotes/quotes.md)
 * [english](english/symbols.md)
+  * [variable names](english/varnames.md)
 
 <!---
 vim:tabstop=2:softtabstop=2:shiftwidth=2:expandtab:filetype=markdown:foldmethod=indent:

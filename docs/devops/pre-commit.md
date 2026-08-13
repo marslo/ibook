@@ -6,6 +6,7 @@
   - [init hook in repo](#init-hook-in-repo)
   - [automatic upgrade to latest version](#automatic-upgrade-to-latest-version)
   - [migrate-config](#migrate-config)
+  - [check yaml validation](#check-yaml-validation)
   - [clean and uninstall](#clean-and-uninstall)
 - [run](#run)
   - [run with manual stage](#run-with-manual-stage)
@@ -50,8 +51,19 @@ $ pre-commit autoupdate --repo https://github.com/pre-commit/pre-commit-hooks
 ```
 
 ### migrate-config
+
 ```bash
 $ pre-commit migrate-config
+```
+
+### check yaml validation
+
+```bash
+# validate .pre-commit-config.yaml
+$ pre-commit validate-config
+
+# validate .pre-commit-hooks.yaml
+$ pre-commit validate-manifest
 ```
 
 ### clean and uninstall
