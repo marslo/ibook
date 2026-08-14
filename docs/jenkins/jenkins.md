@@ -2,6 +2,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [basic](#basic)
+  - [get Jenkins version](#get-jenkins-version)
   - [Java requirements](#java-requirements)
   - [CPS](#cps)
   - [Viewing Jenkins Jobs' Configuration as XML](#viewing-jenkins-jobs-configuration-as-xml)
@@ -36,6 +37,18 @@
 {% endhint %}
 
 ## basic
+
+### get Jenkins version
+
+```bash
+# lts
+$ curl -sL https://updates.jenkins.io/stable/latestCore.txt
+2.568.2
+
+# weekly
+$ curl -sL https://updates.jenkins.io/current/latestCore.txt
+2.577
+```
 
 ### [Java requirements](https://www.jenkins.io/doc/administration/requirements/java/)
 

@@ -4,7 +4,8 @@
 - [groovy & jenkinsfile](#groovy--jenkinsfile)
   - [groovy libs setup](#groovy-libs-setup)
   - [jenkins libs setup](#jenkins-libs-setup)
-  - [coc settings](#coc-settings)
+  - [lsp-gdoc](#lsp-gdoc)
+  - [vim and nvim settings](#vim-and-nvim-settings)
   - [environment variables](#environment-variables)
   - [enhanced groovy tree-sitter](#enhanced-groovy-tree-sitter)
 
@@ -21,11 +22,15 @@
 > - download all groovy jar files with `-sources.jar` && `-javadoc.jar`
 
 ```bash
-# install and setup
-$ curl -fsSL https://github.com/marslo/mytools/raw/main/itool/groovy-libs.sh | bash -s -- --groovy --groovy-libs --path /opt/groovy
+# download <name>-sources.jar and <name>-javadoc.jar
+$ curl -fsSL https://github.com/marslo/mytools/raw/main/itool/groovy-libs.sh | bash -s -- --groovy --with-libs --path /opt/groovy
 
-# check help
-$ curl -fsSL https://github.com/marslo/mytools/raw/main/itool/groovy-libs.sh | bash -s -- --help
+#                                                                                                      + <name>-sources.jar and <name>-javadoc.jar
+#                                                                                                      v           + <name>.jar
+$ curl -fsSL https://github.com/marslo/mytools/raw/main/itool/groovy-libs.sh | bash -s -- --groovy --with-libs --with-bin --path /opt/groovy
+
+# ── to cleanup ──
+$ curl -fsSL https://github.com/marslo/mytools/raw/main/itool/groovy-libs.sh | bash -s -- --clean
 ```
 
 ## jenkins libs setup
@@ -34,23 +39,55 @@ $ curl -fsSL https://github.com/marslo/mytools/raw/main/itool/groovy-libs.sh | b
 > - setup and linked all jar file into `${HOME}/.groovy/lib/`
 
 ```bash
-$ curl -fsSL https://github.com/marslo/mytools/raw/main/itool/jenkins-libs.sh | bash -s -- --lts --ln --path /opt/jenkins
+#                                                                                                  + ln -sf to ~/.groovy/lib
+#                                                                                                  |      + <name>-sources.jar
+#                                                                                                  v      v       + <name>-javadoc.jar
+$ curl -fsSL https://github.com/marslo/mytools/raw/main/itool/jenkins-libs.sh | bash -s -- --lts --ln --sources --javadoc --path /opt/jenkins
 
-# check help
-$ curl -fsSL https://github.com/marslo/mytools/raw/main/itool/jenkins-libs.sh | bash -s -- --help
+# ── to cleanup ──
+$ curl -fsSL https://github.com/marslo/mytools/raw/main/itool/jenkins-libs.sh | bash -s -- --clean
 ```
 
-## coc settings
+## lsp-gdoc
+```bash
+# - sources.jar : unzip '*.java''*.groovy' ----►  ~/.cache/nvim/gdoc/src/  -- ctags --►  ~/.cache/nvim/gdoc/.tags
+# - javadoc.jar : (list HTML manifest ONLY) ---►  ~/.cache/nvim/gdoc/javadoc-map.tsv
+$ curl -fsSL https://github.com/marslo/mytools/raw/main/itool/lsp-gdoc | bash -s -- --build
+
+# ── to cleanup ──
+$ curl -fsSL https://github.com/marslo/mytools/raw/main/itool/lsp-gdoc | bash -s -- --clean
+```
+
+## vim and nvim settings
 
 ```jsonc
+// ~/.config/nvim/coc-settings.json
 {
+  "groovy.enable": true,
+  "groovy.java.home": "/opt/homebrew/Cellar/openjdk@21/21.0.12/libexec/openjdk.jdk/Contents/Home",
   "groovy.project.referencedLibraries": [
+    "/opt/homebrew/opt/groovy/libexec/lib/*",
     "/opt/groovy/latest/*",
-    "$HOME/.groovy/lib/*",
     "/opt/jenkins/latest/WEB-INF/lib/*",
-    "/opt/homebrew/opt/groovy/libexec/lib/*"
+    "/Users/marslo/.groovy/lib/*"
   ],
+  "groovy.ls.vmargs": "-noverify -Xmx2G -XX:+UseG1GC -XX:+UseStringDeduplication",
+  "groovy.trace.server": "off",
+  "groovy.ls.feature.noRoot": true,
 }
+```
+
+```vim
+" ~/.vimrc
+augroup Groovy
+  autocmd FileType groovy,Jenkinsfile setlocal tags+=~/.cache/nvim/gdoc/.tags
+augroup END
+
+augroup JavaMarkdownDoc
+  autocmd!
+  autocmd ColorScheme * highlight default link markdownLineStart markdownH1
+augroup END
+silent! highlight default link markdownLineStart markdownH1
 ```
 
 ## environment variables
