@@ -27,6 +27,7 @@
   - [screensaver](#screensaver)
   - [others](#others)
 - [check appstore version](#check-appstore-version)
+  - [fix false alarm](#fix-false-alarm)
 - [troubleshooting](#troubleshooting)
   - [`failed to connect to raw.githubusercontent.com port 443: connection refused`](#failed-to-connect-to-rawgithubusercontentcom-port-443-connection-refused)
   - [failure in `brew search` for cask formula](#failure-in-brew-search-for-cask-formula)
@@ -1039,12 +1040,60 @@ $ export PATH="${RUBY_GEM_HOME}/bin"
 ## check appstore version
 
 ```bash
-bundleId=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$HOME/Applications/Bob.app/Contents/Info.plist")
+app="$HOME/Applications/Bob.app"
+bundleId=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "${app}/Contents/Info.plist")
 trackId=$(curl -s "https://itunes.apple.com/lookup?bundleId=${bundleId}&country=cn" | jq -r '.results[0].trackId')
 latestVersion=$(curl -s "https://itunes.apple.com/lookup?id=${trackId}&country=cn" | jq -r '.results[0].version')
 
 # or search via bundleId
 trackId=$(curl -s "https://itunes.apple.com/lookup?bundleId=${bundleId}&country=cn" | jq -r '.results[] | select(.kind=="mac-software") | .version')
+```
+
+```bash
+app='/Applications/iShot Pro.app'
+bundleId=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "${app}/Contents/Info.plist")
+local="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "${app}/Contents/Info.plist" 2>/dev/null)"
+online="$(curl -fsG 'https://itunes.apple.com/lookup' --data-urlencode "bundleId=${bundleId}" --data-urlencode 'country=cn' | plutil -extract results.0.version raw -o - - )"
+echo "${bundleId}: local=${local}  online=${online}"
+# cn.better365.iShotPro: local=2.6.8  online=2.6.8
+```
+
+### fix false alarm
+
+```bash
+$ db="${HOME}/Library/Caches/com.apple.appstoreagent/storeSystem.db"
+$ sqlite3 "${db}" "SELECT bundle_id, update_state, store_software_version_id FROM mapi_app_update;"
+# ╭───────────────────────┬──────────────┬──────────────────────╮
+# │       bundle_id       │ update_state │ store_software_ve... │
+# ╞═══════════════════════╪══════════════╪══════════════════════╡
+# │ cn.better365.iShotPro │            1 │            888549430 │
+# │ com.moleskine.overlap │            0 │            889377307 │
+# ╰───────────────────────┴──────────────┴──────────────────────╯
+
+# or
+$ mapfile -t staleIds < <( sqlite3 "${db}" "SELECT bundle_id FROM mapi_app_update WHERE update_state=1;" )
+$ printf "%s\n" "${staleIds[@]}"
+cn.better365.iShotPro
+```
+
+```bash
+$ bundleId='cn.better365.iShotPro'
+$ db="$HOME/Library/Caches/com.apple.appstoreagent/storeSystem.db"
+$ killall appstored appstoreagent 2>/dev/null
+
+# ── force reset with bundle_id ──
+$ sqlite3  "UPDATE mapi_app_update SET update_state=0 WHERE bundle_id='${bundleId}';"
+# ── force reset all ──
+$ for bundleId in "${staleIds[@]}"; do
+    sqlite3 "${db}" "UPDATE mapi_app_update SET update_state=0 WHERE bundle_id='${bundleId}';"
+  done
+```
+
+```bash
+# clean the badge count
+$ defaults write com.apple.appstored BadgeCount -int 0
+$ defaults delete com.apple.appstored BadgeCount 2>/dev/null
+killall appstored appstoreagent 2>/dev/null
 ```
 
 ## troubleshooting

@@ -1645,6 +1645,15 @@ $ defaults delete com.apple.QuickTimePlayerX MGEnableCCAndSubtitlesOnOpen
 ```
 
 ### App Store
+
+![App Store... 1 update](../screenshot/osx/appstore-update.png)
+
+```bash
+# App Store... 1 update
+$ defaults write com.apple.appstored BadgeCount -int 0
+$ killall appstored appstoreagent 2>/dev/null
+```
+
 ```bash
 # enable the webkit developer tools
 $ defaults write com.apple.appstore WebKitDeveloperExtras -bool true
