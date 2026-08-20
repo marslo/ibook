@@ -3,6 +3,7 @@
 
 - [brew command](#brew-command)
 - [homebrew installation](#homebrew-installation)
+  - [using `https://git::@github.com`](#using-httpsgitgithubcom)
 - [homebrew caskroom installation](#homebrew-caskroom-installation)
 - [brew install](#brew-install)
   - [batch install](#batch-install)
@@ -111,6 +112,53 @@ $ /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/inst
   origin  git@github.com:Homebrew/homebrew-core (push)
   ```
 
+### using `https://git::@github.com`
+
+> [!TIP|label:reason:]
+> - [* iMarslo: force using https for vim plug](../../vim/plugins/plugins.md#force-using-https-for-vim-plug)
+
+```bash
+# check
+$ for d in "$(brew --repo)" $(brew --repo)/Library/Taps/*/*; do
+    u=$( git -C "${d}" config --get remote.origin.url 2>/dev/null ) || continue
+    echo "${d} -> ${u}"
+  done
+```
+
+```bash
+# change for https://github.com -> https://git::@github.com
+$ for d in "$(brew --repo)" $(brew --repo)/Library/Taps/*/*; do
+    u="$( git -C "${d}" config --get remote.origin.url 2>/dev/null )" || continue;
+    case "${u}" in
+      https://github.com/* ) git -C "${d}" remote set-url origin "https://git::@github.com/${u#https://github.com/}"; echo "changed: ${d}" ;;
+    esac
+  done
+
+# change all types -> https://git::@github.com
+$ for d in "$(brew --repo)" $(brew --repo)/Library/Taps/*/*; do
+    u=$( git -C "${d}" config --get remote.origin.url 2>/dev/null ) || continue
+    case "${u}" in
+      https://github.com/*   ) path="${u#https://github.com/}"   ;;
+      http://github.com/*    ) path="${u#http://github.com/}"    ;;
+      ssh://git@github.com/* ) path="${u#ssh://git@github.com/}" ;;
+      git@github.com:*       ) path="${u#git@github.com:}"       ;;
+      git://github.com/*     ) path="${u#git://github.com/}"     ;;
+      *                      ) continue                          ;;
+    esac
+    new="https://git::@github.com/${path%.git}"
+    [ "${u}" != "${new}" ] && git -C "${d}" remote set-url origin "$new" && echo "changed: ${d} -> ${new}"
+  done
+```
+
+```bash
+# revert back https://git::@github.com -> https://github.com
+for d in "$(brew --repo)" "$(brew --repo)"/Library/Taps/*/*; do
+  u=$( git -C "${d}" config --get remote.origin.url 2>/dev/null ) || continue
+  case "${u}" in
+    https://git::@github.com/* ) git -C "${d}" remote set-url origin "https://github.com/${u#https://git::@github.com/}"; echo "revert: ${d}" ;;
+  esac
+done
+```
 
 ## homebrew caskroom installation
 ```bash
