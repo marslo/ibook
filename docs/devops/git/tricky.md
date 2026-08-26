@@ -35,6 +35,7 @@
   - [replace sensitive words in all files](#replace-sensitive-words-in-all-files)
   - [cleanup repo](#cleanup-repo)
 - [textcov + gitattributes](#textcov--gitattributes)
+- [injecting git config via environment variables (`GIT_CONFIG_COUNT`)](#injecting-git-config-via-environment-variables-git_config_count)
 - [others](#others)
   - [case-sensitive repo in osx](#case-sensitive-repo-in-osx)
   - [disk size](#disk-size)
@@ -1083,6 +1084,53 @@ $ cat ~/.gitconfig
 ```bash
 $ cat ~/.gitattributes
 stylus-*.json    diff=stylus-json
+```
+
+## injecting git config via environment variables (`GIT_CONFIG_COUNT`)
+
+> [!TIP|label:tips:]
+> - git ≥ `2.31` supports injecting config through environment variables. Equivalent to the command-line `-c section.key=value`, but it is **inherited by child processes**.
+> - use case scenarios: `GIT_CONFIG_COUNT=x pre-commit run xxx`
+> - tips:
+>   - highest precedence: env config is applied **after** all config files, so it overrides same-named keys in `~/.gitconfig` etc.
+>   - affects only the current process and its children; it expires when the command exits and writes to no config file.
+
+| VARIABLE               | MEANING                                                  |
+| ---------------------- | -------------------------------------------------------- |
+| `GIT_CONFIG_COUNT=<n>` | number of entries to inject; git reads indices `0 … n-1` |
+| `GIT_CONFIG_KEY_<i>`   | key of entry `i`, full `section.key` (with the dot)      |
+| `GIT_CONFIG_VALUE_<i>` | value of entry `i`                                       |
+
+i.e.:
+
+| VARIABLE                                                                                                                        | GIT CONFIG                                     |
+| ------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
+| `GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=color.diff GIT_CONFIG_VALUE_0=auto`                                                        | `git -c color.diff=auto`                       |
+| `GIT_CONFIG_COUNT=2 GIT_CONFIG_KEY_0=color.diff GIT_CONFIG_VALUE_0=auto GIT_CONFIG_KEY_1=diff.colormoved GIT_CONFIG_VALUE_1=no` | `git -c color.diff=auto -c diff.colormoved=no` |
+
+> [!NOTE|label:background]
+> `color.diff=always` forces color onto piped output, activating `colorMoved`+`allow-indentation-change`, which hangs the git diff inside pre-commit on large diffs; injecting `color.diff=auto` via env fixes it
+>> ```bash
+>> $ git config --show-scope --show-origin --get diff.colorMoved
+>> global  file:/Users/marslo/.gitconfig zebra
+>> $ git config --show-scope --show-origin --get diff.colorMovedWS
+>> global  file:/Users/marslo/.gitconfig allow-indentation-change
+>> # or
+>> $ git config --show-scope --show-origin --get color.diff
+>> global file:/Users/marslo/.marslo/gitconfig.d/gitcolors  always
+>> ```
+
+```bash
+# == -c color.diff=auto
+$ GIT_CONFIG_COUNT=1 \
+    GIT_CONFIG_KEY_0=color.diff GIT_CONFIG_VALUE_0=auto \
+    pre-commit run --all-files
+
+# == -c color.diff=auto -c diff.colormoved=no
+$ GIT_CONFIG_COUNT=2 \
+    GIT_CONFIG_KEY_0=color.diff      GIT_CONFIG_VALUE_0=auto \
+    GIT_CONFIG_KEY_1=diff.colormoved GIT_CONFIG_VALUE_1=no \
+    pre-commit run --all-files
 ```
 
 ## others

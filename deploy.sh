@@ -126,6 +126,11 @@ function updateBook() {
     cd "${target}" || exit
 
     command -v pre-commit >/dev/null 2>&1 && test -f "$(git rev-parse --show-toplevel)/.pre-commit-config.yaml" && {
+      # color.diff=always forces ANSI into pre-commit's piped `git diff`, which activates colormoved+allow-indentation-change and hangs on large diffs:
+      # == -c color.diff=auto -c diff.colormoved=no pre-commit run --all-files
+      GIT_CONFIG_COUNT=2 \
+      GIT_CONFIG_KEY_0=color.diff      GIT_CONFIG_VALUE_0=auto \
+      GIT_CONFIG_KEY_1=diff.colormoved GIT_CONFIG_VALUE_1=no \
       pre-commit run --all-files
     }
     git add --all .
