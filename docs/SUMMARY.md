@@ -75,6 +75,7 @@
     * [troubleshooting](devops/git/troubleshooting.md)
     * [tricky](devops/git/tricky.md)
     * [statistics](devops/git/statistics.md)
+    * [diff tools](devops/git/diff-tools.md)
   * [github](devops/github/github.md)
     * [cli](devops/github/cli.md)
     * [api](devops/github/api.md)
