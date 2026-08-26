@@ -7,9 +7,9 @@
     "ibook:prepare": "gitbook install",
     "ibook:watch": "npm run ibook:prepare && gitbook serve",
     "ibook:dev": "cd books && gitbook serve --config=../book.json",
-    "clean": "[ -d node_modules ] && rm -rf node_modules; [ -d _book ] && rm -rf _book",
-    "builtall": "[ -d node_modules ] && rm -rf node_modules; [ -d _book ] && rm -rf _book; gitbook install && gitbook build --log=debug --debug",
-    "built": "[ -d _book ] && rm -rf _book; gitbook build --log=debug --debug",
+    "clean": "test -d node_modules && rm -rf node_modules; [ -d _book ] && rm -rf _book",
+    "builtall": "test -d node_modules && rm -rf node_modules; [ -d _book ] && rm -rf _book; gitbook install && gitbook build --log=debug --debug",
+    "built": "test -d _book && rm -rf _book; gitbook build --log=debug --debug",
     "ibook": "gitbook install && gitbook serve",
     "deploy": "bash deploy.sh doDeploy"
   },
