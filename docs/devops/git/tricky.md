@@ -35,7 +35,7 @@
   - [replace sensitive words in all files](#replace-sensitive-words-in-all-files)
   - [cleanup repo](#cleanup-repo)
 - [textcov + gitattributes](#textcov--gitattributes)
-- [injecting git config via environment variables (`GIT_CONFIG_COUNT`)](#injecting-git-config-via-environment-variables-git_config_count)
+- [injecting git config via environment variables](#injecting-git-config-via-environment-variables)
 - [others](#others)
   - [case-sensitive repo in osx](#case-sensitive-repo-in-osx)
   - [disk size](#disk-size)
@@ -1086,13 +1086,16 @@ $ cat ~/.gitattributes
 stylus-*.json    diff=stylus-json
 ```
 
-## injecting git config via environment variables (`GIT_CONFIG_COUNT`)
+## injecting git config via environment variables
 
 > [!TIP|label:tips:]
-> - git ≥ `2.31` supports injecting config through environment variables. Equivalent to the command-line `-c section.key=value`, but it is **inherited by child processes**.
+> - references:
+>   - [`GIT_CONFIG_COUNT`](https://git-scm.com/docs/git-config#Documentation/git-config.txt-GITCONFIGCOUNT)
+>   - git ≥ `2.31` supports injecting config through environment variables. Equivalent to the command-line `-c section.key=value`, but it is **inherited by child processes**.
 > - use case scenarios: `GIT_CONFIG_COUNT=x pre-commit run xxx`
 > - tips:
->   - highest precedence: env config is applied **after** all config files, so it overrides same-named keys in `~/.gitconfig` etc.
+>   - precedence: env config overrides **all config files**, but is itself overridden by `git -c key=value` on the command line — so it is **not** the highest.
+>     - order (low → high): `system` < `global` (`~/.gitconfig`) < `repo` (`.git/config`) < `worktree` < `GIT_CONFIG_*` env < `git -c`
 >   - affects only the current process and its children; it expires when the command exits and writes to no config file.
 
 | VARIABLE               | MEANING                                                  |

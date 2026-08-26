@@ -1,8 +1,71 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+- [common](#common)
+- [differences](#differences)
+- [configuration](#configuration)
+  - [`--no-ext-diff` / `--no-pager` behavior matrix](#--no-ext-diff----no-pager-behavior-matrix)
+- [common pitfalls](#common-pitfalls)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 > [!TIP]
-> - `difft` is an **external diff** (it replaces git's diff engine)
-> - `delta` and `diff-highlight` are **pagers** (they only prettify the unified diff git already produced).
+> - `difft` is an _external diff_ **engine**
+> - `delta` and `diff-highlight` are **pagers** (they only prettify the unified diff git already produced)
+
+<table style="border-collapse:collapse">
+  <style>
+    table td, table th { vertical-align: middle; text-align: left; }
+  </style>
+  <thead>
+    <tr>
+      <th>TOOL</th>
+      <th>TYPE</th>
+      <th>IMPACT — examples</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>difft</code></td>
+      <td>external diff<br/><b>engine</b></td>
+      <td>
+        it <b>replaces</b> git's diff computation, so <b>anything git normally does at the diff layer is skipped</b> — <code>textconv</code> is just one example:
+        <ul>
+          <li><code>textconv</code> — diffs the raw blob, not the converted text (binary / JSON / <code>hexdump</code> drivers)</li>
+          <li><code>.gitattributes</code> <code>diff=&lt;driver&gt;</code> — custom <code>xfuncname</code> hunk headers, <code>wordRegex</code>, etc.</li>
+          <li>render / normalize flags — <code>--color-words</code>, <code>--word-diff</code>, <code>diff.colorMoved</code> (zebra), <code>-w</code> / <code>--ignore-*-space</code>, <code>diff.orderFile</code></li>
+          <li>output is <b>not a unified patch</b> → <code>git apply</code> / <code>patch</code> / most review tools can't consume it</li>
+          <li>still fine: <code>--stat</code> / <code>--numstat</code> / <code>-S</code>/<code>-G</code> pickaxe (git computes these, not the engine)</li>
+          <li>only <code>--no-ext-diff</code> bypasses it</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td><code>delta</code></td>
+      <td rowspan="2"><b>pager</b><br/><sub>(restyles the diff<br/>git already produced)</sub></td>
+      <td>
+        <ul>
+          <li>honors <code>textconv</code>, <code>--color-words</code>, etc. for free (they run upstream)</li>
+          <li>nothing to render when there's no diff → <code>git log -1</code> (no <code>-p</code>) looks unchanged</li>
+          <li><code>--no-ext-diff</code> does <b>not</b> disable it — use <code>--no-pager</code></li>
+          <li>double-colors when <code>color.diff=always</code> (feed it <code>--no-color</code>)</li>
+          <li>chokes on non-unified input (e.g. piping difft's output → mangled)</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td><code>diff-highlight</code></td>
+      <td>
+        same pager model as delta, lighter:
+        <ul>
+          <li>passes unknown lines through untouched → tolerant of foreign input</li>
+          <li>word-level emphasis only; no line numbers / side-by-side</li>
+          <li><code>--no-ext-diff</code> does <b>not</b> disable it — use <code>--no-pager</code></li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
 
 ## common
 
@@ -12,16 +75,16 @@
 
 ## differences
 
-| Aspect                                 | `difft` (difftastic)                           | `delta` (git-delta)                                           | `diff-highlight`                                                                                   |
-| -------------------------------------- | ---------------------------------------------- | ------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
-| category                               | **external diff** — replaces git's diff engine | **pager** — reads git's unified diff                          | **pager** (perl filter), same class as delta                                                       |
-| diff algorithm                         | own **structural / syntax-tree (AST)** diff    | git's line-level diff; only recolors/reformats                | git's line-level diff; adds word-level emphasis                                                    |
-| config entry                           | `[diff] external` / `GIT_EXTERNAL_DIFF`        | `[core] pager` / `[pager] <cmd>`                              | `[core] pager` / `[pager] <cmd>`                                                                   |
-| bypassed by                            | `git diff --no-ext-diff` ✅                    | `git --no-pager` / auto-off on non-tty                        | `git --no-pager` /  `git -c core.pager=cat` auto-off on non-tty                                    |
-| can act as external?                   | yes (it *is* the external)                     | **no** — doesn't take `GIT_EXTERNAL_DIFF`'s 7 positional args | **no** — same as delta                                                                             |
-| line numbers / side-by-side / navigate | side-by-side, syntax coloring                  | line numbers, side-by-side, `navigate`, hyperlinks            | none, word-level emphasis only                                                                     |
-| parseable (for scripts/grep)           | no (own format, not unified)                   | yes (with `--no-pager` it's git's native diff)                | yes (same as left)                                                                                 |
-| install                                | `brew install difftastic`                      | `brew install git-delta`                                      | ships with git contrib `$(brew --prefix git)/share/git-core/contrib/diff-highlight/diff-highlight` |
+| ASPECT                                 | `difft` (difftastic)                           | `delta` (git-delta)                                            | `diff-highlight`                                                                                   |
+| -------------------------------------- | ---------------------------------------------- | -------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| category                               | **external diff** — replaces git's diff engine | **pager** — reads git's unified diff                           | **pager** (perl filter), same class as delta                                                       |
+| diff algorithm                         | own **structural / syntax-tree (AST)** diff    | git's line-level diff; only recolors/reformats                 | git's line-level diff; adds word-level emphasis                                                    |
+| config entry                           | `[diff] external` / `GIT_EXTERNAL_DIFF`        | `[core] pager` / `[pager] <cmd>`                               | `[core] pager` / `[pager] <cmd>`                                                                   |
+| bypassed by                            | `git diff --no-ext-diff` ✅                    | `git --no-pager` / `git -c core.pager=cat` auto-off on non-tty | `git --no-pager` / auto-off on non-tty                                                             |
+| can act as external?                   | yes (it *is* the external)                     | **no** — doesn't take `GIT_EXTERNAL_DIFF`'s 7 positional args  | **no** — same as delta                                                                             |
+| line numbers / side-by-side / navigate | side-by-side, syntax coloring                  | line numbers, side-by-side, `navigate`, hyperlinks             | none, word-level emphasis only                                                                     |
+| parseable (for scripts/grep)           | no (own format, not unified)                   | yes (with `--no-pager` it's git's native diff)                 | yes (same as left)                                                                                 |
+| install                                | `brew install difftastic`                      | `brew install git-delta`                                       | ships with git contrib `$(brew --prefix git)/share/git-core/contrib/diff-highlight/diff-highlight` |
 
 ## configuration
 
@@ -43,11 +106,11 @@
       <td>
 <pre><code>[core]
   pager        = delta
-[interactive]
-  diffFilter   = delta --color-only
 [pager]
   diff         = delta
-  log          = delta</code></pre>
+  log          = delta
+[interactive]
+  diffFilter   = delta --color-only</code></pre>
       </td>
       <td>
 <pre><code>[core]
@@ -86,7 +149,7 @@
   file-style               = bold "#89b4fa"
   file-decoration-style    = "#585b70" ul</code></pre>
       </td>
-      <td><i>none — word-level emphasis only;</i><br/><i>tune the trailing <code>less</code> flags</i></td>
+      <td><i>none — word-level emphasis only; tune the trailing <code>less</code> flags</i></td>
       <td><i>not via gitconfig — </i>env vars:
 <pre><code>DFT_DISPLAY=side-by-side
 DFT_SYNTAX_HIGHLIGHT=on
@@ -103,7 +166,7 @@ DFT_TAB_WIDTH=2</code></pre>
       </td>
       <td>
 <pre><code>[alias]
-  dh = "!git --no-pager diff --no-ext-diff \"$@\" | diff-highlight | less -R"</code></pre>
+  dh = "!f() { git --no-pager diff --no-ext-diff \"$@\" | diff-highlight | less -RFX; }; f"</code></pre>
       </td>
       <td>
 <pre><code>[alias]
@@ -111,6 +174,18 @@ DFT_TAB_WIDTH=2</code></pre>
   rd  = -c diff.external=difft diff @{u}..@
   pd  = -c diff.external=difft diff @{-1}..@
   nd  = -c diff.external=difft diff --name-status</code></pre>
+      </td>
+    </tr>
+    <tr>
+      <td><b>FORCE-USE</b><br/><sub>one-off; ignores<br/>current pager &amp; engine</sub></td>
+      <td>
+<pre><code>git --no-pager diff --no-ext-diff | delta</code></pre>
+      </td>
+      <td>
+<pre><code>git --no-pager diff --no-ext-diff | diff-highlight | less -R</code></pre>
+      </td>
+      <td>
+<pre><code>git --no-pager -c diff.external=difft diff --ext-diff</code></pre>
       </td>
     </tr>
     <tr>
@@ -134,7 +209,7 @@ git -c pager.diff=false diff
 
 ### `--no-ext-diff` / `--no-pager` behavior matrix
 
-| COMMAND                  | INTERACTIVE TERMINAL (TTY)                                                 | PIPE / CAPTURE `$(...)` / `\| grep`                            |
+| COMMAND                  | INTERACTIVE TERMINAL (TTY)                                                 | PIPE / CAPTURE `$(...)` / <code>&#124; grep</code>             |
 | ------------------------ | -------------------------------------------------------------------------- | -------------------------------------------------------------- |
 | `git diff`               | delta-rendered                                                             | plain unified diff (pager auto-off)                            |
 | `git diff --no-ext-diff` | still delta (pager applies on tty; `--no-ext-diff` only disables external) | **plain unified diff** ✅ (neither external nor pager applies) |

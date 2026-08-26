@@ -25,6 +25,7 @@
   - [add to bash_completion.d](#add-to-bash_completiond)
 - [tig](#tig)
   - [install from source](#install-from-source)
+  - [tigrc](#tigrc)
 - [troubleshooting](#troubleshooting)
   - [`ld: archive member '/' not a mach-o file`](#ld-archive-member--not-a-mach-o-file)
 
@@ -1072,6 +1073,33 @@ make[1]: Leaving directory '/home/marslo/iMarslo/tools/git/tools/tig'
   tig version 2.5.8-17-ge543cfe
   ncursesw version 6.1.20180224
   ```
+
+## tigrc
+
+> [!NOTE|label:references:]
+> - [External user-defined command](https://jonas.github.io/tig/doc/tigrc.5.html)
+
+| FLAG | MEANING                                                                                           |
+| ---- | ------------------------------------------------------------------------------------------------- |
+| `!`  | run in the foreground with output shown — pauses with `Press Enter to continue` when it finishes |
+| `@`  | run in the background with no output                                                              |
+| `+`  | run synchronously and echo the first line of output to the status bar                             |
+| `?`  | prompt for confirmation before running                                                            |
+| `<`  | exit Tig after running the command                                                                |
+| `>`  | re-open Tig instantly in the last displayed view after running                                    |
+
+```bash
+$ cat ~/.tigrc
+# using delta as diff tool
+bind diff    D  >sh -c "git --no-pager show --no-ext-diff --textconv %(commit) | delta"
+bind main    D  >sh -c "git --no-pager show --no-ext-diff --textconv %(commit) | delta"
+bind status  D  >sh -c "git --no-pager diff --no-ext-diff -- %(file)           | delta"
+
+# using difftastic (difft) as diff tool
+bind diff    F  >sh -c "GIT_EXTERNAL_DIFF='difft --color always' git --no-pager show --ext-diff %(commit) | less -R"
+bind main    F  >sh -c "GIT_EXTERNAL_DIFF='difft --color always' git --no-pager show --ext-diff %(commit) | less -R"
+bind status  F  >sh -c "GIT_EXTERNAL_DIFF='difft --color always' git --no-pager diff HEAD -- %(file)      | less -R"
+```
 
 # troubleshooting
 
