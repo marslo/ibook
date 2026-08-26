@@ -24,7 +24,7 @@ require(['gitbook', 'jQuery'], function(gitbook, $) {
     expand(activeChapter.parents(CHAPTER));
 
 
-  } 
+  }
   var toggle = function ($chapter) {
     if ($chapter.hasClass('expanded')) {
       collapse($chapter);
@@ -64,5 +64,5 @@ require(['gitbook', 'jQuery'], function(gitbook, $) {
   }
   gitbook.events.bind('page.change', function() {
     init()
-  }); 
+  });
 });

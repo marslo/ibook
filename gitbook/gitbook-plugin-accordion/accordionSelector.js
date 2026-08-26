@@ -3,7 +3,7 @@ function addAccordionSelectors(){
 	Object.keys(accordions)
 		.forEach(function(index){
 			accordions[index].onclick = function(event){
-				
+
 				if(	event.target.className !== "accordionButton" &&
 					event.target.className !== "accordionTitle" &&
 					event.target.className !== "accordionSpinnerBox" &&
@@ -11,7 +11,7 @@ function addAccordionSelectors(){
 				) return null;
 
 				event.stopPropagation();
-				
+
 				accordions[index].className = ~accordions[index].className.indexOf('accordionClose')
 					? 'accordion'
 					: 'accordion accordionClose';

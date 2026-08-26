@@ -38,7 +38,7 @@
     color: #7F0000;
 }
 
-/* 
+/*
     ensure compatibility with js-sequence plugin.
     This hide strategy ensures the diagram is rendered with proper sizing
     before being brought into view
