@@ -34,6 +34,7 @@
   - [rewrite the commit history](#rewrite-the-commit-history)
   - [replace sensitive words in all files](#replace-sensitive-words-in-all-files)
   - [cleanup repo](#cleanup-repo)
+- [textcov + gitattributes](#textcov--gitattributes)
 - [others](#others)
   - [case-sensitive repo in osx](#case-sensitive-repo-in-osx)
   - [disk size](#disk-size)
@@ -1049,6 +1050,39 @@ $ git filter-repo --replace-text replace.txt
 ```bash
 # cleanup the repo by removing blobs bigger than 50MB
 $ git filter-repo --strip-blobs-bigger-than 50M
+```
+
+## textcov + gitattributes
+
+> [!NOTE|label:references:]
+> **reason**:
+> - Stylus browser-extension exports are minified: the whole document sits on one very long line, and CSS bodies are stored as string values with `\n` escaped inline. A raw `git diff` shows the entire file as a single changed line and is unreadable
+> **solution**: a git **textconv** diff driver
+> - `~/.gitattributes`: routes matching paths to the driver
+> - gitconfig: `[diff "stylus-json"]` section defines the driver and points to a script that expands Stylus JSON files for diffing
+> - `stylus-expand.sh`: expands Stylus JSON files for diffing, using `jq` to pretty-print the JSON and `sed` to replace escaped newlines with actual newlines. If `jq` fails (e.g., if the file is not valid JSON), it falls back to simply outputting the original file content
+
+```bash
+#!/usr/bin/env bash
+# ~/.marslo/gitconfig.d/bin/stylus-expand.sh
+
+set -euo pipefail
+
+jq '.' "$1" 2>/dev/null | sed 's/\\n/\n/g' || cat "$1"
+
+# vim:tabstop=2:softtabstop=2:shiftwidth=2:expandtab:filetype=sh:
+```
+
+```bash
+$ cat ~/.gitconfig
+[diff "stylus-json"]
+  textconv          = ~/.marslo/gitconfig.d/bin/stylus-expand.sh
+  cachetextconv     = true
+```
+
+```bash
+$ cat ~/.gitattributes
+stylus-*.json    diff=stylus-json
 ```
 
 ## others
