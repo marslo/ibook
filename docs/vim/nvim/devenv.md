@@ -60,7 +60,7 @@ $ curl -fsSL https://github.com/marslo/mytools/raw/main/itool/lsp-gdoc | bash -s
 
 ## vim and nvim settings
 
-```jsonc
+```json5
 // ~/.config/nvim/coc-settings.json
 {
   "groovy.enable": true,
