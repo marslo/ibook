@@ -105,3 +105,25 @@ $ sudo sed 's/^#\?\$nrconf{restart}.*/$nrconf{restart} = "a";/' -i /etc/needrest
 $ grep 'nrconf{restart}' /etc/needrestart/needrestart.conf
 $nrconf{restart} = "a";
 ```
+
+# do-release-upgrade
+
+```bash
+# start tmux session
+$ tmux new -s upgrade
+
+# upgrade and cleanup with current system
+$ sudo apt update && sudo apt full-upgrade -y
+$ sudo apt --purge autoremove -y
+
+# make sure next LTS release is available
+$ sudo apt install -y update-manager-core
+# the expectation is `prompt=lts`
+$ grep -i '^Prompt' /etc/update-manager/release-upgrades
+
+# check enough disk space
+$ df -h /
+
+# upgrade
+$ sudo do-release-upgrade
+```
