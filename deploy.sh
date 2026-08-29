@@ -119,6 +119,7 @@ function updateBook() {
   else
     command rm -rf "${target:?}"/*
     command cp -Rf "${book}"/* "${target}"/
+    # command cp -f "${root}"/docs/linux/vnc/vnc-runbook.html "${target}"/linux/vnc/vnc-runbook.html
 
     cd "${target}" || exit
 
