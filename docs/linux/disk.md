@@ -523,6 +523,48 @@ $ sudo pvs
 > - [Moving /home with LVM](https://askubuntu.com/a/923943/92979)
 
 ### extend lv
+
+> [!NOTE|label:reference for enough VFree]
+> solution for enough VFree, just need to extend the lv and resize the filesystem
+> `lv_path` would be in format of `/dev/<VG_NAME>/<LV_NAME>`
+
+```bash
+# status
+$ sudo vgs
+  VG        #PV #LV #SN Attr   VSize   VFree
+  ubuntu-vg   1   1   0 wz--n- 276.34g 176.34g
+$ sudo lvs
+  LV        VG        Attr       LSize   Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
+  ubuntu-lv ubuntu-vg -wi-ao---- 100.00g
+
+# 1. get lv_path
+$ sudo lvs -o lv_path
+  Path
+  /dev/ubuntu-vg/ubuntu-lv
+# or
+$ sudo lvdisplay
+  --- Logical volume ---
+  LV Path                /dev/ubuntu-vg/ubuntu-lv
+  ...
+
+# 2. extend lv
+#                       + -r -> including resize the filesystem (--resizefs)
+#                       v
+$ sudo lvextend -L 200G -r /dev/ubuntu-vg/ubuntu-lv
+  Size of logical volume ubuntu-vg/ubuntu-lv changed from 100.00 GiB (25600 extents) to 200.00 GiB (51200 extents).
+  Logical volume ubuntu-vg/ubuntu-lv successfully resized.
+resize2fs 1.46.5 (30-Dec-2021)
+Filesystem at /dev/mapper/ubuntu--vg-ubuntu--lv is mounted on /; on-line resizing required
+old_desc_blocks = 13, new_desc_blocks = 25
+The filesystem on /dev/mapper/ubuntu--vg-ubuntu--lv is now 52428800 (4k) blocks long.
+# or with 2-steps: extend + resize
+$ sudo lvextend -L 200G /dev/ubuntu-vg/ubuntu-lv
+$ sudo resize2fs /dev/ubuntu-vg/ubuntu-lv
+```
+
+> [!NOTE|label:reference for add new disk/pv]
+> **pvcreate** -> **vgextend** -> **lvextend** -> **resize2fs**
+
 ```bash
 # check status
 $ sudo pvs
@@ -541,17 +583,17 @@ $ sudo dmidecode -t1
 $ sudo blkid
 $ lsblk
 
-# enable qemu-guest-agent
+# enable qemu-guest-agent - optional
 $ sudo apt-get install qemu-guest-agent
 $ sudo systemctl restart qemu-guest-agent.service
-$ sudo systemctl enable qemu-guest-agent.service
+$ sudo systemctl enable --now qemu-guest-agent.service
 $ sudo systemctl status qemu-guest-agent.service
 
 # create pv
-$ sudo pvcreate /dev/temp
+$ sudo pvcreate /dev/vdc
 
 # extend vg
-$ sudo vgextend ubuntu-vg /dev/temp
+$ sudo vgextend ubuntu-vg /dev/vdc
 
 # extend lv
 $ sudo lvextend -L +100G /dev/ubuntu-vg/ubuntu-lv-home
@@ -562,9 +604,7 @@ $ sudo resize2fs /dev/ubuntu-vg/ubuntu-lv-home
 
 > [!TIP]
 > - remove order:
->   1. lv
->   2. pv
->   3. vg
+>> **lv** -> **pv** -> **vg**
 > - [15.2.2. Removing an LVM2 Logical Volume for Swap](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/storage_administration_guide/swap-removing-lvm2)
 > - [5.3.10. Removing Volume Groups](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/logical_volume_manager_administration/vg_remove)
 > - [Linux Quick Tip: How to Delete or Remove LVM volumes](https://faun.pub/linux-quick-tip-how-to-delete-or-remove-lvm-volumes-7df4447102af)
@@ -583,20 +623,20 @@ $ sudo vgremove <vg-name>
 ```
 
 ### example
-- extends the logical volume /dev/myvg/homevol to 12 gigabytes
-  ```bash
-  $ sudo lvextend -L12G /dev/myvg/homevol
-  lvextend -- extending logical volume "/dev/myvg/homevol" to 12 GB
-  lvextend -- doing automatic backup of volume group "myvg"
-  lvextend -- logical volume "/dev/myvg/homevol" successfully extended
-  ```
-- adds another gigabyte to the logical volume /dev/myvg/homevol
-  ```bash
-  $ sudo lvextend -L+1G /dev/myvg/homevol
-  lvextend -- extending logical volume "/dev/myvg/homevol" to 13 GB
-  lvextend -- doing automatic backup of volume group "myvg"
-  lvextend -- logical volume "/dev/myvg/homevol" successfully extended
-  ```
+
+```bash
+# extends the logical volume /dev/myvg/homevol to 12 gigabytes
+$ sudo lvextend -L12G /dev/myvg/homevol
+lvextend -- extending logical volume "/dev/myvg/homevol" to 12 GB
+lvextend -- doing automatic backup of volume group "myvg"
+lvextend -- logical volume "/dev/myvg/homevol" successfully extended
+
+# adds another gigabyte to the logical volume /dev/myvg/homevol
+$ sudo lvextend -L+1G /dev/myvg/homevol
+lvextend -- extending logical volume "/dev/myvg/homevol" to 13 GB
+lvextend -- doing automatic backup of volume group "myvg"
+lvextend -- logical volume "/dev/myvg/homevol" successfully extended
+```
 
 ## others
 
