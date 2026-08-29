@@ -58,7 +58,6 @@
   .mono{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
   .eyebrow{font-family:"IBM Plex Mono",monospace; font-size:.72rem; letter-spacing:.16em; text-transform:uppercase; color:var(--accent-ink); font-weight:600}
 
-  /* ---- header ---- */
   header.doc{border-bottom:1px solid var(--border); padding-bottom:1.8rem; margin-bottom:2.4rem}
   header.doc .kick{display:flex; align-items:center; gap:.6rem; margin-bottom:1rem}
   header.doc .kick .dot{width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
@@ -68,7 +67,7 @@
     margin:.2rem 0 .5rem; text-wrap:balance;
   }
   h1 .caret{color:var(--accent)}
-  .lede{font-size:1.075rem; color:var(--muted); max-width:60ch; margin:.4rem 0 1.4rem}
+  .lede{font-size:1.075rem; color:var(--muted); max-width:62ch; margin:.4rem 0 1.4rem}
   .meta{display:flex; flex-wrap:wrap; gap:.5rem}
   .meta span{
     font-family:"IBM Plex Mono",monospace; font-size:.76rem; color:var(--muted);
@@ -76,20 +75,17 @@
   }
   .meta b{color:var(--ink); font-weight:600}
 
-  /* ---- toc ---- */
   nav.toc{
     background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
     padding:1.1rem 1.3rem; margin-bottom:2.8rem; box-shadow:var(--shadow);
   }
   nav.toc p{margin:0 0 .7rem; font-family:"IBM Plex Mono",monospace; font-size:.72rem; letter-spacing:.14em; text-transform:uppercase; color:var(--faint)}
-  nav.toc ol{margin:0; padding:0; list-style:none; display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:.35rem .9rem}
+  nav.toc ol{margin:0; padding:0; list-style:none; display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:.35rem .9rem; counter-reset:toc}
   nav.toc li{counter-increment:toc}
   nav.toc a{display:flex; gap:.6rem; align-items:baseline; border:0; color:var(--ink); font-size:.94rem; padding:.15rem 0}
   nav.toc a::before{content:counter(toc,decimal-leading-zero); font-family:"IBM Plex Mono",monospace; font-size:.76rem; color:var(--accent-ink); font-weight:600}
   nav.toc a:hover{color:var(--accent-ink)}
-  nav.toc ol{counter-reset:toc}
 
-  /* ---- sections ---- */
   section{margin:0 0 3rem; scroll-margin-top:1.5rem}
   h2{
     font-size:1.5rem; font-weight:600; letter-spacing:-.01em; line-height:1.2;
@@ -109,9 +105,7 @@
     background:var(--surface-2); border:1px solid var(--border); border-radius:5px;
     padding:.08em .38em; color:var(--ink); word-break:break-word;
   }
-  code.inl.accent{color:var(--accent-ink); border-color:color-mix(in srgb,var(--accent) 30%,var(--border))}
 
-  /* ---- terminal / code ---- */
   .term{
     background:var(--term-bg); border:1px solid var(--border); border-radius:10px;
     margin:1.1rem 0; overflow:hidden; box-shadow:var(--shadow);
@@ -130,10 +124,8 @@
   }
   .term pre .p{color:var(--term-prompt); user-select:none}
   .term pre .c{color:var(--term-comment); font-style:italic}
-  .term pre .k{color:#7fb4e8}
   .term pre b{color:#fff; font-weight:600}
 
-  /* ---- callouts ---- */
   .box{
     border:1px solid var(--border); border-left:3px solid var(--accent);
     background:var(--accent-soft); border-radius:8px; padding:.85rem 1.05rem; margin:1.2rem 0;
@@ -144,9 +136,10 @@
   .box.warn .lbl{color:var(--warn)}
   .box.danger{border-left-color:var(--danger); background:var(--danger-soft); border-color:var(--danger-bd)}
   .box.danger .lbl{color:var(--danger)}
+  .box.good{border-left-color:var(--good); background:color-mix(in srgb,var(--good) 12%,transparent); border-color:color-mix(in srgb,var(--good) 30%,var(--border))}
+  .box.good .lbl{color:var(--good)}
   .box code.inl{background:color-mix(in srgb,var(--ink) 6%,transparent)}
 
-  /* ---- tables ---- */
   .tablewrap{overflow-x:auto; margin:1.2rem 0; border:1px solid var(--border); border-radius:10px; box-shadow:var(--shadow)}
   table{border-collapse:collapse; width:100%; font-size:.9rem; min-width:520px}
   thead th{
@@ -175,12 +168,13 @@
   <header class="doc">
     <div class="kick"><span class="dot"></span><span class="eyebrow">Ops Runbook</span></div>
     <h1><span class="caret">▸</span> TigerVNC on the shared box</h1>
-    <p class="lede">Running isolated VNC desktops for several users on one Ubuntu&nbsp;22.04 server — plus the Chrome file-dialog fix, hardening, and password recovery.</p>
+    <p class="lede">Isolated VNC desktops for several users on one Xubuntu server — the browser upload-dialog saga (and how 24.04 ended it), the in-place 22.04→24.04 upgrade, hardening, and password recovery.</p>
     <div class="meta">
       <span><b>Host</b>&nbsp; sj4dl360n4u20</span>
-      <span><b>OS</b>&nbsp; Ubuntu 22.04.5</span>
-      <span><b>Desktop</b>&nbsp; XFCE 4.16</span>
-      <span><b>Server</b>&nbsp; TigerVNC 1.12</span>
+      <span><b>OS</b>&nbsp; Ubuntu 24.04.4</span>
+      <span><b>Desktop</b>&nbsp; Xfce 4.18</span>
+      <span><b>VNC</b>&nbsp; TigerVNC 1.13.1</span>
+      <span><b>Portal</b>&nbsp; xdg-desktop-portal 1.18.4</span>
       <span><b>Updated</b>&nbsp; 2026-08-29</span>
     </div>
   </header>
@@ -192,8 +186,9 @@
       <li><a href="#multi">Enable per-user VNC</a></li>
       <li><a href="#conf">Per-user config</a></li>
       <li><a href="#xstartup">xstartup reference</a></li>
-      <li><a href="#portal">Chrome dialog fix</a></li>
+      <li><a href="#uploads">Browser uploads</a></li>
       <li><a href="#migrate">Retire the custom unit</a></li>
+      <li><a href="#upgrade">22.04 → 24.04 upgrade</a></li>
       <li><a href="#security">Hardening</a></li>
       <li><a href="#passwd">Password recovery</a></li>
       <li><a href="#trouble">Troubleshooting</a></li>
@@ -208,7 +203,7 @@
       <table>
         <thead><tr><th>Display</th><th>Port</th><th>User</th><th>Service</th><th>Managed by</th></tr></thead>
         <tbody>
-          <tr><td class="mono">:1</td><td class="mono">5901</td><td>marslo <span class="tag me">owner</span></td><td class="mono">vncserver@1 → tigervncserver@:1</td><td>custom unit today; migrate in §06</td></tr>
+          <tr><td class="mono">:1</td><td class="mono">5901</td><td>marslo <span class="tag me">owner</span></td><td class="mono">tigervncserver@:1</td><td>migrated off the custom unit (§06)</td></tr>
           <tr><td class="mono">:2</td><td class="mono">5902</td><td>ubuntu <span class="tag other">guest</span></td><td class="mono">tigervncserver@:2</td><td>official mechanism</td></tr>
           <tr><td class="mono">:3</td><td class="mono">5903</td><td>iliad <span class="tag other">guest</span></td><td class="mono">tigervncserver@:3</td><td>official mechanism</td></tr>
         </tbody>
@@ -216,18 +211,19 @@
     </div>
     <div class="box">
       <span class="lbl">Why not just <code class="inl">vncserver@2</code></span>
-      <p>In the custom unit the <code class="inl">@N</code> is the <em>display number</em> and <code class="inl">User=marslo</code> is hardcoded — so <code class="inl">vncserver@2/@3</code> would open more desktops <em>as marslo</em>, not sessions for ubuntu/iliad. Other users need the official display→user mapping below.</p>
+      <p>The old hand-rolled unit hardcoded <code class="inl">User=marslo</code>, and its <code class="inl">@N</code> was the <em>display number</em> — so <code class="inl">vncserver@2/@3</code> would have opened more desktops <em>as marslo</em>, not sessions for other users. Multi-user needs the official display→user map below.</p>
     </div>
   </section>
 
   <!-- 2 -->
   <section id="multi">
     <h2><span class="num">02</span> Enable VNC for another account</h2>
-    <p class="sub">TigerVNC's packaged multi-user mechanism is already installed: a display→user map in <code class="inl">/etc/tigervnc/vncserver.users</code> plus the <code class="inl">tigervncserver@</code> unit, which launches each session as the mapped user through a real PAM login.</p>
+    <p class="sub">TigerVNC's packaged multi-user mechanism: a display→user map in <code class="inl">/etc/tigervnc/vncserver.users</code> plus the <code class="inl">tigervncserver@</code> unit, which launches each session as the mapped user through a real PAM login.</p>
     <div class="term">
       <div class="bar"><i class="d1"></i><i class="d2"></i><i class="d3"></i><span>map displays to users</span></div>
       <pre><span class="c"># /etc/tigervnc/vncserver.users — one line per display</span>
 <span class="p">$</span> sudo tee /etc/tigervnc/vncserver.users &gt;/dev/null &lt;&lt;'EOF'
+:1=marslo
 :2=ubuntu
 :3=iliad
 EOF</pre>
@@ -243,15 +239,15 @@ EOF</pre>
 <span class="p">$</span> sudo systemctl enable --now tigervncserver@:3.service</pre>
     </div>
     <div class="box">
-      <span class="lbl">Note — two independent systems</span>
-      <p>The custom <code class="inl">vncserver@</code> (marslo) and the packaged <code class="inl">tigervncserver@</code> are different units. Keep display numbers unique and never start the same display from both. Each guest also needs their own <code class="inl">~/.vnc/xstartup</code> for XFCE, or they land in the system default session.</p>
+      <span class="lbl">Note — each guest needs their own <code class="inl">~/.vnc</code></span>
+      <p>A password (<code class="inl">vncpasswd</code>) plus an <code class="inl">xstartup</code> for XFCE, or they land in the system default session. Options come from their own <code class="inl">~/.vnc/tigervnc.conf</code> (§03).</p>
     </div>
   </section>
 
   <!-- 3 -->
   <section id="conf">
     <h2><span class="num">03</span> Per-user config — <span class="mono" style="font-size:.9rem">~/.vnc/tigervnc.conf</span></h2>
-    <p class="sub">The <code class="inl">tigervncserver@</code> unit reads options from a config file, not the command line. It is <strong>Perl syntax</strong> and must end in <code class="inl">1;</code>. This is where geometry, depth and network exposure live.</p>
+    <p class="sub">The <code class="inl">tigervncserver@</code> unit reads options from a config file, not the command line. It is <strong>Perl syntax</strong> and must end in <code class="inl">1;</code>. Geometry, depth, and network exposure live here.</p>
     <div class="term">
       <div class="bar"><i class="d1"></i><i class="d2"></i><i class="d3"></i><span>~/.vnc/tigervnc.conf</span></div>
       <pre><span class="c"># Perl syntax — sourced per user</span>
@@ -262,26 +258,25 @@ EOF</pre>
     </div>
     <div class="box warn">
       <span class="lbl">Warning — the localhost default flips to “yes”</span>
-      <p>With the default <code class="inl">VncAuth</code> security type, TigerVNC defaults to <code class="inl">$localhost="yes"</code> — <strong>localhost-only</strong>, unlike the old custom unit's <code class="inl">-localhost no</code>. If you want direct network access you must set <code class="inl">$localhost="no"</code> explicitly. Otherwise guests can only reach it over an SSH tunnel — which is the safer default (see §07).</p>
+      <p>With the default <code class="inl">VncAuth</code> security type, TigerVNC defaults to <code class="inl">$localhost="yes"</code> — <strong>localhost-only</strong>, unlike the old custom unit's <code class="inl">-localhost no</code>. For direct network access set <code class="inl">$localhost="no"</code> explicitly. Otherwise guests reach it only over an SSH tunnel — the safer default (see §08).</p>
     </div>
   </section>
 
   <!-- 4 -->
   <section id="xstartup">
     <h2><span class="num">04</span> The xstartup reference</h2>
-    <p class="sub">Kept in each user's <code class="inl">~/.vnc/xstartup</code> and honored by both the custom and official units. This is the marslo copy.</p>
+    <p class="sub">Kept in each user's <code class="inl">~/.vnc/xstartup</code>. This is the marslo copy.</p>
     <div class="term">
       <div class="bar"><i class="d1"></i><i class="d2"></i><i class="d3"></i><span>~/.vnc/xstartup</span></div>
       <pre>#!/bin/sh
 unset SESSION_MANAGER
 unset DBUS_SESSION_BUS_ADDRESS
 
-<span class="c"># runtime dir (kept alive by enable-linger); avoids apps falling back to /tmp</span>
+<span class="c"># runtime dir; avoids apps falling back to /tmp (PAM login also provides it now)</span>
 test -d "/run/user/$(id -u)" &amp;&amp; export XDG_RUNTIME_DIR="/run/user/$(id -u)"
 
-<span class="c"># desktop identity (xdg-open, autostart filtering).</span>
-<span class="c"># portal is intentionally disabled; append ":GNOME" if you ever want it back</span>
-export XDG_CURRENT_DESKTOP=XFCE
+<span class="c"># desktop identity; ":GNOME" makes the portal pick the GTK FileChooser backend (UseIn=gnome)</span>
+export XDG_CURRENT_DESKTOP=XFCE:GNOME
 
 <span class="c"># clipboard bridge between vnc viewer and X</span>
 vncconfig -nowin &amp;
@@ -291,71 +286,143 @@ autocutsel -selection PRIMARY -fork
 <span class="c"># disable X screensaver / blanking</span>
 xset s off -dpms 2&gt;/dev/null
 
-<span class="c"># DPI has no tigervnc.conf knob — set it here (old unit used -dpi 120)</span>
+<span class="c"># DPI has no tigervnc.conf knob — set it here</span>
 xrandr --dpi 120 2&gt;/dev/null
 
 exec dbus-run-session -- startxfce4</pre>
     </div>
     <ul>
-      <li><strong><code class="inl">dbus-run-session</code></strong> — this XFCE session has no bus of its own (neither <code class="inl">startxfce4</code> nor the XFCE <code class="inl">xinitrc</code> starts one), and because VNC is launched from a systemd <em>system</em> service <code class="inl">XDG_RUNTIME_DIR</code> is empty, so the systemd user bus isn't the default either. <code class="inl">dbus-run-session</code> guarantees a private bus and tears it down cleanly on logout.</li>
-      <li><strong><code class="inl">XDG_RUNTIME_DIR</code> guard</strong> — set only if the dir exists (it does, thanks to <code class="inl">enable-linger</code>). Becomes redundant once you migrate to the PAM-based unit in §06.</li>
+      <li><strong><code class="inl">dbus-run-session</code></strong> — neither <code class="inl">startxfce4</code> nor the Xfce <code class="inl">xinitrc</code> starts a session bus, and (as a system-service child) <code class="inl">XDG_RUNTIME_DIR</code> isn't inherited, so the systemd user bus isn't the default either. This guarantees a private bus and tears it down cleanly on logout.</li>
+      <li><strong><code class="inl">XDG_CURRENT_DESKTOP=XFCE:GNOME</code></strong> — the <code class="inl">:GNOME</code> is what lets the portal serve the file-chooser (see §05). Drop it to <code class="inl">XFCE</code> only if you deliberately disable the portal.</li>
     </ul>
   </section>
 
   <!-- 5 -->
-  <section id="portal">
-    <h2><span class="num">05</span> Chrome upload dialog opens at <span class="mono">/</span></h2>
-    <p class="sub">Per-user fix. Chrome ≥123 hands its file dialog to <code class="inl">xdg-desktop-portal</code> when reachable, and the portal's GTK backend ignores Chrome's saved <code class="inl">last_directory</code>, opening at the filesystem root. Chrome's own preference is fine — it just isn't consulted in portal mode.</p>
-    <h3>Fix — disable the portal for your user (keep the packages)</h3>
+  <section id="uploads">
+    <h2><span class="num">05</span> Browser file uploads (Chrome &amp; Firefox)</h2>
+    <p class="sub">Chrome ≥123 and Firefox hand the file-picker to <code class="inl">xdg-desktop-portal</code> when it's reachable. How well that dialog behaves depends almost entirely on the <em>portal version</em> — which is exactly why the 24.04 upgrade mattered.</p>
+
+    <div class="box good">
+      <span class="lbl">Resolved on 24.04 — keep the portal ON</span>
+      <p>With <code class="inl">xdg-desktop-portal 1.18</code> the portal dialog now <strong>double-clicks to upload AND remembers the last folder</strong>, in both Chrome and Firefox. Nothing to configure beyond leaving the portal enabled. On 22.04's <code class="inl">1.14</code> you couldn't get both at once — the upgrade dissolved the trade-off.</p>
+    </div>
+
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Portal version</th><th>Double-click uploads</th><th>Opens at</th></tr></thead>
+        <tbody>
+          <tr><td>1.18 — Ubuntu 24.04 <span class="tag me">now</span></td><td style="color:var(--good)">yes</td><td style="color:var(--good)">last-used folder</td></tr>
+          <tr><td>1.14 — Ubuntu 22.04</td><td style="color:var(--danger)">closed dialog without uploading</td><td><code class="inl">$HOME</code> (never last dir)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>How “portal ON” is wired</h3>
+    <ul>
+      <li>Packages <code class="inl">xdg-desktop-portal</code> + <code class="inl">xdg-desktop-portal-gtk</code> installed, and <strong>no</strong> shadow file overriding the D-Bus service.</li>
+      <li><code class="inl">~/.vnc/xstartup</code> sets <code class="inl">XDG_CURRENT_DESKTOP=XFCE:GNOME</code> — the <code class="inl">:GNOME</code> is required so the portal picks the GTK <code class="inl">FileChooser</code> backend (its <code class="inl">gtk.portal</code> declares <code class="inl">UseIn=gnome</code>).</li>
+    </ul>
+
+    <h3>Fallback — turn the portal OFF (rarely needed on 24.04)</h3>
+    <p>Shadow the portal's D-Bus activation for your user and set <code class="inl">XDG_CURRENT_DESKTOP=XFCE</code>; Chrome then falls back to its own GTK dialog (remembers the dir, but on 22.04 double-click closed it without uploading). Kept for reference.</p>
     <div class="term">
-      <div class="bar"><i class="d1"></i><i class="d2"></i><i class="d3"></i><span>shadow the portal's D-Bus activation</span></div>
+      <div class="bar"><i class="d1"></i><i class="d2"></i><i class="d3"></i><span>disable the portal for your user</span></div>
       <pre><span class="p">$</span> mkdir -p ~/.local/share/dbus-1/services
 <span class="p">$</span> tee ~/.local/share/dbus-1/services/org.freedesktop.portal.Desktop.service &lt;&lt;'EOF'
 [D-BUS Service]
 Name=org.freedesktop.portal.Desktop
 Exec=/bin/false
 EOF
-<span class="c"># then restart the session</span></pre>
+<span class="c"># restart the session; delete the file to re-enable</span></pre>
     </div>
-    <p>The user-level file outranks the one in <code class="inl">/usr/share</code>, so activating the portal runs <code class="inl">/bin/false</code> and fails → Chrome sees “no portal” and falls back to its built-in GTK dialog, which remembers the last folder. Revert by deleting the file and restarting the session.</p>
     <div class="box warn">
       <span class="lbl">Warning — <code class="inl">systemctl --user mask</code> does NOT work here</span>
-      <p>This session runs on a <code class="inl">dbus-launch</code>/<code class="inl">dbus-run-session</code> bus whose <code class="inl">session.conf</code> has no systemd activation, so the portal is activated <em>directly</em> by dbus-daemon — masking the systemd unit is bypassed. Shadowing the D-Bus service file is the reliable, bus-agnostic lever.</p>
+      <p>The session runs on a <code class="inl">dbus-run-session</code> bus whose <code class="inl">session.conf</code> has no systemd activation, so the portal is activated <em>directly</em> by dbus-daemon — masking the systemd unit is bypassed. Shadowing the D-Bus service file is the reliable, bus-agnostic lever.</p>
     </div>
-    <div class="box">
-      <span class="lbl">Note — it's per user</span>
-      <p>The shadow lives in one user's <code class="inl">~/.local</code>. Each guest who uses Chrome hits the same <code class="inl">/</code> problem and needs the same file in their own home.</p>
+
+    <h3>Firefox — install the deb, not the snap</h3>
+    <p>The snap build fails in this VNC session with <code class="inl">… is not a snap cgroup for tag snap.firefox.firefox</code> (snap-confine can't track the session's cgroup). Use Mozilla's apt repo, like the deb Chrome, and pin it so upgrades never switch it back to the snap:</p>
+    <div class="term">
+      <div class="bar"><i class="d1"></i><i class="d2"></i><i class="d3"></i><span>firefox: mozilla deb + pin out the snap</span></div>
+      <pre><span class="p">$</span> sudo install -d -m 0755 /etc/apt/keyrings
+<span class="p">$</span> wget -q https://packages.mozilla.org/apt/repo-signing-key.gpg -O- \
+    | sudo tee /etc/apt/keyrings/packages.mozilla.org.asc &gt; /dev/null
+<span class="p">$</span> echo "deb [signed-by=/etc/apt/keyrings/packages.mozilla.org.asc] https://packages.mozilla.org/apt mozilla main" \
+    | sudo tee /etc/apt/sources.list.d/mozilla.list &gt; /dev/null
+
+<span class="c"># pin: Mozilla's firefox wins (1000), Ubuntu's snap-stub blocked (-1)</span>
+<span class="p">$</span> sudo tee /etc/apt/preferences.d/mozilla-firefox &gt;/dev/null &lt;&lt;'EOF'
+Package: firefox*
+Pin: origin packages.mozilla.org
+Pin-Priority: 1000
+
+Package: firefox*
+Pin: release o=Ubuntu
+Pin-Priority: -1
+EOF
+<span class="p">$</span> sudo apt update; sudo snap remove firefox 2&gt;/dev/null; sudo apt purge -y firefox; sudo apt install -y firefox</pre>
     </div>
   </section>
 
   <!-- 6 -->
   <section id="migrate">
-    <h2><span class="num">06</span> Retire the custom unit (optional)</h2>
-    <p class="sub">The hand-rolled <code class="inl">/etc/systemd/system/vncserver@.service</code> is redundant: run marslo's <code class="inl">:1</code> through the same official mechanism. Bonus — <code class="inl">tigervncsession</code> opens a real PAM session, so <code class="inl">XDG_RUNTIME_DIR</code> is populated for free.</p>
+    <h2><span class="num">06</span> Retire the custom unit</h2>
+    <p class="sub"><span class="tag me">done</span> marslo's <code class="inl">:1</code> was moved off the hand-rolled <code class="inl">/etc/systemd/system/vncserver@.service</code> onto the official mechanism. Bonus — <code class="inl">tigervncsession</code> opens a real PAM login, so <code class="inl">XDG_RUNTIME_DIR</code> is populated for free.</p>
     <ol class="steps">
-      <li>Move CLI options to <code class="inl">~/.vnc/tigervnc.conf</code> (§03) — <code class="inl">geometry</code>, <code class="inl">depth</code>, <code class="inl">localhost</code>.</li>
-      <li>Move <code class="inl">-dpi 120</code> into <code class="inl">~/.vnc/xstartup</code> (§04) — it has no config knob.</li>
-      <li><code class="inl">~/.vnc/xstartup</code> carries over automatically — no change needed there.</li>
+      <li>CLI options moved to <code class="inl">~/.vnc/tigervnc.conf</code> (§03) — <code class="inl">geometry</code>, <code class="inl">depth</code>, <code class="inl">localhost</code>.</li>
+      <li><code class="inl">-dpi 120</code> moved into <code class="inl">~/.vnc/xstartup</code> (§04) — no config knob for it.</li>
+      <li><code class="inl">~/.vnc/xstartup</code> carries over automatically.</li>
     </ol>
     <div class="term">
       <div class="bar"><i class="d1"></i><i class="d2"></i><i class="d3"></i><span>switch marslo onto the official unit</span></div>
-      <pre><span class="c"># add marslo to the map alongside :2 / :3</span>
-<span class="p">$</span> grep -q '^:1=' /etc/tigervnc/vncserver.users \
-    || echo ':1=marslo' | sudo tee -a /etc/tigervnc/vncserver.users
-
-<span class="c"># swap the units</span>
+      <pre><span class="c"># :1=marslo added to /etc/tigervnc/vncserver.users, then:</span>
 <span class="p">$</span> sudo systemctl disable --now vncserver@1.service
-<span class="p">$</span> sudo systemctl enable  --now tigervncserver@:1.service
-
-<span class="c"># optional: remove the now-unused custom unit</span>
-<span class="p">$</span> sudo rm /etc/systemd/system/vncserver@.service
-<span class="p">$</span> sudo systemctl daemon-reload</pre>
+<span class="p">$</span> sudo systemctl enable  --now tigervncserver@:1.service</pre>
+    </div>
+    <div class="box">
+      <span class="lbl">Note — custom unit disabled, kept as a fallback</span>
+      <p><code class="inl">/etc/systemd/system/vncserver@.service</code> is <code class="inl">disabled</code> but <strong>not deleted</strong>. It survived the 24.04 upgrade and <code class="inl">tigervncserver@:1</code> auto-starts on boot. Rollback: <code class="inl">sudo systemctl disable --now tigervncserver@:1 &amp;&amp; sudo systemctl enable --now vncserver@1</code>.</p>
     </div>
   </section>
 
   <!-- 7 -->
+  <section id="upgrade">
+    <h2><span class="num">07</span> The 22.04 → 24.04 upgrade</h2>
+    <p class="sub">Done in-place over SSH with <code class="inl">do-release-upgrade</code>. The gotchas below are the ones that actually bit.</p>
+    <div class="term">
+      <div class="bar"><i class="d1"></i><i class="d2"></i><i class="d3"></i><span>the upgrade itself</span></div>
+      <pre><span class="c"># ALWAYS in tmux/screen — a dropped SSH mid-upgrade can wreck the box</span>
+<span class="p">$</span> tmux new -s upgrade
+<span class="p">$</span> sudo apt update &amp;&amp; sudo apt full-upgrade -y &amp;&amp; sudo apt --purge autoremove -y
+<span class="p">$</span> sudo do-release-upgrade   <span class="c"># opens a backup sshd on :1022; keep old configs (sshd_config!)</span></pre>
+    </div>
+
+    <h3>Disk was 88% full — grow the LV online</h3>
+    <p><code class="inl">/</code> is an LVM ext4 volume with free space in the VG. Extend it live — no unmount, no reboot, no data loss (growing is safe; only <em>shrinking</em> is risky):</p>
+    <div class="term">
+      <div class="bar"><i class="d1"></i><i class="d2"></i><i class="d3"></i><span>lvextend + online resize2fs in one step</span></div>
+      <pre><span class="p">$</span> sudo lvextend -L 200G -r /dev/ubuntu-vg/ubuntu-lv   <span class="c"># -r also grows the ext4 fs</span></pre>
+    </div>
+    <div class="box">
+      <span class="lbl">Note — when the VG itself is full (VFree = 0)</span>
+      <p>Feed capacity from the bottom first: a new disk → <code class="inl">pvcreate</code> + <code class="inl">vgextend</code>; or an enlarged disk → <code class="inl">growpart</code> + <code class="inl">pvresize</code>. Then <code class="inl">lvextend -r</code>. Diagnose with <code class="inl">vgs</code> (VFree) and <code class="inl">pvs</code> (PFree). Canonical LV path: <code class="inl">lvs -o lv_path</code>.</p>
+    </div>
+
+    <h3>After the upgrade: third-party apt repos</h3>
+    <p><code class="inl">do-release-upgrade</code> disables third-party sources (renames them <code class="inl">*.list.distUpgrade</code>). Re-enable the ones you use for <code class="inl">noble</code>. Two bit us:</p>
+    <div class="box warn">
+      <span class="lbl">Marvell Artifactory mirror — 24.04's apt rejects it as unsigned</span>
+      <p>The mirror serves an <strong>unsigned</strong> <code class="inl">Release</code> (<code class="inl">Origin: Artifactory</code>; no <code class="inl">InRelease</code>/<code class="inl">Release.gpg</code>, no key endpoint), so <code class="inl">Signed-By</code> is impossible. Add <code class="inl">Trusted: yes</code> to its deb822 stanza in <code class="inl">/etc/apt/sources.list.d/third-party.sources</code>. The leftover <code class="inl">N: Missing Signed-By</code> lines are harmless notices (not errors); only Artifactory-side GPG signing removes them — an IT request.</p>
+    </div>
+    <div class="box danger">
+      <span class="lbl">Firefox — the upgrade tries to revert it to the snap</span>
+      <p>With the Mozilla repo disabled during the upgrade, apt reinstalls Ubuntu's snap-transition <code class="inl">firefox</code> (the “Configuring firefox → snap” dialog). Press <code class="inl">Ok</code>, let it finish, then re-enable the Mozilla repo and apply the pin from §05 to keep the deb permanently.</p>
+    </div>
+  </section>
+
+  <!-- 8 -->
   <section id="security">
-    <h2><span class="num">07</span> Hardening</h2>
+    <h2><span class="num">08</span> Hardening</h2>
     <div class="box danger">
       <span class="lbl">Security — VNC auth is weak</span>
       <p><code class="inl">~/.vnc/passwd</code> is <strong>reversibly obfuscated</strong> (fixed DES key), not hashed, and only the first <strong>8 characters</strong> matter. Treat a VNC password as low-trust: never reuse it elsewhere.</p>
@@ -373,14 +440,14 @@ EOF
     </ul>
   </section>
 
-  <!-- 8 -->
+  <!-- 9 -->
   <section id="passwd">
-    <h2><span class="num">08</span> Forgot a VNC password</h2>
+    <h2><span class="num">09</span> Forgot a VNC password</h2>
     <h3>Just reset it — no old password needed</h3>
     <div class="term">
       <div class="bar"><i class="d1"></i><i class="d2"></i><i class="d3"></i><span>reset</span></div>
-      <pre><span class="p">$</span> vncpasswd                                   <span class="c"># rewrites ~/.vnc/passwd</span>
-<span class="p">$</span> sudo systemctl restart vncserver@1.service   <span class="c"># or tigervncserver@:2 etc.</span></pre>
+      <pre><span class="p">$</span> vncpasswd                                       <span class="c"># rewrites ~/.vnc/passwd</span>
+<span class="p">$</span> sudo systemctl restart tigervncserver@:1.service</pre>
     </div>
     <h3>Recover the old plaintext (it's decryptable)</h3>
     <p>Because the file is fixed-key DES, the original (first 8 chars) can be decrypted. The VNC key <code class="inl">{23,82,107,6,35,78,88,7}</code> is fed with each byte bit-reversed → <code class="inl">E84AD660C4721AE0</code>, which standard OpenSSL DES accepts.</p>
@@ -392,22 +459,21 @@ EOF
     </div>
     <div class="box">
       <span class="lbl">Note</span>
-      <p>Drop <code class="inl">-provider legacy -provider default</code> on OpenSSL 1.1 (it doesn't recognize the flags); Ubuntu 22.04 is OpenSSL 3 and needs them. A 16-byte file also holds a view-only password in bytes 9–16 (<code class="inl">tail -c +9 | head -c 8</code>).</p>
+      <p>OpenSSL 3 (Ubuntu 22.04+) needs <code class="inl">-provider legacy -provider default</code>; drop them on OpenSSL 1.1. A 16-byte file also holds a view-only password in bytes 9–16 (<code class="inl">tail -c +9 | head -c 8</code>).</p>
     </div>
   </section>
 
-  <!-- 9 -->
+  <!-- 10 -->
   <section id="trouble">
-    <h2><span class="num">09</span> Troubleshooting</h2>
+    <h2><span class="num">10</span> Troubleshooting</h2>
 
-    <h3>“A Xtigervnc server is already running” on restart</h3>
-    <p>The old custom unit had a latent bug — systemd runs no shell, so the redirect in <code class="inl">ExecStartPre=-/usr/bin/vncserver -kill :%i &gt; /dev/null 2&gt;&amp;1</code> became literal arguments and the pre-kill failed every time. Fix: drop the redirect (<code class="inl">ExecStartPre=-/usr/bin/vncserver -kill :%i</code>). If a restart still refuses:</p>
+    <h3>“A Xtigervnc server is already running” (legacy custom unit)</h3>
+    <p>The old custom unit had a latent bug — systemd runs no shell, so the redirect in <code class="inl">ExecStartPre=-/usr/bin/vncserver -kill :%i &gt; /dev/null 2&gt;&amp;1</code> became literal arguments and the pre-kill failed every time. Fix: drop the redirect. If a restart still refuses:</p>
     <div class="term">
       <div class="bar"><i class="d1"></i><i class="d2"></i><i class="d3"></i><span>clear a stuck display</span></div>
       <pre><span class="p">$</span> vncserver -kill :1
 <span class="c"># if it complains about stale locks:</span>
-<span class="p">$</span> rm -f /tmp/.X1-lock /tmp/.X11-unix/X1 ~/.vnc/*:1.pid
-<span class="p">$</span> sudo systemctl start vncserver@1.service</pre>
+<span class="p">$</span> rm -f /tmp/.X1-lock /tmp/.X11-unix/X1 ~/.vnc/*:1.pid</pre>
     </div>
 
     <h3>Bus / env values differ between shells — expected</h3>
@@ -417,15 +483,15 @@ EOF
         <thead><tr><th>Context</th><th>DBUS_SESSION_BUS_ADDRESS</th><th>XDG_RUNTIME_DIR</th><th>DISPLAY</th></tr></thead>
         <tbody>
           <tr><td>SSH login shell</td><td class="mono">unix:path=/run/user/1100/bus</td><td class="mono">/run/user/1100</td><td class="mono">(empty)</td></tr>
-          <tr><td>Terminal inside VNC</td><td class="mono">unix:abstract=/tmp/dbus-…</td><td class="mono">(empty)</td><td class="mono">:1.0</td></tr>
+          <tr><td>Terminal inside VNC</td><td class="mono">unix:abstract=/tmp/dbus-…</td><td class="mono">/run/user/1100</td><td class="mono">:1.0</td></tr>
         </tbody>
       </table>
     </div>
-    <p>The VNC session runs on its own <code class="inl">dbus-run-session</code> bus and (as a system-service child) has no <code class="inl">XDG_RUNTIME_DIR</code>; an SSH login gets the systemd user bus from <code class="inl">pam_systemd</code>. Migrating to the official unit (§06) makes the VNC session a proper login and fills in <code class="inl">XDG_RUNTIME_DIR</code>.</p>
+    <p>The VNC session runs on its own <code class="inl">dbus-run-session</code> bus (a <code class="inl">/tmp</code> abstract socket), while an SSH login uses the systemd user bus from <code class="inl">pam_systemd</code>. To poke the VNC session's bus from SSH, read a session process's env: <code class="inl">tr '\0' '\n' &lt; /proc/$(pgrep -u marslo -x xfce4-session)/environ</code>.</p>
   </section>
 
   <footer>
-    <b>TigerVNC runbook</b> · sj4dl360n4u20 · Ubuntu 22.04.5 / XFCE / TigerVNC 1.12
+    <b>TigerVNC runbook</b> · sj4dl360n4u20 · Ubuntu 24.04.4 · Xfce 4.18 · TigerVNC 1.13.1 · xdg-desktop-portal 1.18.4
   </footer>
 
 </div>
