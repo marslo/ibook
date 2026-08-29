@@ -524,20 +524,20 @@ $ echo $XDG_SESSION_TYPE
 > - [How to Install TightVNC to Access Remote Desktops in Linux](https://www.tecmint.com/install-tightvnc-access-remote-desktop-in-linux/)
 
 #### install
-- desktop environment
-  ```bash
-  # rhel
-  $ sudo dnf groupinstall "Server with GUI"
 
-  # debian
-  $ sudo apt install xfce4 xfce4-goodies
+```bash
+# rhel
+$ sudo dnf groupinstall "Server with GUI"
 
-  # or with Xubuntu
-  $ sudo apt-get install -y xubuntu-core^
+# debian
+$ sudo apt install xfce4 xfce4-goodies
 
-  # gnome desktop
-  $ sudo apt-get install --no-install-recommends ubuntu-desktop gnome-panel gnome-settings-daemon metacity nautilus gnome-terminal -y
-  ```
+# or with Xubuntu
+$ sudo apt-get install -y xubuntu-core^
+
+# gnome desktop
+$ sudo apt-get install --no-install-recommends ubuntu-desktop gnome-panel gnome-settings-daemon metacity nautilus gnome-terminal -y
+```
 
 - tightvncserver
   ```bash
@@ -555,23 +555,29 @@ $ echo $XDG_SESSION_TYPE
           100 /var/lib/dpkg/status
   ```
 
-- start vnc server
-  ```bash
-  $ vncserver
+```bash
+# ── start vnc server ──
+$ vncserver
+# or
+$ vncserver :1
+```
 
-  # or
-  $ vncserver :1
-  ```
+```bash
+# ── check connection ──
+$ sudo netstat -peanut | grep 'vnc'
+$ ss -ltnp | grep 'vnc'
+```
 
-- check connection
-  ```bash
-  $ sudo netstat -peanut | grep "vnc"
-  ```
+```bash
+# ── setup/change password ──
+$ vncpassword
 
-- change password
-  ```bash
-  $ vncpassword
-  ```
+# for another user
+$ sudo -iu <ACCOUNT> vncpasswd
+
+# to retrieve password
+$ openssl enc -des-ecb -d -nopad -K E84AD660C4721AE0 -provider legacy -provider default -in ~/.vnc/passwd 2>/dev/null | head -c 8 | tr -d '\0'; echo
+```
 
 - [clipman](https://docs.xfce.org/panel-plugins/xfce4-clipman-plugin/start)
   ```bash
@@ -579,10 +585,10 @@ $ echo $XDG_SESSION_TYPE
   $ xfconf-query -c xfce4-panel -lv | grep /plugins/clipman
   ```
 
-- icons
-  ```bash
-  $ gtk-update-icon-cache --force /usr/share/icons/<theme-name>
-  ```
+```bash
+# ── icons ──
+$ gtk-update-icon-cache --force /usr/share/icons/<theme-name>
+```
 
 - setup
 
@@ -1101,6 +1107,7 @@ $ xfconf-query -c xfce4-panel -lv
 
 ### [TigerVNC](https://tigervnc.org/)
 
+<!--sec data-title="legacy version" data-id="section4" data-show=true data-collapse=true ces-->
 ```bash
 # rhel
 $ sudo yum -y install tigervnc-server xorg-x11-fonts-Type1
@@ -1112,23 +1119,203 @@ $ wget https://bintray.com/artifact/download/tigervnc/stable/ubuntu-14.04LTS/amd
 $ sudo dpkg -i tigervncserver_1.6.0-3ubuntu1_amd64.deb
 $ sudo apt-get -f install
 ```
+<!--endsec-->
 
-- replace x11vnc to attach the local display
-  ```bash
-  $ x0vncserver -display :0
-  ```
+```bash
+$ sudo apt update && sudo apt install -y xfce4 xfce4-goodies tigervnc-standalone-server tigervnc-common dbus-x11
+
+# clipboard sharing
+sudo apt install -y autocutsel
+```
+
+```bash
+# ── xstartup ──
+$ mkdir -p ~/.vnc
+
+$ tee ~/.vnc/xstartup >/dev/null <<EOF
+#!/bin/sh
+# shellcheck disable=SC2155
+
+unset SESSION_MANAGER
+unset DBUS_SESSION_BUS_ADDRESS
+
+# runtime dir (kept alive by enable-linger); avoids apps falling back to /tmp
+test -d "/run/user/$(id -u)" && export XDG_RUNTIME_DIR="/run/user/$(id -u)"
+
+# desktop identity (xdg-open, autostart filtering). portal is intentionally disabled; append ":GNOME" here if you ever want it back
+export XDG_CURRENT_DESKTOP=XFCE
+
+# clipboard bridge between vnc viewer and X
+vncconfig -nowin &
+# keep PRIMARY and CLIPBOARD selections in sync
+autocutsel -fork
+autocutsel -selection PRIMARY -fork
+
+# disable X screensaver / blanking
+xset s off -dpms 2>/dev/null
+
+exec dbus-run-session -- startxfce4
+EOF
+
+$ chmod +x ~/.vnc/xstartup
+
+# setup password - view-only password: n
+$ vncpasswd
+
+# firewall setup (optional)
+$ sudo ufw allow 5901/tcp
+```
+
+#### service setup - optional
+
+> [!NOTE|label:add new geometry]
+> ```bash
+> $ xrandr --newmode "1600x1080_60.00" 144.00 1600 1704 1872 2144 1080 1083 1093 1120 -hsync +vsync
+> $ xrandr --addmode VNC-0 "1600x1080_60.00"
+>
+> # modify current session
+> $ xrandr --output VNC-0 --mode "1600x1080_60.00"
+>
+> # check all available modes
+> $ xrandr
+> ```
+
+```bash
+$ VNCUSER="$(id -un)"
+$ VNCHOME="$(getent passwd "$VNCUSER" | cut -d: -f6)"
+$ GEOMETRY='1920x1080'                      # '1600x1200'
+
+$ sudo tee /etc/systemd/system/vncserver@.service > /dev/null <<EOF
+[Unit]
+Description=TigerVNC server
+After=syslog.target network.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+User=${VNCUSER}
+WorkingDirectory=${VNCHOME}
+ExecStartPre=-/usr/bin/vncserver -kill :%i
+ExecStart=/usr/bin/vncserver :%i -localhost no -geometry ${GEOMETRY} -depth 24 -dpi 120
+ExecStop=/usr/bin/vncserver -kill :%i
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# enable and start service with port :5901
+$ sudo systemctl daemon-reload && sudo systemctl enable --now vncserver@1
+$ sudo systemctl start vncserver@1.service
+
+# check status
+$ sudo systemctl status vncserver@1 --no-pager
+
+# restart service
+$ sudo systemctl daemon-reload && sudo systemctl restart vncserver@1 --no-pager
+```
+
+```bash
+# replace x11vnc to attach the local display
+$ x0vncserver -display :0
+```
+
+#### tools and configure
+
+```bash
+# ── browser ──
+# chrome
+# install
+$ wget -O /tmp/chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && sudo apt install -y /tmp/chrome.deb
+# set chrome as default browser
+$ mkdir -p  ~/.config/xfce4
+$ printf '[Default Applications]\nWebBrowser=google-chrome\n' > ~/.config/xfce4/helpers.rc
+# test
+$ exo-open --launch WebBrowser
+
+# firefox
+# install
+$ sudo install -d -m 0755 /etc/apt/keyrings && wget -qO- https://packages.mozilla.org/apt/repo-signing-key.gpg | sudo tee /etc/apt/keyrings/packages.mozilla.org.asc > /dev/null
+$ echo 'deb [signed-by=/etc/apt/keyrings/packages.mozilla.org.asc] https://packages.mozilla.org/apt mozilla main' | sudo tee /etc/apt/sources.list.d/mozilla.list
+$ printf 'Package: *\nPin: origin packages.mozilla.org\nPin-Priority: 1000\n' | sudo tee /etc/apt/preferences.d/mozilla
+# set firefox as default browser
+$ mkdir -p ~/.config/xfce4
+$ printf '[Default Applications]\nWebBrowser=firefox\n' > ~/.config/xfce4/helpers.rc
+# test
+$ exo-open --launch WebBrowser
+```
+
+```bash
+# ── disable screensaver ──
+$ xfconf-query -c xfce4-screensaver -p /saver/enabled --create -t bool -s false
+$ xfconf-query -c xfce4-screensaver -p /lock/enabled --create -t bool -s false
+$ xset s off; xset s noblank; xset -dpms 2>/dev/null
+
+# prevent screensaver in system bootup
+$ pkill -f xfce4-screensaver
+$ mkdir -p ~/.config/autostart && cp /etc/xdg/autostart/xfce4-screensaver.desktop ~/.config/autostart/ 2>/dev/null && printf 'Hidden=true\n' >> ~/.config/autostart/xfce4-screensaver.desktop
+
+# verify
+$ xfconf-query -c xfce4-screensaver -p /saver/enabled; xfconf-query -c xfce4-screensaver -p /lock/enabled
+false
+false
+```
+
+#### chrome forgets the last upload folder under vnc
+
+> [!TIP]
+> - **Symptom**
+>> In a headless TigerVNC + XFCE session, Google Chrome's file‑upload dialog always opens at / and forgets the previously chosen folder — but only while xdg-desktop-portal and xdg-desktop-portal-gtk are installed.
+> - **Cause**
+>> Since Chrome 123, the browser delegates its native file dialog to xdg-desktop-portal whenever the portal is reachable on the session bus. The portal's GTK backend does not honor Chrome's own selectfile.last_directory preference, so every dialog starts at the filesystem root. When the portal is absent, Chrome falls back to its built‑in GTK dialog, which does remember the last folder.
+> - **Fix**
+>> - **disable the portal in user-level**. Keep the packages (they're part of the desktop stack and may be needed elsewhere), and simply shadow the portal's D‑Bus activation entry
+>> - **uninstall** xdg-desktop-portal  and xdg-desktop-portal-gtk
+
+```bash
+$ mkdir -p ~/.local/share/dbus-1/services
+$ tee ~/.local/share/dbus-1/services/org.freedesktop.portal.Desktop.service > /dev/null <<EOF
+[D-BUS Service]
+Name=org.freedesktop.portal.Desktop
+Exec=/bin/false
+EOF
+
+$ sudo systemctl daemon-reload && sudo systemctl restart vncserver@1.service
+```
+
+#### enable vnc for multiple accounts
+
+| PORT    | ACCOUNT      | COMMAND                                            |
+| ------- | ------------ | -------------------------------------------------- |
+| `:5901` | current user | `$ sudo systemctl start vncserver@1.service`       |
+| `:5902` | user-2       | `$ sudo systemctl start tigervncserver@:2.service` |
+| `:5903` | user-3       | `$ sudo systemctl start tigervncserver@:3.service` |
+
+```bash
+$ sudo tee /etc/tigervnc/vncserver.users >/dev/null <<EOF
+:2=user-2
+:3=user-3
+EOF
+
+# generate password
+$ sudo -iu user-2 vncpasswd
+$ sudo -iu user-3 vncpasswd
+
+# start service
+$ sudo systemctl enable --now tigervncserver@:2.service   # user-2
+$ sudo systemctl enable --now tigervncserver@:3.service   # user-3
+```
 
 ### [x11vnc](https://en.wikipedia.org/wiki/X11vnc)
 
-- [tips](https://help.ubuntu.com/community/VNC)
-  ```bash
-  #!/bin/sh
-
-  ssh -C -f -L 5900:localhost:5900 rebecca@rebeccas-pc.dyndns.org \
-          x11vnc -safer -localhost -nopw -once -display :0 \
-          && sleep 5 \
-          && vncviewer localhost:0
-  ```
+> [!TIP]
+> ```bash
+> #!/bin/sh
+>
+> ssh -C -f -L 5900:localhost:5900 rebecca@rebeccas-pc.dyndns.org \
+>         x11vnc -safer -localhost -nopw -once -display :0 \
+>         && sleep 5 \
+>         && vncviewer localhost:0
+> ```
 
 ### [AppleRemoteDesktop](https://help.ubuntu.com/community/AppleRemoteDesktop)
 

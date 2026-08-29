@@ -218,6 +218,7 @@
     * [authorization](linux/account.md)
     * [apps](linux/app.md)
     * [x11](linux/x11.md)
+    * [vnc](linux/vnc/vnc-runbook.md)
   * [ubuntu](linux/ubuntu/ubuntu.md)
     * [init](linux/ubuntu/init.md)
     * [file system](linux/ubuntu/fileserver.md)

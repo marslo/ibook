@@ -1,0 +1,431 @@
+<title>TigerVNC Runbook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+
+<style>
+  :root{
+    --bg:#f1f4f4; --surface:#ffffff; --surface-2:#eaefef; --border:#dde4e4;
+    --ink:#182028; --muted:#586268; --faint:#8b969b;
+    --accent:#0e7c74; --accent-ink:#0a5b54; --accent-soft:#e0efed;
+    --warn:#9c5407; --warn-soft:#f8ecdc; --warn-bd:#e6c79b;
+    --danger:#ad2b23; --danger-soft:#f8e6e4; --danger-bd:#e8bab6;
+    --good:#1c7d4d;
+    --term-bg:#0f1620; --term-panel:#0b111a; --term-ink:#ccd7e2; --term-muted:#6f7f8e;
+    --term-prompt:#54ccbe; --term-comment:#63788a; --term-bar:#1a2530;
+    --shadow:0 1px 2px rgba(16,32,40,.04), 0 6px 24px -12px rgba(16,32,40,.18);
+    --radius:12px;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --bg:#0d1116; --surface:#151b22; --surface-2:#1a222b; --border:#28323d;
+      --ink:#e7edf2; --muted:#98a5b1; --faint:#6b7883;
+      --accent:#2fc7b8; --accent-ink:#63d6ca; --accent-soft:#123531;
+      --warn:#d99a3c; --warn-soft:#2b2417; --warn-bd:#4a3d22;
+      --danger:#e78b84; --danger-soft:#2c1a19; --danger-bd:#4c2f2c;
+      --good:#4cbd82;
+      --term-bg:#0c1218; --term-panel:#080d13; --term-ink:#ccd7e2; --term-muted:#6f7f8e;
+      --term-prompt:#54ccbe; --term-comment:#5f7486; --term-bar:#141d26;
+      --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 30px -14px rgba(0,0,0,.6);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0d1116; --surface:#151b22; --surface-2:#1a222b; --border:#28323d;
+    --ink:#e7edf2; --muted:#98a5b1; --faint:#6b7883;
+    --accent:#2fc7b8; --accent-ink:#63d6ca; --accent-soft:#123531;
+    --warn:#d99a3c; --warn-soft:#2b2417; --warn-bd:#4a3d22;
+    --danger:#e78b84; --danger-soft:#2c1a19; --danger-bd:#4c2f2c;
+    --good:#4cbd82;
+    --term-bg:#0c1218; --term-panel:#080d13; --term-ink:#ccd7e2; --term-muted:#6f7f8e;
+    --term-prompt:#54ccbe; --term-comment:#5f7486; --term-bar:#141d26;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 30px -14px rgba(0,0,0,.6);
+  }
+
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:"IBM Plex Sans",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    font-size:16px; line-height:1.65;
+    -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+  }
+  .wrap{max-width:920px; margin:0 auto; padding:clamp(1.4rem,4vw,3.5rem) clamp(1rem,4vw,2rem) 5rem}
+
+  a{color:var(--accent-ink); text-decoration:none; border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+  a:hover{border-bottom-color:var(--accent)}
+  :focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:3px}
+
+  .mono{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  .eyebrow{font-family:"IBM Plex Mono",monospace; font-size:.72rem; letter-spacing:.16em; text-transform:uppercase; color:var(--accent-ink); font-weight:600}
+
+  /* ---- header ---- */
+  header.doc{border-bottom:1px solid var(--border); padding-bottom:1.8rem; margin-bottom:2.4rem}
+  header.doc .kick{display:flex; align-items:center; gap:.6rem; margin-bottom:1rem}
+  header.doc .kick .dot{width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
+  h1{
+    font-family:"IBM Plex Mono",monospace; font-weight:700;
+    font-size:clamp(1.9rem,5.2vw,2.9rem); line-height:1.05; letter-spacing:-.02em;
+    margin:.2rem 0 .5rem; text-wrap:balance;
+  }
+  h1 .caret{color:var(--accent)}
+  .lede{font-size:1.075rem; color:var(--muted); max-width:60ch; margin:.4rem 0 1.4rem}
+  .meta{display:flex; flex-wrap:wrap; gap:.5rem}
+  .meta span{
+    font-family:"IBM Plex Mono",monospace; font-size:.76rem; color:var(--muted);
+    background:var(--surface-2); border:1px solid var(--border); border-radius:999px; padding:.24rem .7rem;
+  }
+  .meta b{color:var(--ink); font-weight:600}
+
+  /* ---- toc ---- */
+  nav.toc{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+    padding:1.1rem 1.3rem; margin-bottom:2.8rem; box-shadow:var(--shadow);
+  }
+  nav.toc p{margin:0 0 .7rem; font-family:"IBM Plex Mono",monospace; font-size:.72rem; letter-spacing:.14em; text-transform:uppercase; color:var(--faint)}
+  nav.toc ol{margin:0; padding:0; list-style:none; display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:.35rem .9rem}
+  nav.toc li{counter-increment:toc}
+  nav.toc a{display:flex; gap:.6rem; align-items:baseline; border:0; color:var(--ink); font-size:.94rem; padding:.15rem 0}
+  nav.toc a::before{content:counter(toc,decimal-leading-zero); font-family:"IBM Plex Mono",monospace; font-size:.76rem; color:var(--accent-ink); font-weight:600}
+  nav.toc a:hover{color:var(--accent-ink)}
+  nav.toc ol{counter-reset:toc}
+
+  /* ---- sections ---- */
+  section{margin:0 0 3rem; scroll-margin-top:1.5rem}
+  h2{
+    font-size:1.5rem; font-weight:600; letter-spacing:-.01em; line-height:1.2;
+    margin:0 0 .3rem; padding-top:1.2rem; display:flex; align-items:baseline; gap:.7rem; text-wrap:balance;
+  }
+  h2 .num{font-family:"IBM Plex Mono",monospace; font-size:.9rem; font-weight:600; color:var(--accent-ink); background:var(--accent-soft); border-radius:6px; padding:.15rem .5rem; line-height:1; transform:translateY(-2px)}
+  h3{font-size:1.08rem; font-weight:600; margin:1.8rem 0 .4rem; color:var(--ink)}
+  .sub{color:var(--muted); margin:.1rem 0 1.1rem; max-width:64ch}
+  p{margin:.7rem 0; max-width:66ch}
+  ul,ol.steps{max-width:66ch; padding-left:1.2rem; margin:.7rem 0}
+  li{margin:.3rem 0}
+  strong{font-weight:600}
+  hr{border:0; border-top:1px solid var(--border); margin:2.5rem 0}
+
+  code.inl{
+    font-family:"IBM Plex Mono",monospace; font-size:.86em;
+    background:var(--surface-2); border:1px solid var(--border); border-radius:5px;
+    padding:.08em .38em; color:var(--ink); word-break:break-word;
+  }
+  code.inl.accent{color:var(--accent-ink); border-color:color-mix(in srgb,var(--accent) 30%,var(--border))}
+
+  /* ---- terminal / code ---- */
+  .term{
+    background:var(--term-bg); border:1px solid var(--border); border-radius:10px;
+    margin:1.1rem 0; overflow:hidden; box-shadow:var(--shadow);
+  }
+  .term .bar{
+    display:flex; align-items:center; gap:.55rem; padding:.5rem .85rem;
+    background:var(--term-bar); border-bottom:1px solid rgba(255,255,255,.05);
+  }
+  .term .bar i{width:9px;height:9px;border-radius:50%;background:#3a4653;opacity:.55}
+  .term .bar .d1{background:#e06c5b}.term .bar .d2{background:#e0b23f}.term .bar .d3{background:#59b871}
+  .term .bar span{margin-left:.3rem; font-family:"IBM Plex Mono",monospace; font-size:.7rem; letter-spacing:.06em; color:var(--term-muted); text-transform:lowercase}
+  .term pre{
+    margin:0; padding:.95rem 1.1rem; overflow-x:auto;
+    font-family:"IBM Plex Mono",monospace; font-size:.855rem; line-height:1.7; color:var(--term-ink);
+    -webkit-overflow-scrolling:touch;
+  }
+  .term pre .p{color:var(--term-prompt); user-select:none}
+  .term pre .c{color:var(--term-comment); font-style:italic}
+  .term pre .k{color:#7fb4e8}
+  .term pre b{color:#fff; font-weight:600}
+
+  /* ---- callouts ---- */
+  .box{
+    border:1px solid var(--border); border-left:3px solid var(--accent);
+    background:var(--accent-soft); border-radius:8px; padding:.85rem 1.05rem; margin:1.2rem 0;
+  }
+  .box .lbl{font-family:"IBM Plex Mono",monospace; font-size:.68rem; letter-spacing:.14em; text-transform:uppercase; font-weight:700; color:var(--accent-ink); display:block; margin-bottom:.25rem}
+  .box p{margin:.3rem 0; max-width:64ch}
+  .box.warn{border-left-color:var(--warn); background:var(--warn-soft); border-color:var(--warn-bd)}
+  .box.warn .lbl{color:var(--warn)}
+  .box.danger{border-left-color:var(--danger); background:var(--danger-soft); border-color:var(--danger-bd)}
+  .box.danger .lbl{color:var(--danger)}
+  .box code.inl{background:color-mix(in srgb,var(--ink) 6%,transparent)}
+
+  /* ---- tables ---- */
+  .tablewrap{overflow-x:auto; margin:1.2rem 0; border:1px solid var(--border); border-radius:10px; box-shadow:var(--shadow)}
+  table{border-collapse:collapse; width:100%; font-size:.9rem; min-width:520px}
+  thead th{
+    text-align:left; font-family:"IBM Plex Mono",monospace; font-size:.68rem; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--muted); font-weight:600; background:var(--surface-2); padding:.7rem .9rem; border-bottom:1px solid var(--border); white-space:nowrap;
+  }
+  tbody td{padding:.7rem .9rem; border-bottom:1px solid var(--border); vertical-align:top; background:var(--surface)}
+  tbody tr:last-child td{border-bottom:0}
+  td .mono,th .mono{font-size:.86em}
+  .tag{font-family:"IBM Plex Mono",monospace; font-size:.74rem; padding:.12rem .5rem; border-radius:5px; white-space:nowrap; display:inline-block}
+  .tag.me{background:var(--accent-soft); color:var(--accent-ink)}
+  .tag.other{background:var(--surface-2); color:var(--muted); border:1px solid var(--border)}
+
+  footer{margin-top:3.5rem; padding-top:1.5rem; border-top:1px solid var(--border); color:var(--faint); font-size:.82rem; font-family:"IBM Plex Mono",monospace}
+  footer b{color:var(--muted); font-weight:500}
+
+  @media (max-width:560px){
+    body{font-size:15px}
+    h2 .num{transform:none}
+  }
+  @media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+
+<div class="wrap">
+
+  <header class="doc">
+    <div class="kick"><span class="dot"></span><span class="eyebrow">Ops Runbook</span></div>
+    <h1><span class="caret">▸</span> TigerVNC on the shared box</h1>
+    <p class="lede">Running isolated VNC desktops for several users on one Ubuntu&nbsp;22.04 server — plus the Chrome file-dialog fix, hardening, and password recovery.</p>
+    <div class="meta">
+      <span><b>Host</b>&nbsp; sj4dl360n4u20</span>
+      <span><b>OS</b>&nbsp; Ubuntu 22.04.5</span>
+      <span><b>Desktop</b>&nbsp; XFCE 4.16</span>
+      <span><b>Server</b>&nbsp; TigerVNC 1.12</span>
+      <span><b>Updated</b>&nbsp; 2026-08-29</span>
+    </div>
+  </header>
+
+  <nav class="toc" aria-label="Contents">
+    <p>Contents</p>
+    <ol>
+      <li><a href="#map">Display map</a></li>
+      <li><a href="#multi">Enable per-user VNC</a></li>
+      <li><a href="#conf">Per-user config</a></li>
+      <li><a href="#xstartup">xstartup reference</a></li>
+      <li><a href="#portal">Chrome dialog fix</a></li>
+      <li><a href="#migrate">Retire the custom unit</a></li>
+      <li><a href="#security">Hardening</a></li>
+      <li><a href="#passwd">Password recovery</a></li>
+      <li><a href="#trouble">Troubleshooting</a></li>
+    </ol>
+  </nav>
+
+  <!-- 1 -->
+  <section id="map">
+    <h2><span class="num">01</span> Display map</h2>
+    <p class="sub">One display number per user, each a separate X server on its own port with its own <code class="inl">~/.vnc/passwd</code>. Users are isolated by construction — nobody can enter another display without that display's password.</p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Display</th><th>Port</th><th>User</th><th>Service</th><th>Managed by</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">:1</td><td class="mono">5901</td><td>marslo <span class="tag me">owner</span></td><td class="mono">vncserver@1 → tigervncserver@:1</td><td>custom unit today; migrate in §06</td></tr>
+          <tr><td class="mono">:2</td><td class="mono">5902</td><td>ubuntu <span class="tag other">guest</span></td><td class="mono">tigervncserver@:2</td><td>official mechanism</td></tr>
+          <tr><td class="mono">:3</td><td class="mono">5903</td><td>iliad <span class="tag other">guest</span></td><td class="mono">tigervncserver@:3</td><td>official mechanism</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="box">
+      <span class="lbl">Why not just <code class="inl">vncserver@2</code></span>
+      <p>In the custom unit the <code class="inl">@N</code> is the <em>display number</em> and <code class="inl">User=marslo</code> is hardcoded — so <code class="inl">vncserver@2/@3</code> would open more desktops <em>as marslo</em>, not sessions for ubuntu/iliad. Other users need the official display→user mapping below.</p>
+    </div>
+  </section>
+
+  <!-- 2 -->
+  <section id="multi">
+    <h2><span class="num">02</span> Enable VNC for another account</h2>
+    <p class="sub">TigerVNC's packaged multi-user mechanism is already installed: a display→user map in <code class="inl">/etc/tigervnc/vncserver.users</code> plus the <code class="inl">tigervncserver@</code> unit, which launches each session as the mapped user through a real PAM login.</p>
+    <div class="term">
+      <div class="bar"><i class="d1"></i><i class="d2"></i><i class="d3"></i><span>map displays to users</span></div>
+      <pre><span class="c"># /etc/tigervnc/vncserver.users — one line per display</span>
+<span class="p">$</span> sudo tee /etc/tigervnc/vncserver.users &gt;/dev/null &lt;&lt;'EOF'
+:2=ubuntu
+:3=iliad
+EOF</pre>
+    </div>
+    <div class="term">
+      <div class="bar"><i class="d1"></i><i class="d2"></i><i class="d3"></i><span>per-user password + start</span></div>
+      <pre><span class="c"># each user gets their OWN password (run as that user)</span>
+<span class="p">$</span> sudo -iu ubuntu vncpasswd
+<span class="p">$</span> sudo -iu iliad  vncpasswd
+
+<span class="c"># start now + on boot (instance name includes the colon)</span>
+<span class="p">$</span> sudo systemctl enable --now tigervncserver@:2.service
+<span class="p">$</span> sudo systemctl enable --now tigervncserver@:3.service</pre>
+    </div>
+    <div class="box">
+      <span class="lbl">Note — two independent systems</span>
+      <p>The custom <code class="inl">vncserver@</code> (marslo) and the packaged <code class="inl">tigervncserver@</code> are different units. Keep display numbers unique and never start the same display from both. Each guest also needs their own <code class="inl">~/.vnc/xstartup</code> for XFCE, or they land in the system default session.</p>
+    </div>
+  </section>
+
+  <!-- 3 -->
+  <section id="conf">
+    <h2><span class="num">03</span> Per-user config — <span class="mono" style="font-size:.9rem">~/.vnc/tigervnc.conf</span></h2>
+    <p class="sub">The <code class="inl">tigervncserver@</code> unit reads options from a config file, not the command line. It is <strong>Perl syntax</strong> and must end in <code class="inl">1;</code>. This is where geometry, depth and network exposure live.</p>
+    <div class="term">
+      <div class="bar"><i class="d1"></i><i class="d2"></i><i class="d3"></i><span>~/.vnc/tigervnc.conf</span></div>
+      <pre><span class="c"># Perl syntax — sourced per user</span>
+<b>$geometry</b>  = "1920x1080";
+<b>$depth</b>     = "24";
+<b>$localhost</b> = "no";   <span class="c"># listen on all interfaces; "yes" = localhost-only</span>
+1;</pre>
+    </div>
+    <div class="box warn">
+      <span class="lbl">Warning — the localhost default flips to “yes”</span>
+      <p>With the default <code class="inl">VncAuth</code> security type, TigerVNC defaults to <code class="inl">$localhost="yes"</code> — <strong>localhost-only</strong>, unlike the old custom unit's <code class="inl">-localhost no</code>. If you want direct network access you must set <code class="inl">$localhost="no"</code> explicitly. Otherwise guests can only reach it over an SSH tunnel — which is the safer default (see §07).</p>
+    </div>
+  </section>
+
+  <!-- 4 -->
+  <section id="xstartup">
+    <h2><span class="num">04</span> The xstartup reference</h2>
+    <p class="sub">Kept in each user's <code class="inl">~/.vnc/xstartup</code> and honored by both the custom and official units. This is the marslo copy.</p>
+    <div class="term">
+      <div class="bar"><i class="d1"></i><i class="d2"></i><i class="d3"></i><span>~/.vnc/xstartup</span></div>
+      <pre>#!/bin/sh
+unset SESSION_MANAGER
+unset DBUS_SESSION_BUS_ADDRESS
+
+<span class="c"># runtime dir (kept alive by enable-linger); avoids apps falling back to /tmp</span>
+test -d "/run/user/$(id -u)" &amp;&amp; export XDG_RUNTIME_DIR="/run/user/$(id -u)"
+
+<span class="c"># desktop identity (xdg-open, autostart filtering).</span>
+<span class="c"># portal is intentionally disabled; append ":GNOME" if you ever want it back</span>
+export XDG_CURRENT_DESKTOP=XFCE
+
+<span class="c"># clipboard bridge between vnc viewer and X</span>
+vncconfig -nowin &amp;
+autocutsel -fork
+autocutsel -selection PRIMARY -fork
+
+<span class="c"># disable X screensaver / blanking</span>
+xset s off -dpms 2&gt;/dev/null
+
+<span class="c"># DPI has no tigervnc.conf knob — set it here (old unit used -dpi 120)</span>
+xrandr --dpi 120 2&gt;/dev/null
+
+exec dbus-run-session -- startxfce4</pre>
+    </div>
+    <ul>
+      <li><strong><code class="inl">dbus-run-session</code></strong> — this XFCE session has no bus of its own (neither <code class="inl">startxfce4</code> nor the XFCE <code class="inl">xinitrc</code> starts one), and because VNC is launched from a systemd <em>system</em> service <code class="inl">XDG_RUNTIME_DIR</code> is empty, so the systemd user bus isn't the default either. <code class="inl">dbus-run-session</code> guarantees a private bus and tears it down cleanly on logout.</li>
+      <li><strong><code class="inl">XDG_RUNTIME_DIR</code> guard</strong> — set only if the dir exists (it does, thanks to <code class="inl">enable-linger</code>). Becomes redundant once you migrate to the PAM-based unit in §06.</li>
+    </ul>
+  </section>
+
+  <!-- 5 -->
+  <section id="portal">
+    <h2><span class="num">05</span> Chrome upload dialog opens at <span class="mono">/</span></h2>
+    <p class="sub">Per-user fix. Chrome ≥123 hands its file dialog to <code class="inl">xdg-desktop-portal</code> when reachable, and the portal's GTK backend ignores Chrome's saved <code class="inl">last_directory</code>, opening at the filesystem root. Chrome's own preference is fine — it just isn't consulted in portal mode.</p>
+    <h3>Fix — disable the portal for your user (keep the packages)</h3>
+    <div class="term">
+      <div class="bar"><i class="d1"></i><i class="d2"></i><i class="d3"></i><span>shadow the portal's D-Bus activation</span></div>
+      <pre><span class="p">$</span> mkdir -p ~/.local/share/dbus-1/services
+<span class="p">$</span> tee ~/.local/share/dbus-1/services/org.freedesktop.portal.Desktop.service &lt;&lt;'EOF'
+[D-BUS Service]
+Name=org.freedesktop.portal.Desktop
+Exec=/bin/false
+EOF
+<span class="c"># then restart the session</span></pre>
+    </div>
+    <p>The user-level file outranks the one in <code class="inl">/usr/share</code>, so activating the portal runs <code class="inl">/bin/false</code> and fails → Chrome sees “no portal” and falls back to its built-in GTK dialog, which remembers the last folder. Revert by deleting the file and restarting the session.</p>
+    <div class="box warn">
+      <span class="lbl">Warning — <code class="inl">systemctl --user mask</code> does NOT work here</span>
+      <p>This session runs on a <code class="inl">dbus-launch</code>/<code class="inl">dbus-run-session</code> bus whose <code class="inl">session.conf</code> has no systemd activation, so the portal is activated <em>directly</em> by dbus-daemon — masking the systemd unit is bypassed. Shadowing the D-Bus service file is the reliable, bus-agnostic lever.</p>
+    </div>
+    <div class="box">
+      <span class="lbl">Note — it's per user</span>
+      <p>The shadow lives in one user's <code class="inl">~/.local</code>. Each guest who uses Chrome hits the same <code class="inl">/</code> problem and needs the same file in their own home.</p>
+    </div>
+  </section>
+
+  <!-- 6 -->
+  <section id="migrate">
+    <h2><span class="num">06</span> Retire the custom unit (optional)</h2>
+    <p class="sub">The hand-rolled <code class="inl">/etc/systemd/system/vncserver@.service</code> is redundant: run marslo's <code class="inl">:1</code> through the same official mechanism. Bonus — <code class="inl">tigervncsession</code> opens a real PAM session, so <code class="inl">XDG_RUNTIME_DIR</code> is populated for free.</p>
+    <ol class="steps">
+      <li>Move CLI options to <code class="inl">~/.vnc/tigervnc.conf</code> (§03) — <code class="inl">geometry</code>, <code class="inl">depth</code>, <code class="inl">localhost</code>.</li>
+      <li>Move <code class="inl">-dpi 120</code> into <code class="inl">~/.vnc/xstartup</code> (§04) — it has no config knob.</li>
+      <li><code class="inl">~/.vnc/xstartup</code> carries over automatically — no change needed there.</li>
+    </ol>
+    <div class="term">
+      <div class="bar"><i class="d1"></i><i class="d2"></i><i class="d3"></i><span>switch marslo onto the official unit</span></div>
+      <pre><span class="c"># add marslo to the map alongside :2 / :3</span>
+<span class="p">$</span> grep -q '^:1=' /etc/tigervnc/vncserver.users \
+    || echo ':1=marslo' | sudo tee -a /etc/tigervnc/vncserver.users
+
+<span class="c"># swap the units</span>
+<span class="p">$</span> sudo systemctl disable --now vncserver@1.service
+<span class="p">$</span> sudo systemctl enable  --now tigervncserver@:1.service
+
+<span class="c"># optional: remove the now-unused custom unit</span>
+<span class="p">$</span> sudo rm /etc/systemd/system/vncserver@.service
+<span class="p">$</span> sudo systemctl daemon-reload</pre>
+    </div>
+  </section>
+
+  <!-- 7 -->
+  <section id="security">
+    <h2><span class="num">07</span> Hardening</h2>
+    <div class="box danger">
+      <span class="lbl">Security — VNC auth is weak</span>
+      <p><code class="inl">~/.vnc/passwd</code> is <strong>reversibly obfuscated</strong> (fixed DES key), not hashed, and only the first <strong>8 characters</strong> matter. Treat a VNC password as low-trust: never reuse it elsewhere.</p>
+    </div>
+    <p>For a shared server, don't leave the ports open. Prefer <strong>localhost-only + SSH tunnel</strong>:</p>
+    <div class="term">
+      <div class="bar"><i class="d1"></i><i class="d2"></i><i class="d3"></i><span>connect over ssh — from the client</span></div>
+      <pre><span class="c"># set $localhost="yes" in tigervnc.conf, then tunnel the port</span>
+<span class="p">$</span> ssh -L 5902:localhost:5902 ubuntu@sj4dl360n4u20
+<span class="c"># then point the VNC viewer at  localhost:5902</span></pre>
+    </div>
+    <ul>
+      <li>Only SSH-authenticated users can reach the VNC port — the biggest single win.</li>
+      <li>If you must expose ports (<code class="inl">$localhost="no"</code>), firewall <code class="inl">5901-5903</code> to trusted IPs and give each user a distinct password.</li>
+    </ul>
+  </section>
+
+  <!-- 8 -->
+  <section id="passwd">
+    <h2><span class="num">08</span> Forgot a VNC password</h2>
+    <h3>Just reset it — no old password needed</h3>
+    <div class="term">
+      <div class="bar"><i class="d1"></i><i class="d2"></i><i class="d3"></i><span>reset</span></div>
+      <pre><span class="p">$</span> vncpasswd                                   <span class="c"># rewrites ~/.vnc/passwd</span>
+<span class="p">$</span> sudo systemctl restart vncserver@1.service   <span class="c"># or tigervncserver@:2 etc.</span></pre>
+    </div>
+    <h3>Recover the old plaintext (it's decryptable)</h3>
+    <p>Because the file is fixed-key DES, the original (first 8 chars) can be decrypted. The VNC key <code class="inl">{23,82,107,6,35,78,88,7}</code> is fed with each byte bit-reversed → <code class="inl">E84AD660C4721AE0</code>, which standard OpenSSL DES accepts.</p>
+    <div class="term">
+      <div class="bar"><i class="d1"></i><i class="d2"></i><i class="d3"></i><span>decrypt — prints to your own terminal only</span></div>
+      <pre><span class="p">$</span> openssl enc -des-ecb -d -nopad -K E84AD660C4721AE0 \
+    -provider legacy -provider default \
+    -in ~/.vnc/passwd 2&gt;/dev/null | head -c 8 | tr -d '\0'; echo</pre>
+    </div>
+    <div class="box">
+      <span class="lbl">Note</span>
+      <p>Drop <code class="inl">-provider legacy -provider default</code> on OpenSSL 1.1 (it doesn't recognize the flags); Ubuntu 22.04 is OpenSSL 3 and needs them. A 16-byte file also holds a view-only password in bytes 9–16 (<code class="inl">tail -c +9 | head -c 8</code>).</p>
+    </div>
+  </section>
+
+  <!-- 9 -->
+  <section id="trouble">
+    <h2><span class="num">09</span> Troubleshooting</h2>
+
+    <h3>“A Xtigervnc server is already running” on restart</h3>
+    <p>The old custom unit had a latent bug — systemd runs no shell, so the redirect in <code class="inl">ExecStartPre=-/usr/bin/vncserver -kill :%i &gt; /dev/null 2&gt;&amp;1</code> became literal arguments and the pre-kill failed every time. Fix: drop the redirect (<code class="inl">ExecStartPre=-/usr/bin/vncserver -kill :%i</code>). If a restart still refuses:</p>
+    <div class="term">
+      <div class="bar"><i class="d1"></i><i class="d2"></i><i class="d3"></i><span>clear a stuck display</span></div>
+      <pre><span class="p">$</span> vncserver -kill :1
+<span class="c"># if it complains about stale locks:</span>
+<span class="p">$</span> rm -f /tmp/.X1-lock /tmp/.X11-unix/X1 ~/.vnc/*:1.pid
+<span class="p">$</span> sudo systemctl start vncserver@1.service</pre>
+    </div>
+
+    <h3>Bus / env values differ between shells — expected</h3>
+    <p>Values depend on <em>where</em> you run the command, not on any misconfig:</p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Context</th><th>DBUS_SESSION_BUS_ADDRESS</th><th>XDG_RUNTIME_DIR</th><th>DISPLAY</th></tr></thead>
+        <tbody>
+          <tr><td>SSH login shell</td><td class="mono">unix:path=/run/user/1100/bus</td><td class="mono">/run/user/1100</td><td class="mono">(empty)</td></tr>
+          <tr><td>Terminal inside VNC</td><td class="mono">unix:abstract=/tmp/dbus-…</td><td class="mono">(empty)</td><td class="mono">:1.0</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>The VNC session runs on its own <code class="inl">dbus-run-session</code> bus and (as a system-service child) has no <code class="inl">XDG_RUNTIME_DIR</code>; an SSH login gets the systemd user bus from <code class="inl">pam_systemd</code>. Migrating to the official unit (§06) makes the VNC session a proper login and fills in <code class="inl">XDG_RUNTIME_DIR</code>.</p>
+  </section>
+
+  <footer>
+    <b>TigerVNC runbook</b> · sj4dl360n4u20 · Ubuntu 22.04.5 / XFCE / TigerVNC 1.12
+  </footer>
+
+</div>

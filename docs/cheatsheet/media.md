@@ -7,6 +7,7 @@
   - [download video](#download-video)
   - [convert flv to mp4](#convert-flv-to-mp4)
   - [convert png to mp4](#convert-png-to-mp4)
+  - [convert mov to gif](#convert-mov-to-gif)
   - [scale the media](#scale-the-media)
   - [combine video and audio](#combine-video-and-audio)
   - [compression mov](#compression-mov)
@@ -81,6 +82,26 @@ $ ffmpeg -i name.flv -qscale 0 name.mp4
 
 ```bash
 $ ffmpeg -r 1/5 -i pic-%02d.png -c:v libx264 -r 30 -pix_fmt yuv420p out.mp4
+```
+
+### convert mov to gif
+
+> [!NOTE|label:get part of video]
+> `-ss <START_TIMESTAMP> -t <DURATION>`. i.e.:
+> - `-ss 00:00:30 -t 3` : means start at 30 seconds and last for 3 seconds.
+> key options:
+> - `fps=15`: [fps](https://ffmpeg.org/ffmpeg-filters.html#fps) filter sets the frame rate. Higher FPS result in smoother playback but larger file sizes
+> - `scale=640:-1`: resize the output to 640 pixels wide and automatically determine the height. `-1` means the height is automatically calculated to maintain the aspect ratio
+> - `flags=lanczos`: the [lanczos scaling algorithm](https://ffmpeg.org/ffmpeg-scaler.html) is used in this example. It provides high-quality resampling
+> - `palettegen` / `paletteuse`: [palettegen](https://ffmpeg.org/ffmpeg-filters.html#palettegen) and [paletteuse](https://ffmpeg.org/ffmpeg-filters.html#paletteuse) filters will generate and use a custom palette generated from your input. This is important for GIFs because they have a limited color palette (256 colors). Using a custom palette can significantly improve the quality of the output GIF
+> - `dither=sierra2_4a`: dithering algorithm used when applying the palette. `dither=none` for no dithering (cleaner color blocks). `dither=sierra2_4a` for a more complex dithering algorithm that can help reduce color banding in gradients
+
+```bash
+# generate a color palette
+ffmpeg -i input.mov -vf "fps=15,scale=640:-1:flags=lanczos,palettegen=stats_mode=diff" palette.png
+
+# generate gifs using color palettes
+ffmpeg -i input.mov -i palette.png -lavfi "fps=15,scale=640:-1:flags=lanczos[x];[x][1:v]paletteuse=dither=sierra2_4a" output.gif
 ```
 
 ### [scale the media](https://www.everythingcli.org/convert-pdf-to-mp4/)
