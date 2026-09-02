@@ -23,14 +23,17 @@
 
 ```bash
 # download <name>-sources.jar and <name>-javadoc.jar
-$ curl -fsSL https://github.com/marslo/mytools/raw/main/itool/groovy-libs.sh | bash -s -- --groovy --with-libs --path /opt/groovy
+$ curl -fsSL https://github.com/marslo/mytools/raw/main/itool/groovy-libs.sh | bash -s -- --jar --with-libs --path /opt/groovy
 
-#                                                                                                      + <name>-sources.jar and <name>-javadoc.jar
-#                                                                                                      v           + <name>.jar
-$ curl -fsSL https://github.com/marslo/mytools/raw/main/itool/groovy-libs.sh | bash -s -- --groovy --with-libs --with-bin --path /opt/groovy
+#                                                                                                     + <name>-sources.jar and <name>-javadoc.jar
+#                                                                                                     v           + <name>.jar
+$ curl -fsSL https://github.com/marslo/mytools/raw/main/itool/groovy-libs.sh | bash -s -- --jar --with-libs --with-bin --path /opt/groovy
 
 # ── to cleanup ──
 $ curl -fsSL https://github.com/marslo/mytools/raw/main/itool/groovy-libs.sh | bash -s -- --clean
+
+# ── to latest install runtime only ──
+$ curl -fsSL https://github.com/marslo/mytools/raw/main/itool/groovy-libs.sh | bash -s -- --runtime --latest
 ```
 
 ## jenkins libs setup
