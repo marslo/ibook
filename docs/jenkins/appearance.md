@@ -13,6 +13,7 @@
   - [oneline badges](#oneline-badges)
 - [custom folder icon](#custom-folder-icon)
 - [colors](#colors)
+- [description](#description)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -4768,3 +4769,125 @@
 | Purple | #C589E0 | #B143DC | #8B0CB4 | `oklch(60% 0.2308 314.6)`  |
 | Pink   | #F5768A | #F30054 | #C50033 | `oklch(60% 0.2601 12.28)`  |
 | Brown  | #BBA07E | #A2773B | #7E5413 | `oklch(60% 0.0941 72.67)`  |
+
+## description
+
+```html
+<!-- 01 · Violet Indigo 紫罗兰 -->
+<div style="display:block; width:85vw; border-radius:12px; background:linear-gradient(135deg, #6d5efc, #7c6ffd, #a78bfa); box-shadow:0 6px 20px rgba(109,94,252,0.3); padding:20px 28px; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; box-sizing:border-box;">
+  <div style="font-size:1.2em; color:#ede9fe; text-transform:uppercase; letter-spacing:1.5px; font-weight:700; margin-bottom:8px;">
+    Documentation
+  </div>
+  <div style="font-size:16px; color:#f5f3ff; line-height:1.5; margin-bottom:14px;">
+    Pipeline usage, parameters, and configuration guide.
+  </div>
+  <a href="#" target="_blank" style="display:inline-block; padding:8px 20px; border-radius:6px; background:linear-gradient(90deg, #a78bfa, #c4b5fd); color:#2e1065; text-decoration:none; font-size:14px; font-weight:700; letter-spacing:0.3px;">
+    Open Confluence - Title &#8599;
+  </a>
+</div>
+```
+
+![1. Violet Indigo](../screenshot/jenkins/cards/1-Violet-Indigo.png)
+
+```html
+<!-- 02 · Sunset Coral 日落珊瑚 -->
+<div style="display:block; width:85vw; border-radius:12px; background:linear-gradient(135deg, #ff6b6b, #ff8e72, #ffa94d); box-shadow:0 6px 20px rgba(255,107,107,0.3); padding:20px 28px; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; box-sizing:border-box;">
+  <div style="font-size:1.2em; color:#fff0e6; text-transform:uppercase; letter-spacing:1.5px; font-weight:700; margin-bottom:8px;">
+    Documentation
+  </div>
+  <div style="font-size:16px; color:#fff5ef; line-height:1.5; margin-bottom:14px;">
+    Pipeline usage, parameters, and configuration guide.
+  </div>
+  <a href="#" target="_blank" style="display:inline-block; padding:8px 20px; border-radius:6px; background:linear-gradient(90deg, #ffd166, #ffe08a); color:#7a2e12; text-decoration:none; font-size:14px; font-weight:700; letter-spacing:0.3px;">
+    Open Confluence - Title &#8599;
+  </a>
+</div>
+```
+
+![2. Sunset Coral](../screenshot/jenkins/cards/2-Sunset-Coral.png)
+
+```html
+<!-- 03 · Ocean Cyan 深海青 -->
+<div style="display:block; width:85vw; border-radius:12px; background:linear-gradient(135deg, #0891b2, #06b6d4, #22d3ee); box-shadow:0 6px 20px rgba(8,145,178,0.3); padding:20px 28px; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; box-sizing:border-box;">
+  <div style="font-size:1.2em; color:#cffafe; text-transform:uppercase; letter-spacing:1.5px; font-weight:700; margin-bottom:8px;">
+    Documentation
+  </div>
+  <div style="font-size:16px; color:#ecfeff; line-height:1.5; margin-bottom:14px;">
+    Pipeline usage, parameters, and configuration guide.
+  </div>
+  <a href="#" target="_blank" style="display:inline-block; padding:8px 20px; border-radius:6px; background:linear-gradient(90deg, #67e8f9, #a5f3fc); color:#083344; text-decoration:none; font-size:14px; font-weight:700; letter-spacing:0.3px;">
+    Open Confluence - Title &#8599;
+  </a>
+</div>
+```
+
+![3. Ocean Cyan](../screenshot/jenkins/cards/3-Ocean-Cyan.png)
+
+```html
+<!-- 04 · Dark Neon 暗夜霓虹 -->
+<div style="display:block; width:85vw; border-radius:12px; background:linear-gradient(135deg, #0f172a, #1e293b, #334155); box-shadow:0 6px 20px rgba(0,0,0,0.4); padding:20px 28px; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; box-sizing:border-box;">
+  <div style="font-size:1.2em; color:#38bdf8; text-transform:uppercase; letter-spacing:1.5px; font-weight:700; margin-bottom:8px;">
+    Documentation
+  </div>
+  <div style="font-size:16px; color:#cbd5e1; line-height:1.5; margin-bottom:14px;">
+    Pipeline usage, parameters, and configuration guide.
+  </div>
+  <a href="#" target="_blank" style="display:inline-block; padding:8px 20px; border-radius:6px; background:linear-gradient(90deg, #22d3ee, #818cf8); color:#0f172a; text-decoration:none; font-size:14px; font-weight:700; letter-spacing:0.3px;">
+    Open Confluence - Title &#8599;
+  </a>
+</div>
+```
+
+![4. Dark Neon](../screenshot/jenkins/cards/4-Dark-Neon.png)
+
+```html
+<!-- 05 · Rose Pink 玫瑰粉 -->
+<div style="display:block; width:85vw; border-radius:12px; background:linear-gradient(135deg, #ec4899, #f472b6, #f9a8d4); box-shadow:0 6px 20px rgba(236,72,153,0.3); padding:20px 28px; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; box-sizing:border-box;">
+  <div style="font-size:1.2em; color:#fce7f3; text-transform:uppercase; letter-spacing:1.5px; font-weight:700; margin-bottom:8px;">
+    Documentation
+  </div>
+  <div style="font-size:16px; color:#fdf2f8; line-height:1.5; margin-bottom:14px;">
+    Pipeline usage, parameters, and configuration guide.
+  </div>
+  <a href="#" target="_blank" style="display:inline-block; padding:8px 20px; border-radius:6px; background:linear-gradient(90deg, #f9a8d4, #fbcfe8); color:#831843; text-decoration:none; font-size:14px; font-weight:700; letter-spacing:0.3px;">
+    Open Confluence - Title &#8599;
+  </a>
+</div>
+```
+
+![5. Rose Pink](../screenshot/jenkins/cards/5-Rose-Pink.png)
+
+```html
+<!-- 06 · Aurora 极光青紫 -->
+<div style="display:block; width:85vw; border-radius:12px; background:linear-gradient(135deg, #0d9488, #6366f1, #8b5cf6); box-shadow:0 6px 20px rgba(99,102,241,0.3); padding:20px 28px; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; box-sizing:border-box;">
+  <div style="font-size:1.2em; color:#e0e7ff; text-transform:uppercase; letter-spacing:1.5px; font-weight:700; margin-bottom:8px;">
+    Documentation
+  </div>
+  <div style="font-size:16px; color:#f5f3ff; line-height:1.5; margin-bottom:14px;">
+    Pipeline usage, parameters, and configuration guide.
+  </div>
+  <a href="#" target="_blank" style="display:inline-block; padding:8px 20px; border-radius:6px; background:linear-gradient(90deg, #5eead4, #a5b4fc); color:#1e1b4b; text-decoration:none; font-size:14px; font-weight:700; letter-spacing:0.3px;">
+    Open Confluence - Title &#8599;
+  </a>
+</div>
+```
+
+![6. Aurora](../screenshot/jenkins/cards/6-Aurora.png)
+
+
+```html
+<!-- 07 · Original Green 原始绿 -->
+<div style="display:block; width:85vw; border-radius:12px; background:linear-gradient(135deg, #4a8c5c, #5da06d, #78b888); box-shadow:0 6px 20px rgba(74,140,92,0.25); padding:20px 28px; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; box-sizing:border-box;">
+  <div style="font-size:1.2em; color:#d4edda; text-transform:uppercase; letter-spacing:1.5px; font-weight:700; margin-bottom:8px;">
+    Documentation
+  </div>
+  <div style="font-size:16px; color:#f0f9f2; line-height:1.5; margin-bottom:14px;">
+    Pipeline usage, parameters, and configuration guide.
+  </div>
+  <a href="#" target="_blank" style="display:inline-block; padding:8px 20px; border-radius:6px; background:linear-gradient(90deg, #81c784, #aed581); color:#1b3d24; text-decoration:none; font-size:14px; font-weight:700; letter-spacing:0.3px;">
+    Open Confluence - Title &#8599;
+  </a>
+</div>
+```
+
+![7. Original Green](../screenshot/jenkins/cards/7-Original-Green.png)

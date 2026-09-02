@@ -4,7 +4,7 @@
 #   FileName : deploy.sh
 #     Author : marslo
 #    Created : 2020-09-27 22:03:34
-# LastChange : 2026-08-26 14:20:32
+# LastChange : 2026-09-01 19:03:26
 # =============================================================================
 
 # @credit: https://github.com/ppo/bash-colors
@@ -139,7 +139,9 @@ function updateBook() {
         command grep -q "$(git config user.email)" || cmd+=('--signoff')
 
     if [[ "${targetMsg}" = "${msg}" ]]; then
-      echo -e "$(c 0Ci)~~> force push without create new commit:$(c)"
+      local _info='\n~~> force push without create new commit:'
+      type -P lolcat >/dev/null 2>&1 && command echo -e "${_info}" | lolcat --force --seed="196" --freq=0.03 --spread=1.1 --truecolor \
+                                     || echo -e "$(c 0Ci)${_info}$(c)"
       cmd+=(--amend --no-edit --allow-empty)
     else
       cmd+=(-am "${msg}")
