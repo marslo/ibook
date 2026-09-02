@@ -22,8 +22,7 @@
 
 ### install pre-commit
 ```bash
-$ python -m pip install --user pipx
-$ pipx ensurepath
+$ python -m pip install --user pipx && pipx ensurepath
 $ pipx install pre-commit
 
 # or
@@ -37,6 +36,43 @@ $ pre-commit install
 # or
 $ pre-commit install --install-hook
 pre-commit installed at .git/hooks/pre-commit
+```
+
+> [!TIP|labels:with different stages:]
+> - references:
+>   - [default_install_hook_types](https://pre-commit.com/#top_level-default_install_hook_types) : a list of --hook-types which will be used by default when running `pre-commit install`
+>   - [default_stages](https://pre-commit.com/#top_level-default_stages) : a configuration-wide default for the `stages` property of hooks. This will only override individual hooks that do not set `stages`
+> - **priority** : `--hook-type` (CLI flag) takes precedence over `default_install_hook_types` (top-level yml config)
+>   - The `--hook-type` CLI flag overrides `default_install_hook_types`: when `--hook-type` is given, pre-commit installs exactly those hook types and ignores `default_install_hook_types` entirely
+> - `.pre-commit-config.yaml`
+>   ```yaml
+>   ---
+>
+>   default_install_hook_types: [pre-commit, commit-msg]
+>   default_stages: [pre-commit]
+>
+>   repos:
+>     - repo: https://github.com/crate-ci/typos
+>       rev: v1.49.0
+>       hooks:
+>         - id: typos
+>           name: Typos
+>           args: ['--write-changes', '--force-exclude']
+>         # scan the commit message itself; no --write-changes -> only fail, never rewrite the message
+>         - id: typos
+>           name: Typos (commit message)
+>           alias: typos-commit-msg
+>           stages: [commit-msg]
+>           args: ['--force-exclude']
+>   ```
+
+```bash
+$ pre-commit install
+pre-commit installed at .git/hooks/pre-commit
+pre-commit installed at .git/hooks/commit-msg
+
+# install manually without top level settings
+$ pre-commit install --hook-type commit-msg --hook-type pre-commit
 ```
 
 ### automatic upgrade to latest version
@@ -101,6 +137,19 @@ $ pre-commit run --show-diff-on-failure --color=always --from-ref "${START_REF}"
 # to check all files under folder recursively
 $ pre-commit run --files $(git ls-files folder/path/) -v
 $ pre-commit run <HOOK_ID> --files $(git ls-files folder/path/) -v
+```
+
+
+> [!TIP|label:references:]
+> - `--hook-stage commit-msg` must be used with `--commit-msg-filename` to specify the commit message file
+
+```bash
+# run with commit-msg hook
+$ tmp=$(mktemp) && git log -1 --format=%B > "${tmp}"
+$ pre-commit run --hook-stage commit-msg --commit-msg-filename "${tmp}"
+
+# run `typos-commit-msg` runner in commit-msg hook stage
+$ pre-commit run typos-commit-msg --hook-stage commit-msg --commit-msg-filename "${tmp}"
 ```
 
 ### run with manual stage
