@@ -3,6 +3,9 @@
 ci:
   autofix_prs: false
 
+default_install_hook_types: [pre-commit, commit-msg]
+default_stages: [pre-commit]
+
 exclude: '^(.*/etc-shadowsocks.json|.*/shadowsocks-all.sh|.*/etcd.yaml|.*/buildinfo.delete.sh)$'
 
 repos:
@@ -28,8 +31,13 @@ repos:
         args: ["--fix=lf"]
 
   - repo: https://github.com/crate-ci/typos
-    rev: v1.49.0
+    rev: v1.50.1
     hooks:
       - id: typos
         name: Typos
         args: ["--write-changes"]
+      - id: typos
+        name: Typos (commit message)
+        alias: typos-commit-msg
+        stages: [commit-msg]
+        args: ['--force-exclude']
