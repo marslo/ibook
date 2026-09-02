@@ -47,6 +47,7 @@ extend-ignore-re = [
 
 [default.extend-words]
 # <typo> = "<correction>"
+# --- allowlist ---
 ba = 'ba'
 certifi = 'certifi'
 fpr = 'fpr'

@@ -16,6 +16,7 @@
     - [coc-word](#coc-word)
     - [extensions management](#extensions-management)
   - [nvim-treesitter/nvim-treesitter](#nvim-treesitternvim-treesitter)
+    - [TS troubleshooting](#ts-troubleshooting)
   - [github/copilot.vim](#githubcopilotvim)
     - [CopilotChat.nvim](#copilotchatnvim)
     - [troubleshooting](#troubleshooting)
@@ -1470,63 +1471,114 @@ $ which -a tree-sitter
 /usr/local/bin/tree-sitter
 ```
 
-- others
-  ```bash
-  $ pip3 install tree_sitter
-  ```
+```bash
+# others
+$ pip3 install tree_sitter
+```
 
-- configure
-  ```vim
-  Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
-  ```
+```vim
+" configure
+Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
+```
 
-  ```lua
-  -- ~/.config/nvim/init.vim
-  require('config/nvim-treesitter')
+```lua
+-- ~/.config/nvim/init.vim
+require('config/nvim-treesitter')
 
-  -- ~/.config/nvim/lua/config/nvim-treesitter.lua
-  require'nvim-treesitter.configs'.setup {
-    ensure_installed = { "c", "lua", "vim", "vimdoc", "query", "python", "bash", "groovy", "java", "yaml", "xml", "cmake", "css", "dockerfile", "git_config", "gitcommit", "gitignore", "jq", "json", "markdown", "ssh_config", "vimdoc", "ini" },
-    sync_install = true,
-    -- install automatically
-    auto_install = true,
-    ignore_install = { "javascript" },
-    indent = {
-      enable = true,
-      disable = { "markdown" },
+-- ~/.config/nvim/lua/config/nvim-treesitter.lua
+require'nvim-treesitter.configs'.setup {
+  ensure_installed = { "c", "lua", "vim", "vimdoc", "query", "python", "bash", "groovy", "java", "yaml", "xml", "cmake", "css", "dockerfile", "git_config", "gitcommit", "gitignore", "jq", "json", "markdown", "ssh_config", "vimdoc", "ini" },
+  sync_install = true,
+  -- install automatically
+  auto_install = true,
+  ignore_install = { "javascript" },
+  indent = {
+    enable = true,
+    disable = { "markdown" },
+  },
+  incremental_selection = {
+    enable = true,
+    keymaps = {
+      init_selection = "<CR>",
+      node_incremental = "<CR>",
+      node_decremental = "<BS>",
+      scope_incremental = "<TAB>",
     },
-    incremental_selection = {
-      enable = true,
-      keymaps = {
-        init_selection = "<CR>",
-        node_incremental = "<CR>",
-        node_decremental = "<BS>",
-        scope_incremental = "<TAB>",
-      },
-    },
-    highlight = {
-      enable = true,
-      disable = { "markdown" },
-      additional_vim_regex_highlighting = false,
-    },
-  }
-  require("nvim-treesitter.install").prefer_git = true
-  ```
+  },
+  highlight = {
+    enable = true,
+    disable = { "markdown" },
+    additional_vim_regex_highlighting = false,
+  },
+}
+require("nvim-treesitter.install").prefer_git = true
+```
 
-- install manually
-  ```vim
-  :TSInstall bash css gitcommit git_config gpg html java jq lua python xml yaml
-  ```
+```vim
+" install manually
+:TSInstall bash css gitcommit git_config gpg html java jq lua python xml yaml
+```
 
-- commands
-  ```vim
-  :TSBufToggle highlight
-  :TSInstallInfo
-  :TSModuleInfo
-  :checkhealth nvim-treesitter
-  :echo nvim_get_runtime_file('*/lua.so', v:true)
-  ['/Users/marslo/.vim/plugged/nvim-treesitter/parser/lua.so', '/usr/local/Cellar/neovim/0.9.5/lib/nvim/parser/lua.so']
-  ```
+```vim
+" commands
+:TSBufToggle highlight
+
+:TSInstallInfo
+:lua =require('nvim-treesitter').get_installed()
+{ "gitcommit", "csv", "gitignore", "python", "css", "dockerfile", "yaml", "xml", "groovy", "vimdoc", "ini", "vim", "java", "bash", "luadoc", "diff", "git_config", "dtd", "markdown", "cmake", "json",
+"markdown_inline", "lua", "comment", "tsv", "git_rebase", "jq", "ssh_config", "c" }
+
+:lua =require('nvim-treesitter').get_available()
+{ "ada", "agda", "angular", "apex", "arduino", "asm", "astro", "authzed", "awk", "bash", "bass", "beancount", "bibtex", "bicep", "bitbake", "blade", "bp", "bpftrace", "brightscript", "c", "c3",
+"c_sharp", "caddy", "cairo", "capnp", "chatito", "circom", "clojure", "cmake", "comment", "commonlisp", "cooklang", "corn", "cpon", "cpp", "css", "csv", "cuda", "cue", "cylc", "d", "dart",
+"desktop", "devicetree", "dhall", "diff", "disassembly", "djot", "dockerfile", "dot", "doxygen", "dtd", "earthfile", "ebnf", "ecma", "editorconfig", "eds", "eex", "elixir", "elm", "elsa",
+"elvish", "embedded_template", "enforce", "erlang", "facility", "faust", "fennel", "fidl", "firrtl", "fish", "foam", "forth", "fortran", "fsh", "fsharp", "func", "gap", "gaptst", "gdscript",
+"gdshader", "git_config", "git_rebase", "gitattributes", "gitcommit", "gitignore", "gleam", "glimmer", "glimmer_javascript", "glimmer_typescript", "glsl", "gn", "gnuplot", "go", "goctl",
+"godot_resource", "gomod", "gosum", "gotmpl", "gowork", "gpg", "graphql", "gren", "groovy", "groq", "gstlaunch", "hack", "hare", "haskell", "haskell_persistent", "hcl", "heex", "helm",
+"hjson", "hlsl", "hocon", "hoon", "html", "html_tags", "htmldjango", "http", "hurl", "hyprlang", "idl", "idris", "ini", "inko", "ispc", "janet_simple", "java", "javadoc", "javascript",
+"jinja", "jinja_inline", "jjdescription", "jq", "jsdoc", "json", "json5", "jsonnet", "jsx", "julia", "just", "kcl", "kconfig", "kdl", "kitty", "kos", "kotlin", "koto", "kusto", "lalrpop",
+"latex", "ledger", "leo", "linkerscript", "liquid", "liquidsoap", "llvm", "lua", "luadoc", "luap", "luau", "m68k", "make", "markdown", "markdown_inline", "matlab", "menhir", "mermaid",
+"meson", "mlir", "nasm", "nginx", "nickel", "nim", "nim_format_string", "ninja", "nix", "nqc", "nu", "objc", "objdump", "ocaml", "ocaml_interface", "ocamllex", "odin", "pascal", "passwd",
+"pem", "perl", "php", "php_only", "phpdoc", "pioasm", "pkl", "po", "pod", "poe_filter", "pony", "powershell", "printf", "prisma", "promql", "properties", "proto", "prql", "psv", "pug",
+"puppet", "purescript", "pymanifest", "python", "ql", "qmldir", "qmljs", "query", "r", "racket", "ralph", "rasi", "razor", "rbs", "re2c", "readline", "regex", "rego", "requirements",
+"rescript", "rifleconf", "rnoweb", "robot", "robots_txt", "roc", "ron", "rst", "ruby", "runescript", "rust", "scala", "scfg", "scheme", "scss", "sflog", "slang", "slim", "slint", "smali",
+"smithy", "snakemake", "snl", "solidity", "soql", "sosl", "sourcepawn", "sparql", "sproto", "sql","squirrel", "ssh_config", "starlark", "strace", "styled", "supercollider", "superhtml",
+"surface", "svelte", "sway", "swift", "sxhkdrc", "systemtap", "systemverilog", "t32", "tablegen", "tact", "tcl", "teal", "templ", "tera", "terraform", "textproto", "thrift", "tiger",
+"tlaplus", "todotxt", "toml", "tsv", "tsx", "turtle", "twig", "typescript", "typespec", "typoscript", "typst", "udev","ungrammar", "unison", "usd", "uxntal", "v", "vala", "vento", "vhdl",
+"vhs", "vim", "vimdoc", "vrl", "vue", "wgsl", "wgsl_bevy", "wing", "wit", "wxml", "xcompose", "xml", "xresources", "yaml", "yang", "yuck", "zig", "ziggy", "ziggy_schema", "zsh" }
+
+:TSModuleInfo
+TS buffer info (main branch has no modules):
+  filetype   : lua
+  language   : lua
+  parser     : available
+  highlight  : on
+  indentexpr : GetLuaIndent()
+Press ENTER or type command to continue
+
+:checkhealth nvim-treesitter
+:echo nvim_get_runtime_file('*/lua.so', v:true)
+['/Users/marslo/.vim/plugged/nvim-treesitter/parser/lua.so', '/usr/local/Cellar/neovim/0.9.5/lib/nvim/parser/lua.so']
+:lua =vim.api.nvim_get_runtime_file('parser/lua.so', true)
+{ "/home/marslo/.local/share/nvim/site/parser/lua.so" }
+:lua =vim.api.nvim_get_runtime_file('queries/lua/highlights.scm', true)
+{ "/home/marslo/.local/share/nvim/site/queries/lua/highlights.scm", "/opt/nvim/v0.12.5/share/nvim/runtime/queries/lua/highlights.scm" }
+```
+
+### TS troubleshooting
+
+> [!NOTE]
+> ```vim
+> :TSInstall! lua
+> [nvim-treesitter/install/lua] error: Error during download: curl: (22) The requested URL returned error: 401
+> ```
+
+```bash
+# using https_proxy
+$ https_proxy=http://ipamunix.domain.com:8080 nvim +'TSInstall! lua bash c python vim vimdoc lua markdown markdown_inline'
+# or
+$ https_proxy=http://ipamunix.domain.com:8080 nvim +TSInstallAllForce
+```
 
 ## [github/copilot.vim](https://github.com/github/copilot.vim)
 
