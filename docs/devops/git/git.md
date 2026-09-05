@@ -80,6 +80,7 @@ git command study and practice
   - [tricky](#tricky)
 - [for-each-ref](#for-each-ref)
   - [get refs days ago](#get-refs-days-ago)
+- [gc](#gc)
 - [others](#others)
   - [mv](#mv)
   - [clean](#clean)
@@ -2042,6 +2043,40 @@ $ git push origin --delete origin/sandbox/marslo/test
    * [new ref]           archive/sandbox/marslo/sandbox    -> refs/archive/sandbox/marslo/sandbox
    * [new ref]           archive/sandbox/marslo/sample     -> refs/archive/sandbox/marslo/sample
   ```
+
+## gc
+
+> [!NOTE]
+> to shrinking repo<br>
+> [* iMarslo: git lfs](./config.md#git-lfs)
+
+```bash
+# cleanup local lfs cache and prune old objects
+$ git lfs prune
+
+# cleanup local unreachable objects
+$ git gc --prune=now
+
+# cleanup local reflogs and unreachable objects
+$ git reflog expire --expire=now --all && git gc --prune=now
+```
+
+```bash
+# check commits
+$ git rev-list --count --all
+
+# check dangling objects
+$ git fsck --dangling --no-progress 2>/dev/null | command grep -c '^dangling'
+
+# check unreachable objects
+$ git fsck --unreachable --no-progress 2>/dev/null | command grep -c '^unreachable'
+
+# check top 12 largest blobs in history
+$ git rev-list --objects --all 2>/dev/null |
+  git cat-file --batch-check='%(objecttype) %(objectname) %(objectsize) %(rest)' 2>/dev/null |
+  command awk '$1=="blob"{ print $3"\t"$4 }' | command sort -rn | command head -12 |
+  command awk -F'\t' '{ printf "  %8.2f MB  %s\n", $1/1048576, $2 }'
+```
 
 ## others
 

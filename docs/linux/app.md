@@ -1303,6 +1303,23 @@ $ sudo -iu user-3 vncpasswd
 # start service
 $ sudo systemctl enable --now tigervncserver@:2.service   # user-2
 $ sudo systemctl enable --now tigervncserver@:3.service   # user-3
+
+# check port
+$ ss -ltnp | grep 5902
+LISTEN 0      5            0.0.0.0:5902      0.0.0.0:*    users:(("Xtigervnc",pid=2705,fd=9))
+LISTEN 0      5               [::]:5902         [::]:*    users:(("Xtigervnc",pid=2705,fd=10))
+$ ss -tlnp 'sport = :5902'
+State              Recv-Q             Send-Q                           Local Address:Port                           Peer Address:Port             Process
+LISTEN             0                  5                                      0.0.0.0:5902                                0.0.0.0:*                 users:(("Xtigervnc",pid=2705,fd=9))
+
+$ lsof -i :5902
+COMMAND    PID   USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
+Xtigervnc 2705 marslo    9u  IPv4  66268      0t0  TCP *:5902 (LISTEN)
+Xtigervnc 2705 marslo   10u  IPv6  66269      0t0  TCP *:5902 (LISTEN)
+# or
+$ lsof -iTCP:5901 -sTCP:LISTEN -P -n
+# or
+$ lsof -iTCP -sTCP:LISTEN -P -n
 ```
 
 ### [x11vnc](https://en.wikipedia.org/wiki/X11vnc)
