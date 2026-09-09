@@ -7,6 +7,7 @@
   - [table](#table)
   - [card](#card)
   - [banner](#banner)
+  - [badge](#badge)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -442,4 +443,56 @@ addSummary icon: 'symbol-status-red'    , text: banner('this is a danger'      ,
       color: var(--alert-danger-text-color);
   }
   ```
+
 <!--endsec-->
+
+
+### badge
+
+```json
+[
+  {
+    "type": "inbuilt",
+    "name": "blocks, formatting, styles, tables, images"
+  },
+  {
+    "type": "new",
+    "allow": {
+      "dl, dt, dd, hr": "",
+      "details, summary": "",
+      "pre, code": "",
+      "div, span": "style, class",
+      "font": "size, color",
+      "table": "class",
+      "thead, tbody, tr": "",
+      "th": "class",
+      "td": "class",
+      "a": "href, target, class, rel",
+      "svg": "xmlns, viewBox, width, height, fill, stroke, stroke-width, stroke-linecap, stroke-linejoin, aria-hidden, role, focusable, class, style",
+      "g": "fill, stroke, stroke-width, stroke-linecap, stroke-linejoin, transform",
+      "path": "d, fill, fill-rule, clip-rule, stroke, stroke-linecap, stroke-linejoin, stroke-width, opacity",
+      "circle": "cx, cy, r, fill, stroke, stroke-width, stroke-linecap, stroke-linejoin",
+      "ellipse": "cx, cy, rx, ry, fill, stroke, stroke-linecap, stroke-miterlimit, stroke-width",
+      "rect": "x, y, width, height, rx, ry, fill, stroke, stroke-width, stroke-linecap, stroke-linejoin",
+      "line": "x1, y1, x2, y2, stroke, stroke-width, stroke-linecap",
+      "polyline": "points, fill, stroke, stroke-width, stroke-linecap, stroke-linejoin",
+      "polygon": "points, fill, stroke, stroke-width, stroke-linecap, stroke-linejoin"
+    },
+    "methods": {
+      "allowStandardUrlProtocols": ""
+    }
+  }
+]
+```
+
+```html
+<span style='background-color: #10b981; color: #ffffff; padding: 2px 8px; border-radius: 4px; font-size: 0.85em; text-transform: uppercase; font-weight: 600;'>&#9733; tip</span>
+<hr>
+<span style='background-color: #10b981; color: #ffffff; padding: 2px 8px; border-radius: 4px; font-size: 0.85em; text-transform: uppercase; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;'><svg width='12' height='12' viewBox='0 0 24 24' aria-hidden='true'><path fill='currentColor' d='M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z'/></svg> tip</span>
+<hr>
+<span style='background-color: #10b981; color: #ffffff; padding: 2px 8px; border-radius: 4px; font-size: 0.85em; text-transform: uppercase; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;'><svg width='12' height='12' viewBox='0 0 24 24' aria-hidden='true'><path fill='currentColor' d='M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .962 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.962 0z'/></svg>tip</span>
+<hr>
+<span style='background-color: #d1fae5; color: #059669; padding: 2px 6px; border-radius: 4px; font-size: 0.85em; text-transform: uppercase;'>&#9432; tip</span>
+```
+
+![jenkins badges](../../screenshot/jenkins/jenkins-badge-tips.png)
