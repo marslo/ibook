@@ -13,6 +13,7 @@
   - [delete line without copy to default register](#delete-line-without-copy-to-default-register)
   - [`ctrl-k` delete to end of line in command mode](#ctrl-k-delete-to-end-of-line-in-command-mode)
   - [g ctrl-g](#g-ctrl-g)
+  - [jump hypertext in `help` page](#jump-hypertext-in-help-page)
 - [commands](#commands)
   - [paste command result to vim](#paste-command-result-to-vim)
   - [search (in)sensitive](#search-insensitive)
@@ -373,6 +374,26 @@ cnoremap <C-k> <C-\>e(strpart(getcmdline(), 0, getcmdpos() - 1))<CR>
 ### [g ctrl-g](https://hashrocket.com/blog/posts/10-vim-commands-for-a-better-workflow)
 
 ![g ctrl-g](../screenshot/vim/vim-g-c-g.gif)
+
+### jump hypertext in `help` page
+
+> [!TIP]
+> - `:help CTRL-W_}`
+> - `:help CTRL-W_]`
+
+| SHORTCUT                                                 | COMMENTS                                                                                                                                            | `:echo &previewwindow` |
+| -------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------- |
+| <kbd>ctrl</kbd> + <kbd>]</kbd>                           | jump to the tag under the cursor                                                                                                                    | `0`                    |
+| <kbd>ctrl</kbd> + <kbd>t</kbd>                           | jump back to the previous tag                                                                                                                       | `0`                    |
+| <kbd>ctrl</kbd> + <kbd>w</kbd> <kbd>]</kbd>              | `:stag {word}` (split + tag): jump to the tag under the cursor in a new window<br>closed by `:q` (<kbd>ctrl</kbd> + <kbd>w</kbd> <kbd>c</kbd>)      | `0`                    |
+| <kbd>ctrl</kbd> + <kbd>w</kbd> <kbd>}</kbd>              | `:ptag {word}` (preview tag): jump to the tag under the cursor in a new window<br>closed by `:pclose` (<kbd>ctrl</kbd> + <kbd>w</kbd> <kbd>z</kbd>) | `1`                    |
+| <kbd>ctrl</kbd> + <kbd>w</kbd> <kbd>t</kbd>              | jump back to the previous tag in a new window                                                                                                       | `0`                    |
+|                                                          |                                                                                                                                                     |                        |
+| <kbd>ctrl</kbd> + <kbd>w</kbd> <kbd>z</kbd>              | close the preview window == `:pclose`                                                                                                               | -                      |
+| <kbd>ctrl</kbd> + <kbd>w</kbd> <kbd>g</kbd> <kbd>}</kbd> | `:ptjump` : jump list of preview windows                                                                                                            | -                      |
+|                                                          |                                                                                                                                                     |                        |
+| <kbd>ctrl</kbd> + <kbd>o</kbd>                           | jump back to the previous cursor position                                                                                                           | -                      |
+| <kbd>ctrl</kbd> + <kbd>i</kbd><br><kbd>⇥</kbd> (tab)     | jump forward to the next cursor position                                                                                                            | -                      |
 
 ## commands
 ### [paste command result to vim](https://hashrocket.com/blog/posts/10-vim-commands-for-a-better-workflow)
