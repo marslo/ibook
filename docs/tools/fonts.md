@@ -203,6 +203,14 @@ EOF
 >   Meslo LG M for Powerline                Regular
 >   ```
 
+```bash
+$ fc-scan --format '%{family}|%{style}|%{fullname}|%{postscriptname}\n' ~/Library/Fonts/BlexMonoLigNerdFontMono-* | column -t -s'|' -o' | '
+BlexMonoLig Nerd Font Mono,BlexMonoLig Nerd Font Mono Book  | Book,Regular        | BlexMonoLig Nerd Font Mono Book         | BlexMonoLigNFM-Book
+BlexMonoLig Nerd Font Mono,BlexMonoLig Nerd Font Mono Book  | Book Italic,Italic  | BlexMonoLig Nerd Font Mono Book Italic  | BlexMonoLigNFM-BookItalic
+BlexMonoLig Nerd Font Mono,BlexMonoLig Nerd Font Mono Light | Light,Regular       | BlexMonoLig Nerd Font Mono Light        | BlexMonoLigNFM-Light
+BlexMonoLig Nerd Font Mono,BlexMonoLig Nerd Font Mono Light | Light Italic,Italic | BlexMonoLig Nerd Font Mono Light Italic | BlexMonoLigNFM-LightItalic
+```
+
 - fullname & fullnamelang
   ```bash
   $ fc-scan --format "%{fullname}\n%{fullnamelang}" chinese.msyh.ttf
@@ -275,18 +283,18 @@ Dumping 'name' table...
 
 ## rename fonts to `postscriptname`
 
-- show font `fullname`
-  ```bash
-  $ fd --glob *.ttf -tf --color=never /path/to/font |
-    while read -r _f; do
-      echo -n ">> $(basename "${_f}") : "; fc-scan --format "%{fullname}\n" "${_f}";
-    done
-  ```
+```bash
+# show font `fullname`
+$ fd --glob *.ttf -tf --color=never /path/to/font |
+  while read -r _f; do
+    echo -n ">> $(basename "${_f}") : "; fc-scan --format "%{fullname}\n" "${_f}";
+  done
+```
 
 ```bash
 $ while read -r _f; do
-    echo ">> $_f <<";
-    name="$(fc-scan --format "%{postscriptname}" "$_f").ttf";
+    echo ">> ${_f} <<";
+    name="$(fc-scan --format "%{postscriptname}" "${_f}").ttf";
     mv "${_f}" "${name}";
   done < <(ls -1 --color=never)
 
@@ -365,11 +373,20 @@ $ fd --glob *.ttf -tf --color=never /path/to/font |
 | weight      | `Light`<br>`Regular`<br>`Medium`<br>`Bold`<br>`Black`                                           | 字体粗细 |
 | suffix      | `ttf` - TrueType Font<br> `otf` - OpenType Font<br> `woff` - Web Open Font Format               | 后缀     |
 
+- sans-serif vs serif
+
+  > [!NOTE|label:references:]
+  > - [What is the Difference between Serif and Sans-Serif Fonts?](https://about.easil.com/serif-vs-sans-serif/)
+
+  [![Sans-Serif vs Serif Fonts](https://www.adobe.com/creativecloud/design/discover/media_18ab26022d50612e7fbcf9111e21a4f7062832524.jpg?width=2000&format=webply&optimize=medium)](https://www.adobe.com/creativecloud/design/discover/serif-vs-sans-serif.html)
+
+  [![serif](https://pimpmytype.com/wp-content/uploads/2021/03/serif-popular-fonts.png)](https://pimpmytype.com/font-follows-feeling/)
+
 - slab serif vs sans serif
 
-  [![slab serif](https://lg-assets.myfonts.com/fdc/images/d206b67118e23ef5/slab.jpg)](https://www.myfonts.com/pages/fontscom-learning-fontology-level-1-type-anatomy-type-classifications)
+  [![slab serif](https://pimpmytype.com/wp-content/uploads/2021/03/slab-serif-fonts-popular.png)](https://pimpmytype.com/font-follows-feeling/)
 
-  [![sans-serif](https://lg-assets.myfonts.com/fdc/images/79c7188496fdf6d5/grotesque.jpg)](https://www.myfonts.com/pages/fontscom-learning-fontology-level-1-type-anatomy-type-classifications)
+  [![sans-serif](https://pimpmytype.com/wp-content/uploads/2021/03/sans-serif-popular-fonts.png)](https://pimpmytype.com/font-follows-feeling/)
 
 - proportional vs monospaced
 
