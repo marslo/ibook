@@ -21,8 +21,8 @@
   - [PWD's secrets](#pwds-secrets)
   - [list the command startsWith](#list-the-command-startswith)
   - [fuzzy find for commands](#fuzzy-find-for-commands)
-- [batch commands](#batch-commands)
-  - [batch rename](#batch-rename)
+- [bulk commands](#bulk-commands)
+  - [bulk rename](#bulk-rename)
   - [xargs rename](#xargs-rename)
   - [batch move](#batch-move)
   - [batch copy](#batch-copy)
@@ -520,26 +520,58 @@ ex (1)               - Vi IMproved, a programmers text editor
 gedit (1)            - text editor for the GNOME Desktop
 ```
 
-## batch commands
-### batch rename
+## bulk commands
+### bulk rename
+
+| -                            | UTIL-LINUX                                | PERL                                           |
+| ---------------------------- | ----------------------------------------- | ---------------------------------------------- |
+| PATH                         | `/opt/homebrew/opt/util-linux/bin/rename` | `/opt/homebrew/bin/rename`                     |
+| REGEX                        | NO                                        | Support Perl Regex                             |
+| SYNTAX                       | `rename old new files`                    | `rename -s old new files` / `rename -e 's///'` |
+| PREFIX/SUFFIX/CAPITALIZATION | Reluctantly                               | YES. `-A` `-a` `-c` `-C`                       |
+| -                            | simple                                    | powerful                                       |
+
+> [!NOTE|label:tips]
+> using `-n` to preview the changes before actually renaming the files. support both `util-linux` and `perl` version.
+
 ```bash
-$ l
-total 4.0K
--rw-r--r-- 1 marslo marslo 10 Feb 21 00:43 a.b
-$ rename -v 's/\./_/g' *
-a.b renamed as a_b
-$ l
-total 4.0K
--rw-r--r-- 1 marslo marslo 10 Feb 21 00:43 a_b
+# ────────────────────────── util-linux version ──────────────────────────
+# foo.txt -> bar.txt
+/opt/homebrew/opt/util-linux/bin/rename foo bar *.txt
+# name.jpeg -> name.jpg
+/opt/homebrew/opt/util-linux/bin/rename .jpeg .jpg *.jpeg
+
+# `foo bar baz.txt` -> `foo_bar baz.txt` -> `-s`: first match
+/opt/homebrew/bin/rename -s ' ' '_' *
+# `foo bar baz.txt` -> `foo_bar_baz.txt` -> `-S`: all matches
+/opt/homebrew/bin/rename -S ' ' '_' *
+
+# ────────────────────────── perl version ──────────────────────────
+# name.jpeg -> name.jpg
+/opt/homebrew/bin/rename -e 's/\.jpeg$/.jpg/' *.jpeg
+# IMG_1234.jpg -> 1234.jpg
+/opt/homebrew/bin/rename -e 's/^IMG_//' *.jpg
+
+# internal transform
+/opt/homebrew/bin/rename -c *.JPG                # all lowercase
+/opt/homebrew/bin/rename -C *.txt                # all uppercase
+/opt/homebrew/bin/rename -A 'draft_' *.txt       # prepend prefix
+/opt/homebrew/bin/rename -a '_old' *.txt         # append suffix
+/opt/homebrew/bin/rename -d 'copy' *             # remove string
+/opt/homebrew/bin/rename -z *                    # sanitize (remove Invalid Characters)
 ```
 
 - [delete string with find](https://unix.stackexchange.com/a/33282/29178)
   ```bash
-  $ for file in sw.ras.*; do mv "$file" "${file/ras./}"; done
+  $ for file in sw.ras.*; do mv "${file}" "${file/ras./}"; done
   ```
 
 - `/usr/local/bin/rename` in OSX
   ```bash
+  # a.b -> a_b
+  $ /opt/homebrew/bin/rename -v 's/\./_/g' *
+  a.b renamed as a_b
+
   $ /usr/local/bin/rename -v 's/_xyz.com//g' *.txt
   'a_xyz.com.txt' renamed to 'a.txt'
   'b_xyz.com.txt' renamed to 'b.txt'

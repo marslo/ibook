@@ -307,8 +307,12 @@ $ 7zz x name.zip
 ```
 
 ### find and rename
+
+> [!NOTE|label:references:]
+> - [* iMarslo: bulk rename](../good.md#bulk-rename)
+
 ```bash
-$ find -iname "*.sh" -exec rename "s/.sh$/.shell/" {} \; -print
+$ find -iname "*.sh" -exec /opt/homebrew/bin/rename "s/.sh$/.shell/" {} \; -print
 ```
 
 ### find and sort
