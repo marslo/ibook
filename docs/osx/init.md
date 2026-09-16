@@ -15,6 +15,10 @@
 >> ```bash
 >> $ brew install --HEAD <formula> --build-from-source -v --debug
 >> ```
+> - *optional* to set cask app dir:
+>> ```bash
+>> export HOMEBREW_CASK_OPTS="--appdir=~/Applications"
+>> ```
 
 ```bash
 # --- utils ---
@@ -110,22 +114,23 @@ $ sudo ln -sf $(npm get prefix)/bin/* /usr/local/bin/
 # --- lint ---
 $ brew install --HEAD shellcheck yamllint yamlfmt
 $ npm i -g npm-groovy-lint && sudo ln -sf $(npm get prefix)/bin/npm-groovy-lint /usr/local/bin/npm-groovy-lint
-$ npm i -g @commitlint/{cli,config-conventional}  # for commitlint
-$ npm i -g css-validator                          # for css validation
-$ npm i -g vscode-langservers-extracted           # for vscodejson/vscodehtml/vscodecss/vscodemarkdown for ALE
-$ brew install hadolint                           # for dockerfile
-$ brew install stylelint                          # for css
+$ npm i -g @commitlint/{cli,config-conventional}              # for commitlint
+$ npm i -g css-validator                                      # for css validation
+$ npm i -g vscode-langservers-extracted                       # for vscodejson/vscodehtml/vscodecss/vscodemarkdown for ALE
+$ brew install hadolint                                       # for dockerfile
+$ brew install stylelint                                      # for css
 $ brew install jsonlint ansible-lint
-$ brew install vint                               # vim script language lint
+$ brew install vint                                           # vim script language lint
 $ brew install --HEAD eslint
-$ brew install --HEAD shfmt                       # autoformat shell script source code
+$ brew install --HEAD shfmt                                   # autoformat shell script source code
 # - optional -
-$ brew install actionlint                         # for github action
-$ brew install libxml2                            # for xmllint
+$ brew install actionlint                                     # for github action
+$ brew install libxml2                                        # for xmllint
 
 # --- cask ---
 $ brew install --cask keycastr
-$ brew install --cask fliqlo                      # flip clock screensaver
+$ brew install --cask fliqlo                                  # flip clock screensaver
+$ brew install --cask iterm2@nightly --appdir=~/Applications  # install iterm2 nightly build to ~/Applications
 
 # --- tap ---
 $ brew tap hashicorp/tap
@@ -152,6 +157,7 @@ vitorgalvao/tiny-scripts
 ```
 
 ## cask
+
 ```bash
        Cask                  Current       Latest        A/U    Result
  1/19  alfred                5.6           5.6            Y   [   OK   ]
