@@ -10,6 +10,7 @@
   - [list commit](#list-commit)
   - [get commit created time](#get-commit-created-time)
   - [get HEAD of branch](#get-head-of-branch)
+  - [compare two refs](#compare-two-refs)
 - [tags](#tags)
   - [list tags](#list-tags)
   - [add lightweight tags](#add-lightweight-tags)
@@ -44,6 +45,8 @@
   - [list failure rule suites](#list-failure-rule-suites)
   - [check failure evaluations](#check-failure-evaluations)
 - [tips](#tips)
+  - [read file content](#read-file-content)
+  - [list repo folder structure](#list-repo-folder-structure)
   - [open in web](#open-in-web)
   - [switch accounts](#switch-accounts)
   - [config setup](#config-setup)
@@ -221,6 +224,32 @@ $ gh api "repos/{owner}/{repo}/git/refs/heads/{branch}"
 $ gh api "repos/marslo/ibook/git/refs/heads/marslo" | jq -r .object.sha
 ```
 
+### compare two refs
+
+> [!NOTE|label:references:]
+> - [Compare two commits](https://docs.github.com/en/rest/commits/commits?apiVersion=2026-03-10#compare-two-commits)
+> - API:
+>   `GET /repos/{owner}/{repo}/compare/{basehead}`
+
+```bash
+$ BRANCH='main'; HASH='5d27c737884ebf980c8cda18a162e06c95773404'; TAG='v4.0.1'
+
+# is hash belongs to branch
+$ gh api repos/marslo/cr-manager/compare/"${BRANCH}...${HASH}" --jq '.status'
+behind
+
+# distance
+# -- compare with branch --
+$ gh api repos/marslo/cr-manager/compare/"${BRANCH}...${HASH}" --jq '.behind_by'
+20
+$ gh api repos/marslo/cr-manager/compare/"${HASH}...${BRANCH}" --jq '.ahead_by'
+20
+
+# -- compare with tag --
+$ gh api repos/marslo/cr-manager/compare/"${TAG}...${HASH}" --jq '.behind_by'
+17
+```
+
 ## tags
 
 ### list tags
@@ -318,11 +347,13 @@ $ jq -n --argjson base "$base" --argjson lock "$lock" \
 ```
 
 > [!TIP|label:jq tricy]
+> ```bash
 > $ jq -n '{var1:true, var2:false}'
 > {
 >   "var1": true,
 >   "var2": false
 > }
+> ```
 
 ```bash
 $ lock=true  # or false
@@ -646,8 +677,8 @@ v7.0.0
 ```bash
 # check latest version
 $ for a in actions/checkout actions/setup-python actions/setup-node actions/cache; do
-    latest="$(gh api "repos/$a/releases/latest" --jq '.tag_name + "  (" + .published_at + ")"' 2>/dev/null)"
-    printf '%-24s latest=%s\n' "$a" "${latest:-<none>}"
+    latest="$(gh api "repos/${a}/releases/latest" --jq '.tag_name + "  (" + .published_at + ")"' 2>/dev/null)"
+    printf '%-24s latest=%s\n' "${a}" "${latest:-<none>}"
   done
 actions/checkout         latest=v7.0.1  (2026-07-20T15:10:05Z)
 actions/setup-python     latest=v7.0.0  (2026-07-20T03:15:01Z)
@@ -658,7 +689,7 @@ actions/cache            latest=v6.1.0  (2026-06-26T19:17:06Z)
 # $1=repo  $2=ref
 $ check() {
     local using
-    using="$(gh api "repos/$1/contents/action.yml?ref=$2" --jq '.content' 2>/dev/null | base64 -d 2>/dev/null | command grep -E '^\s*using:' | head -1 | tr -d ' ')"
+    using="$(gh api "repos/${1}/contents/action.yml?ref=$2" --jq '.content' 2>/dev/null | base64 -d 2>/dev/null | command grep -E '^\s*using:' | head -1 | tr -d ' ')"
     printf '%-24s %-6s -> %s\n' "$1" "$2" "${using:-unknown}"
   }
 
@@ -729,9 +760,9 @@ $ for id in $(gh api "repos/${OWNER}/${REPO}/rulesets" --jq '.[].id'); do
 
 > [!NOTE|label:references:]
 > - this is to add new branch into exclude list of ruleset
-> - API:
->   - [Get all repository rulesets](https://docs.github.com/en/rest/repos/rules?apiVersion=2022-11-28#get-all-repository-rulesets)
->   - [Update a repository ruleset](https://docs.github.com/en/rest/repos/rules?apiVersion=2022-11-28#update-a-repository-ruleset)
+> - APIs:
+>   - [Get all repository rulesets](https://docs.github.com/en/rest/repos/rules?apiVersion=2022-11-28#get-all-repository-rulesets) : `GET /repos/{owner}/{repo}/rulesets`
+>   - [Update a repository ruleset](https://docs.github.com/en/rest/repos/rules?apiVersion=2022-11-28#update-a-repository-ruleset) : `PUT /repos/{owner}/{repo}/rulesets/{ruleset_id}`
 
 - get current rulesets
 
@@ -746,6 +777,7 @@ $ for id in $(gh api "repos/${OWNER}/${REPO}/rulesets" --jq '.[].id'); do
   ```
 
 - create new ruleset json
+
   ```bash
   $ branch='refs/heads/devel'
   $ jq --arg ref "${BRANCH}" '{
@@ -775,24 +807,22 @@ $ for id in $(gh api "repos/${OWNER}/${REPO}/rulesets" --jq '.[].id'); do
 ### rulsets update history
 
 > [!NOTE|label:references:]
-> - [Get repository ruleset history](https://docs.github.com/en/rest/repos/rules?apiVersion=2022-11-28#get-repository-ruleset-history)
+> - [Get repository ruleset history](https://docs.github.com/en/rest/repos/rules?apiVersion=2022-11-28#get-repository-ruleset-history) : `GET /repos/{owner}/{repo}/rulesets/{ruleset_id}/history`
 
 ## rule suites
 
 > [!NOTE|label:references:]
-> - [List repository rule suites](https://docs.github.com/en/rest/repos/rule-suites?apiVersion=2022-11-28#list-repository-rule-suites)
-> - [Get a repository rule suite](https://docs.github.com/en/rest/repos/rule-suites?apiVersion=2022-11-28#get-a-repository-rule-suite)
+> - [List repository rule suites](https://docs.github.com/en/rest/repos/rule-suites?apiVersion=2022-11-28#list-repository-rule-suites) : `GET /repos/{owner}/{repo}/rulesets/rule-suites`
+> - [Get a repository rule suite](https://docs.github.com/en/rest/repos/rule-suites?apiVersion=2022-11-28#get-a-repository-rule-suite) : `GET /repos/{owner}/{repo}/rulesets/rule-suites/{rule_suite_id}`
 
 ### list failure rule suites
 
 ```bash
-$ gh api -H 'X-GitHub-Api-Version: 2022-11-28' \
-  "/repos/${OWNER}/${REPO}/rulesets/rule-suites?ref=refs/heads/${BRANCH}&time_period=week"
+$ gh api -H 'X-GitHub-Api-Version: 2022-11-28' "/repos/${OWNER}/${REPO}/rulesets/rule-suites?ref=refs/heads/${BRANCH}&time_period=week"
 
 # or
-$ gh api -H 'X-GitHub-Api-Version: 2022-11-28' \
-  "/repos/${OWNER}/${REPO}/rulesets/rule-suites?ref=refs/heads/${BRANCH}&time_period=week" \
-  --jq '.[] | {id, ref, pushed_at, actor_name, result}'
+$ gh api -H 'X-GitHub-Api-Version: 2022-11-28' "/repos/${OWNER}/${REPO}/rulesets/rule-suites?ref=refs/heads/${BRANCH}&time_period=week" \
+     --jq '.[] | {id, ref, pushed_at, actor_name, result}'
 ```
 
 <!--sec data-title="sample result" data-id="section0" data-show=true data-collapse=true ces-->
@@ -826,14 +856,12 @@ $ gh api -H 'X-GitHub-Api-Version: 2022-11-28' \
 $ gh api -H 'X-GitHub-Api-Version: 2022-11-28' "/repos/${OWNER}/${REPO}/rulesets/rule-suites/${RULE_SUITE_ID}"
 
 # or list only failure evaluations
-$ gh api -H 'X-GitHub-Api-Version: 2022-11-28' \
-  "/repos/${OWNER}/${REPO}/rulesets/rule-suites/${RULE_SUITE_ID}" \
-  --jq '.rule_evaluations[] | select(.result=="fail")'
+$ gh api -H 'X-GitHub-Api-Version: 2022-11-28' "/repos/${OWNER}/${REPO}/rulesets/rule-suites/${RULE_SUITE_ID}" \
+     --jq '.rule_evaluations[] | select(.result=="fail")'
 
 # or
-$ gh api -H 'X-GitHub-Api-Version: 2022-11-28' \
-  "/repos/${OWNER}/${REPO}/rulesets/rule-suites/${RULE_SUITE_ID}" \
-  --jq '{ref, result, failed_rules: (.rule_evaluations | map(select(.result=="fail")))}'
+$ gh api -H 'X-GitHub-Api-Version: 2022-11-28' "/repos/${OWNER}/${REPO}/rulesets/rule-suites/${RULE_SUITE_ID}" \
+     --jq '{ref, result, failed_rules: (.rule_evaluations | map(select(.result=="fail")))}'
 ```
 
 <!--sec data-title="failure evaluations result" data-id="section1" data-show=true data-collapse=true ces-->
@@ -864,6 +892,91 @@ $ gh api -H 'X-GitHub-Api-Version: 2022-11-28' \
 <!--endsec-->
 
 ## tips
+
+### read file content
+
+> [!NOTE|label:references:]
+> - [Get repository content](https://docs.github.com/en/rest/repos/contents?apiVersion=2026-03-10#get-repository-content) : `GET /repos/{owner}/{repo}/contents/{path}`
+
+```bash
+$ gh api repos/${ORG}/${REPO}/contents/${PATH_TO_FILE}?ref=${REF} --jq '.content' | base64 -d
+
+# i.e.:
+$ gh api repos/marslo/cr-manager/contents/cli/libs/formats.toml --jq '.content' | base64 -d | head -3
+# ==============================================================================
+# Copyright header format configurations for cr-manager.
+# ==============================================================================
+
+# with refs (tag or branch)
+$ gh api repos/marslo/cr-manager/contents/CHANGELOG.md?ref="v4.0.1" --jq '.content' | base64 -d | head -3
+## [4.0.1](https://github.com/marslo/cr-manager/compare/v4.0.0...v4.0.1) (2026-07-29)
+
+### Bug Fixes
+
+$ gh api repos/marslo/cr-manager/contents/CHANGELOG.md?ref="v4.0.0" --jq '.content' | base64 -d | head -3
+## [4.0.0](https://github.com/marslo/cr-manager/compare/v3.3.4...v4.0.0) (2026-05-26)
+
+### ⚠ BREAKING CHANGES
+```
+
+### list repo folder structure
+
+> [!NOTE|label:references:]
+> - list single-level directory | [Get repository content](https://docs.github.com/en/rest/repos/contents?apiVersion=2026-03-10#get-repository-content) : `GET /repos/{owner}/{repo}/contents/{path}`
+> - list tree recursively | [Get a tree](https://docs.github.com/en/rest/git/trees?apiVersion=2026-03-10#get-a-tree) : `GET /repos/{owner}/{repo}/git/trees/{tree_sha}`
+
+```bash
+# list repo root folder structure
+$ gh api repos/${ORG}/${REPO}/contents?ref=${REF} --jq '.[].name'
+
+$ gh api repos/${ORG}/${REPO}/contents --jq '.[] | "\(.type)\t\(.name)"'
+...
+file  README.md
+dir assets
+file  bootstrap.sh
+dir cli
+
+# list in path `cli/libs`
+$ gh api repos/${ORG}/${REPO}/contents/cli/libs --jq '.[] | "\(.type)\t\(.name)"'
+file  __init__.py
+file  formats.toml
+file  helper.py
+file  manager.py
+```
+
+> [!TIP]
+> without `recursive=1`, the following commands are equivalent :
+>
+> `gh api "repos/${ORG}/${REPO}/git/trees/${REF}" --jq '.tree[].path'` == `gh api "repos/${ORG}/${REPO}/contents?ref=${REF}" --jq '.[].path'`
+
+```bash
+# list tree recursively
+$ gh api "repos/${ORG}/${REPO}/git/trees/main?recursive=1" --jq '.tree[].path' | sort -h
+cli
+cli/__init__.py
+cli/completions
+cli/completions/__init__.py
+cli/completions/cr-manager.bash
+cli/crm.py
+cli/install_completion.py
+cli/libs
+cli/libs/__init__.py
+cli/libs/formats.toml
+cli/libs/helper.py
+cli/libs/manager.py
+CONTRIBUTING.md
+...
+
+# list only directories
+$ gh api "repos/${ORG}/${REPO}/git/trees/main?recursive=1" --jq '.tree[] | select(.type=="tree") | .path'
+.github
+.github/workflows
+assets
+cli
+cli/completions
+cli/libs
+tests
+```
 
 ### open in web
 ```bash
