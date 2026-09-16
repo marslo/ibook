@@ -2,6 +2,12 @@
 ---
 exclude: '^(.*/etc-shadowsocks.json|.*/shadowsocks-all.sh|.*/etcd.yaml|.*/buildinfo.delete.sh)$'
 
+ci:
+  autofix_prs: false
+
+default_install_hook_types: [pre-commit, commit-msg]
+default_stages: [pre-commit]
+
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
@@ -9,9 +15,13 @@ repos:
       - id: trailing-whitespace
         name: Trim Trailing Whitespace
         args: [--markdown-linebreak-ext=md]
-        exclude_types: [binary]
       - id: end-of-file-fixer
         name: End Of File Fixer
+      - id: check-yaml
+        name: Check YAML
+        args: ["--unsafe"]
+      - id: check-json
+        name: Check JSON
       - id: check-merge-conflict
         name: Check Merge Conflict
       - id: check-case-conflict
@@ -20,9 +30,14 @@ repos:
         name: Mixed Line Ending
         args: ["--fix=lf"]
 
-  - repo: https://github.com/psf/black
-    rev: 26.5.1
+  - repo: https://github.com/crate-ci/typos
+    rev: v1.50.2
     hooks:
-      - id: black
-        name: Python Black
-        language_version: python3
+      - id: typos
+        name: Typos
+        args: ['--write-changes', '--force-exclude']
+      - id: typos
+        name: Typos (commit message)
+        alias: typos-commit-msg
+        stages: [commit-msg]
+        args: ['--force-exclude']
