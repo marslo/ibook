@@ -1,6 +1,6 @@
 # yamllint disable rule:indentation
 ---
-exclude: '^(.*/etc-shadowsocks.json|.*/shadowsocks-all.sh|.*/etcd.yaml|.*/buildinfo.delete.sh)$'
+exclude: '^(.*/etc-shadowsocks.json|.*/etcd.yaml|.*/shadowsocks-all.sh|.*/plugin.js.map|.*/theme.js|.*/gitbook.js)$'
 
 ci:
   autofix_prs: false
@@ -31,11 +31,12 @@ repos:
         args: ["--fix=lf"]
 
   - repo: https://github.com/crate-ci/typos
-    rev: v1.50.2
+    rev: v1.50.3
     hooks:
       - id: typos
         name: Typos
-        args: ['--write-changes', '--force-exclude']
+        args: ['--force-exclude']
+        files: '\.html$'
       - id: typos
         name: Typos (commit message)
         alias: typos-commit-msg
