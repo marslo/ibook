@@ -15,7 +15,7 @@
 
 {% hint style='tip' %}
 > references:
-> - [podTempate](https://plugins.jenkins.io/kubernetes/#plugin-content-pod-template)
+> - [podTemplate](https://plugins.jenkins.io/kubernetes/#plugin-content-pod-template)
 > - [Jenkins Kubernetes Plugin: Running Agents In Other Clusters](https://www.moogsoft.com/blog/jenkins-kubernetes-plugin-running-agents-in-other-clusters/)
 > - [Jenkins Kubernetes Plugin: Using the plugin in your pipelines](https://www.moogsoft.com/blog/jenkins-kubernetes-plugin-using-the-plugin-in-your-pipelines/)
 > - [Create Kubernetes Service Accounts and Kubeconfigs](https://docs.armory.io/armory-enterprise/armory-admin/manual-service-account/)

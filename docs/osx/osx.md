@@ -300,7 +300,7 @@ $ chflags -R nouchg <PATH of folder>
 ### java
 - setup java home
   ```bash
-  $ /usr/libexec/java_home -v 1.8.0.162 -exec javac -versioin
+  $ /usr/libexec/java_home -v 1.8.0.162 -exec javac -version
   ```
 
 ### keychain

@@ -48,6 +48,7 @@ extend-ignore-re = [
 # case sensitive
 [default.extend-identifiers]
 iwANTtOsPLITtHISsTRING = 'iwANTtOsPLITtHISsTRING'
+UMARK = 'UMARK'
 
 # case insensitive
 [default.extend-words]

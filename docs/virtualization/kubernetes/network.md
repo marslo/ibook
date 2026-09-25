@@ -65,7 +65,9 @@ auto eno3
 
 ### network info
 ```bash
-$ nmcli [-p] d[evice] show <interface>
+$ nmcli [-p] d show <interface>
+# or
+$ nmcli [-p] device show <interface>
 ```
 
 

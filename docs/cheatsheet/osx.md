@@ -189,7 +189,7 @@ Matching Java Virtual Machines (2):
 /opt/homebrew/Cellar/openjdk/24.0.2/libexec/openjdk.jdk/Contents/Home
 
 # legacy java version
-$ /usr/libexec/java_home -v 1.8.0.162 -exec javac -versioin
+$ /usr/libexec/java_home -v 1.8.0.162 -exec javac -version
 ```
 
 ### xCode

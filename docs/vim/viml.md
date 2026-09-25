@@ -359,7 +359,7 @@ make nvim.o
 
 ### [autocmd BufWritePre except](https://stackoverflow.com/q/6496778/2940319)
 
-- [funciton](https://stackoverflow.com/a/6496995/2940319)
+- [functions](https://stackoverflow.com/a/6496995/2940319)
   ```vim
   fun! StripTrailingWhitespace()
     " don't strip on these filetypes

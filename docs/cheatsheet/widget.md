@@ -624,39 +624,44 @@ cname='San Jose'
 verbose='false'
 appid="${OWM_API_TOKEN}"
 # shellcheck disable=SC1078,SC1079
-usage="""
+usage="NAME
 $(c M)iweather$(c) - show weather status of city
-\nNOTICE:
-\n\t1. requires https://openweathermap.org/api API key first! and setup environment variable:
-\t   $(c Y)\$ export OWM_API_TOKEN=xxxxx$(c)
-\t2. copy or move $(c G)iweather.icon$(c) into same directory with current script
-\t   $(c Y)\$ cp mylinux/config/home/.marslo/bin/iweather.icon .$(c)
-\t   $(c sW)# or$(c)
-\t   $(c Y)\$ curl -o iweather.icon https://raw.githubusercontent.com/marslo/mylinux/master/confs/home/.marslo/bin/iweather.icon$(c)
-\nSYNOPSIS:
-\n\t$(c sY)\$ iweather [ -h | -v | -c <city> ]$(c)
-\nEXAMPLE:
-\n\tshow help
-\t   $(c G)\$ iweather -h$(c)
-\n\tto show current weather stats
-\t   $(c G)\$ iweather <city name>$(c) | $(c G)iweather -c <city name>$(c)
-USAGE:
-\n\t $ iweather -v
-\t  $(c G)Santa Clara$(c) : Few Clouds
-\t
-\t \033[38;5;226m   \\  /\033[0m        \033[38;5;214m17.36\033[0m °C
-\t \033[38;5;226m _ /""\033[38;5;250m.-.    \033[0m    → \033[38;5;220m3.6\033[0m m/s
-\t \033[38;5;226m   \\_\033[38;5;250m(   ).  \033[0m  10.00 km
-\t \033[38;5;226m   /\033[38;5;250m(___(__) \033[0m  80 %
-\t                0 mW/cm2
-\n\t $ iweather -c beijing -v
-\t  $(c G)Beijing$(c) : Clear Sky
-\t
-\t\033[38;5;226m    \\   /    \033[0m   \033[38;5;214m31.94\033[0m °C
-\t\033[38;5;226m     .-.     \033[0m   ↑ \033[38;5;220m2.05\033[0m m/s
-\t\033[38;5;226m  ― (   ) ―  \033[0m   10.00 km
-\t\033[38;5;226m     \`-’     \033[0m   57 %
-\t\033[38;5;226m    /   \\    \033[0m   4.6 mW/cm2
+
+NOTICE:
+  1. requires https://openweathermap.org/api API key first! and setup environment variable:
+     $(c Y)\$ export OWM_API_TOKEN=xxxxx$(c)
+  2. copy or move $(c G)iweather.icon$(c) into same directory with current script
+     $(c Y)\$ cp mylinux/config/home/.marslo/bin/iweather.icon .$(c)
+     $(c sW)# or$(c)
+     $(c Y)\$ curl -o iweather.icon https://raw.githubusercontent.com/marslo/mylinux/master/confs/home/.marslo/bin/iweather.icon$(c)
+
+SYNOPSIS:
+  $(c sY)\$ iweather [ -h | -v | -c <city> ]$(c)
+
+EXAMPLE:
+  show help
+     $(c G)\$ iweather -h$(c)
+  to show current weather stats
+     $(c G)\$ iweather <city name>$(c) | $(c G)iweather -c <city name>$(c)
+
+USAGE
+  $ iweather -v
+   $(c G)Santa Clara$(c) : Few Clouds
+
+  \033[38;5;226m   \\  /\033[0m        \033[38;5;214m17.36\033[0m °C
+  \033[38;5;226m _ /""\033[38;5;250m.-.    \033[0m    → \033[38;5;220m3.6\033[0m m/s
+  \033[38;5;226m   \\_\033[38;5;250m(   ).  \033[0m  10.00 km
+  \033[38;5;226m   /\033[38;5;250m(___(__) \033[0m  80 %
+                 0 mW/cm2
+
+  $ iweather -c beijing -v
+   $(c G)Beijing$(c) : Clear Sky
+
+  \033[38;5;226m    \\   /    \033[0m   \033[38;5;214m31.94\033[0m °C
+  \033[38;5;226m     .-.     \033[0m   ↑ \033[38;5;220m2.05\033[0m m/s
+  \033[38;5;226m  ― (   ) ―  \033[0m   10.00 km
+  \033[38;5;226m     \`-’     \033[0m   57 %
+  \033[38;5;226m    /   \\    \033[0m   4.6 mW/cm2
 """
 
 if [[ 0 -eq $# ]]; then
