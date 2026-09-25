@@ -45,6 +45,11 @@ extend-ignore-re = [
   '// result:.*'
 ]
 
+# case sensitive
+[default.extend-identifiers]
+iwANTtOsPLITtHISsTRING = 'iwANTtOsPLITtHISsTRING'
+
+# case insensitive
 [default.extend-words]
 # <typo> = "<correction>"
 # --- allowlist ---

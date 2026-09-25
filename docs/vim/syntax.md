@@ -1,5 +1,4 @@
 
-
 > [!NOTE|label:references:]
 > - [Creating your own syntax files](https://vim.fandom.com/wiki/Creating_your_own_syntax_files)
 

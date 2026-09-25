@@ -20,8 +20,7 @@
 - [system](#system)
   - [system file path](#system-file-path)
   - [filetype in vim language](#filetype-in-vim-language)
-  - [show path of current file](#show-path-of-current-file)
-  - [Putting the current file on the Windows clipboard](#putting-the-current-file-on-the-windows-clipboard)
+  - [putting the current file on the windows clipboard](#putting-the-current-file-on-the-windows-clipboard)
   - [map overview](#map-overview)
   - [check `MACHTYPE`](#check-machtype)
   - [time](#time)
@@ -78,7 +77,6 @@
 | different instance    | `isnot`          | `isnot#`   | `isnot?`         |
 
 
-
 ## [builtin function details](https://neovim.io/doc/user/builtin.html#builtin-function-details)
 
 ### math
@@ -128,10 +126,10 @@
 
 ### assert
 ```vim
-:echo assert_equal('foo', 'bar')
+:echo assert_equal( 'foo', 'bar' )
 1
 
-:echo assert_match('^f.*o$', 'foobar')
+:echo assert_match( '^f.*o$', 'foobar' )
 1
 ```
 
@@ -177,116 +175,116 @@
 ```
 
 ### system info
-- exists
-  ```vim
-  :echo exists("&mouse")
-  1
-  :echo exists("$HOSTNAME")
-  0
-  :echo exists("*strftime")
-  1
-  :echo exists("*s:MyFunc")
-  0
-  :echo exists("*MyFunc")
-  0
-  :echo exists("*v:lua.Func")
-  0
-  :echo exists("bufcount")
-  0
-  :echo exists(":Make")
-  0
-  :echo exists(":make")
-  2
-  :echo exists("#CursorHold")
-  1
-  :echo exists("#BufReadPre#*.gz")
-  1
-  :echo exists("#filetypeindent")
-  1
-  :echo exists("#filetypeindent#FileType")
-  1
-  :echo exists("#filetypeindent#FileType#*")
-  1
-  :echo exists("##ColorScheme")
-  1
-  ```
 
-- file
-  ```vim
-  :echo filereadable('~/.vimrc')
-  0
-  :echo filereadable(expand('~/.vimrc'))
-  1
+```vim
+" whether if exists
+:echo exists("&mouse")
+1
+:echo exists("$HOSTNAME")
+0
+:echo exists("*strftime")
+1
+:echo exists("*s:MyFunc")
+0
+:echo exists("*MyFunc")
+0
+:echo exists("*v:lua.Func")
+0
+:echo exists("bufcount")
+0
+:echo exists(":Make")
+0
+:echo exists(":make")
+2
+:echo exists("#CursorHold")
+1
+:echo exists("#BufReadPre#*.gz")
+1
+:echo exists("#filetypeindent")
+1
+:echo exists("#filetypeindent#FileType")
+1
+:echo exists("#filetypeindent#FileType#*")
+1
+:echo exists("##ColorScheme")
+1
+```
 
-  " get first line
-  :getline(1)
-  <!-- START doctoc generated TOC please keep comment here to allow auto update -->
-  " get current line
-  :echo getline(".")
+```vim
+" file
+:echo filereadable('~/.vimrc')
+0
+:echo filereadable(expand('~/.vimrc'))
+1
 
-  " get matches
-  :echo getmatches()
-  " more
-  :let m = getmatches()
-  :call clearmatches()
-  :echo getmatches()
-  ```
+" get first line
+:getline(1)
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+" get current line
+:echo getline('.')
 
-- returns the character index of the column position
-  ```vim
-  "                + cursor
-  "                v
-  :echo charcoal('.')
-  22
-  :echo col('.')
-  22
-  ```
+" get matches
+:echo getmatches()
+" more
+:let m = getmatches()
+:call clearmatches()
+:echo getmatches()
+```
 
-- line length
-  ```vim
-  " cursor can be anywhere of following line
-  :echo col("$")
-  17
-  ```
+```vim
+" returns the character index of the column position
+"               + cursor
+:echo charcoal('.')
+22
+:echo col('.')
+22
+```
 
-- env
-  ```vim
-  :echo has_key(environ(), 'HOME')
-  1
-  :echo index(keys(environ()), 'HOME', 0, 1) != -1
-  1
+```vim
+" line length
+" cursor can be anywhere of following line
+:echo col("$")
+17
+```
 
-  :echo escape('c:\program files\vim', ' \')
-  c:\\program\ files\\vim
-  ```
+```vim
+" get environment variable
+:echo has_key( environ(), 'HOME' )
+1
+:echo index( keys(environ()), 'HOME', 0, 1 ) != -1
+1
 
-- execute
-  ```vim
-  :echo execute('echon "foo"')
-  foo
+:echo escape( 'c:\program files\vim', ' \' )
+c:\\program\ files\\vim
+```
 
-  :echo execute(['echon "foo"', 'echon "bar"'])
-  foobar
+```vim
+" execute
+:echo execute( 'echon "foo"' )
+foo
 
-  :echo execute('args')->split("\n")
-  ['[nvim.md] ']
-  ```
+:echo execute([ 'echon "foo"', 'echon "bar"' ])
+foobar
 
-- path
-  ```vim
-  :echo expandcmd('make %<.o')
-  make nvim.o
-  :echo expandcmd('make %<.o', {'errmsg': v:true})
-  make nvim.o
+:echo execute('args')->split("\n")
+['[nvim.md] ']
+```
 
-  :echo fnameescape('+some str%nge|name')
-  \+some\ str\%nge\|name
-  :let fname = '+some str%nge|name'
-  :exe "edit " .. fnameescape(fname)
+```vim
+" paths
+:echo expandcmd( 'make %<.o' )
+make nvim.o
+:echo expandcmd( 'make %<.o', {'errmsg': v:true} )
+make nvim.o
 
-  :echo fnamemodify("main.c", ":p:h")
-  /home/marslo/ibook/docs/vim
-  ```
+:echo fnameescape( '+some str%nge|name' )
+\+some\ str\%nge\|name
+:let fname = '+some str%nge|name'
+:exe "edit " .. fnameescape(fname)
+
+:echo fnamemodify( "main.c", ":p:h" )
+/home/marslo/ibook/docs/vim
+```
 
 ### others
 - buffer name
@@ -633,44 +631,20 @@ expand(trim( system('command -v python3') ))
 ```
 
 ### [filetype in vim language](https://stackoverflow.com/a/63255521/2940319)
+
 ```vim
 if index(['vim', 'c', 'cpp'], &filetype) != -1
   echom "hello!"
 endif
+
+" or: https://stackoverflow.com/a/29407473/2940319
+let fts = ['c', 'cpp']
+if index(fts, &filetype) == -1
+  " do stuff
+endif
 ```
 
-- [or](https://stackoverflow.com/a/29407473/2940319)
-  ```vim
-  let fts = ['c', 'cpp']
-  if index(fts, &filetype) == -1
-    " do stuff
-  endif
-  ```
-
-### show path of current file
-
-> [!TIP]
-> references:
-> - [How can I see the full path of the current file?](https://vi.stackexchange.com/a/1885/7389)
-> - [vimtip : Get the name of the current file](https://vim.fandom.com/wiki/Get_the_name_of_the_current_file)
-> - [How to find out which file is currently opened in vim?](https://unix.stackexchange.com/a/104902/29178)
-
-| COMMANDS                  | RESULT                                   | EXPLAIN                                                            |
-|---------------------------|------------------------------------------|--------------------------------------------------------------------|
-| `:echo @%`                | `tricky.md`                              | directory/name of file (relative to the current working directory) |
-| `:echo expand('%:t')`     | `tricky.md`                              | name of file ('tail')                                              |
-| `:echo expand('%:p')`     | `/Users/marslo/ibook/docs/vim/tricky.md` | full path                                                          |
-| `:echo expand('%:p:h')`   | `/Users/marslo/ibook/docs/vim`           | directory containing file ('head')                                 |
-| `:echo expand('%:p:h:t')` | `vim`                                    | direct folder name                                                 |
-| `:echo expand('%:r')`     | `tricky`                                 | name of file less one extension ('root')                           |
-| `:echo expand('%:e')`     | `md`                                     | name of file's extension ('extension')                             |
-
-- others
-  - <kbd>ctrl</kbd> + <kbd>g</kbd>
-  - `:f`
-
-
-### [Putting the current file on the Windows clipboard](https://vim.fandom.com/wiki/Putting_the_current_file_on_the_Windows_clipboard)
+### [putting the current file on the windows clipboard](https://vim.fandom.com/wiki/Putting_the_current_file_on_the_Windows_clipboard)
 
 > [!NOTE|label:references:]
 > - [Using the Windows clipboard in Cygwin Vim](https://vim.fandom.com/wiki/Using_the_Windows_clipboard_in_Cygwin_Vim)
@@ -690,7 +664,7 @@ nn <silent><C-G> :let @*=expand('%:p')<CR>:f<CR>
 > - [* vim tips : Mapping keys in Vim - Tutorial (Part 2)](https://vim.fandom.com/wiki/Mapping_keys_in_Vim_-_Tutorial_(Part_2))
 
 | COMMANDS |   COMMANDS  |   REMOVE  | MODES                                    |
-|:--------:|:-----------:|:---------:|------------------------------------------|
+| :------: | :---------: | :-------: | ---------------------------------------- |
 |  `:map`  |  `:noremap` |  `:unmap` | Normal, Visual, Select, Operator-pending |
 |  `:nmap` | `:nnoremap` | `:nunmap` | Normal                                   |
 |  `:vmap` | `:vnoremap` | `:vunmap` | Visualm Select                           |
@@ -707,7 +681,7 @@ nn <silent><C-G> :let @*=expand('%:p')<CR>:f<CR>
 - [map table](https://vimhelp.org/map.txt.html#map-table)
 
 | MODE COMAMDN | NORM | INS | CMD | VIS | SEL | OPR | TERM | LANG |
-|--------------|:----:|:---:|:---:|:---:|:---:|:---:|:----:|:----:|
+| ------------ | :--: | :-: | :-: | :-: | :-: | :-: | :--: | :--: |
 | `[nore]map`  |  yes |  -  |  -  | yes | yes | yes |   -  |   -  |
 | `n[nore]map` |  yes |  -  |  -  |  -  |  -  |  -  |   -  |   -  |
 | `[nore]map!` |   -  | yes | yes |  -  |  -  |  -  |   -  |   -  |
@@ -722,7 +696,7 @@ nn <silent><C-G> :let @*=expand('%:p')<CR>:f<CR>
 
 
 | COMMANDS |   COMMANDS  |  COMMANDS |   COMMANDS   | Normal | Visual+Select | Operator-pending |
-|:--------:|:-----------:|:---------:|:------------:|:------:|:-------------:|:----------------:|
+| :------: | :---------: | :-------: | :----------: | :----: | :-----------: | :--------------: |
 |  `:map`  |  `:noremap` |  `:unmap` |  `:mapclear` |   yes  |      yes      |        yes       |
 |  `:nmap` | `:nnoremap` | `:nunmap` | `:nmapclear` |   yes  |       -       |         -        |
 |  `:vmap` | `:vnoremap` | `:vunmap` | `:vmapclear` |    -   |      yes      |         -        |
@@ -737,38 +711,36 @@ nn <silent><C-G> :let @*=expand('%:p')<CR>:f<CR>
 > - [`system()`](https://learnvimscriptthehardway.stevelosh.com/chapters/52.html#system)
 > - [:help system()](https://vimhelp.org/builtin.txt.html#system%28%29)
 
-- git bash
-  ```bash
-  :echo system('echo -n $MACHTYPE')
-  x86_64-pc-msys
-  ```
+```vim
+" git bash
+:echo system('echo -n $MACHTYPE')
+x86_64-pc-msys
 
-- wsl
-  ```bash
-  :echo system('echo -n $MACHTYPE')
-  x86_64-pc-linux-gnu
-  ```
+" wsl
+:echo system('echo -n $MACHTYPE')
+x86_64-pc-linux-gnu
 
-- centos
-  ```bash
-  :echo system('echo -n $MACHTYPE')
-  x86_64-redhat-linux-gnu
-  ```
+" centos
+:echo system('echo -n $MACHTYPE')
+x86_64-redhat-linux-gnu
 
-- more for `system()`
-  ```vim
-  :echo system('ls ' .. expand('%:h:S'))
-  color.md
-  install.md
-  plugins.md
-  tricky.md
-  troubleshooting.md
-  vim.md
-  viml.md
-  windows.md
+" osx
+:echo system('echo -n $MACHTYPE')
+aarch64-apple-darwin25.6.0
 
-  Press ENTER or type command to continue
-  ```
+" more for `system()`
+:echo system('ls ' .. expand('%:h:S'))
+color.md
+install.md
+plugins.md
+tricky.md
+troubleshooting.md
+vim.md
+viml.md
+windows.md
+
+Press ENTER or type command to continue
+```
 
 ### time
 
@@ -790,6 +762,7 @@ Wed Dec 31 15:59:59 1969
 ```
 
 ## functions
+
 ### yank highlight
 ```lua
 vim.cmd( 'autocmd TextYankPost * silent! lua vim.highlight.on_yank {on_visual=true}' )
@@ -980,10 +953,8 @@ function! OpenInFreshWindowOrNewTab()
     else
         tabnew
         Files
-        " Close the new tab if the find was cancelled.
-        if bufname('%') == ''
-            tabclose
-        endif
+        " close the new tab if the find was cancelled.
+        if bufname('%') == '' | tabclose | endif
     endif
 endfunction
 nnoremap ; :call OpenInFreshWindowOrNewTab()<cr>
@@ -1231,12 +1202,28 @@ set statusline=%{WordCount()}\ words
 function! VSetSearch()
   let l:cursor = getpos('.')       " save cursor position
   let l:temp = @s                  " save to @s (s register)
-  normal! gv"sy                    " yank the visual selection to @s
-  let @/ = '\V' . substitute(escape(@s, '/|'), '\n', '\\n', 'g')
+  " gv: virtual mode selection; "s: register name is `s`; y: yank (yank the visual selection to @s)
+  normal! gv"sy
+  let @/ = '\V' . substitute( escape(@s, '\/|'), '\n', '\\n', 'g' )
   let @s = l:temp                  " recover @s (s register)
   call setpos('.', l:cursor)       " recover cursor position
 endfunction
-xnoremap *         :<C-u>call VSetSearch()<CR>/<C-R>=@/<CR><CR>:normal! N<CR>
+xnoremap * :<C-u>call VSetSearch()<CR>/<C-R>=@/<CR><CR>:normal! N<CR>
+xnoremap # :<C-u>call VSetSearch()<CR>?<C-R>=@/<CR><CR>:normal! n<CR>
+"                                     +----+--+---+
+"                                       |   |   + `<CR>` ⩵  Enter
+"                                       |   + `@/` ⩵  @/
+"                                       + `?<C-R>=` ⩵  ? → Ctrl+R → =
+
+" g* and g# for regex search
+function! VSetRegexSearch()
+  let temp = @s
+  normal! gv"sy
+  let @/ = '\v' . substitute( escape(@s, '/'), '\n', '\\n', 'g' )
+  let @s = temp
+endfunction
+xnoremap g* :<C-u>call VSetRegexSearch()<CR>/<C-R>=@/<CR><CR>:normal! N<CR>
+xnoremap g# :<C-u>call VSetRegexSearch()<CR>?<C-R>=@/<CR><CR>:normal! n<CR>
 ```
 
 ## commands
@@ -1252,18 +1239,20 @@ xnoremap *         :<C-u>call VSetSearch()<CR>/<C-R>=@/<CR><CR>:normal! N<CR>
 > - [executing vim command silently then echo in vim](https://stackoverflow.com/a/37272102/2940319)
 > - [silent vs. silent! - What is the difference?](https://vi.stackexchange.com/q/34346/7389)
 
-- execute [`doctoc`](https://github.com/thlorenz/doctoc) in vim via command `:Toc`
-  ```vim
-  command! -nargs=0 Toc execute 'silent ! /usr/local/bin/doctoc --github --maxlevel 3 %' | execute 'redraw!'
+execute [`doctoc`](https://github.com/thlorenz/doctoc) in vim via command `:Toc`
+```vim
+command! -nargs=0 Toc execute 'silent ! /usr/local/bin/doctoc --github --maxlevel 3 %' | execute 'redraw!'
 
-  # for automatic cmd
-  autocmd BufWritePost *\(.md\)  silent :Toc                 " automatic build doctoc when save it
-  ```
+" for automatic cmd
+autocmd BufWritePost *\(.md\)  silent :Toc                 " automatic build doctoc when save it
+```
 
 ### get path
 
 > [!NOTE|label:references:]
-> - [`:help expand`](https://vimhelp.org/builtin.txt.html#expand%28%29)
+> references:
+> - [`expand({string} [, {nosuf} [, {list}]])`](https://vimhelp.org/builtin.txt.html#expand%28%29)
+> - [vimtip : Get the name of the current file](https://vim.fandom.com/wiki/Get_the_name_of_the_current_file)
 >
 > | MODIFIERS | COMMENTS                           |
 > |:---------:|------------------------------------|
@@ -1311,6 +1300,44 @@ xnoremap *         :<C-u>call VSetSearch()<CR>/<C-R>=@/<CR><CR>:normal! N<CR>
 > - [Learn Vimscript the Hard Way : String Functions](https://learnvimscriptthehardway.stevelosh.com/chapters/27.html)
 > - [Learn Vimscript the Hard Way : Lists](https://learnvimscriptthehardway.stevelosh.com/chapters/35.html)
 
+
+| EXPRESSION          | RESULT                                                              | COMMENTS
+| ------------------- | ------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| `expand('%:p')`     | `/Users/marslo/path/filename.txt`                                   | absolute path, full path                                                                     |
+| `expand('%:p:~')`   | `~/path/filename.txt`                                               | absolute path with `$HOME` shortened to `~` == `${ABSOLUTE_FILE_PATH/#$HOME\//\~\/}`         |
+| `expand('%:~')`     | `~/path/filename.txt`                                               | relative path with `$HOME` shortened to `~`                                                  |
+| `expand('%:.')`     | `path/filename.txt`                                                 | relative path with `$cwd`                                                                    |
+| `expand('%:t')`     | `filename.txt`                                                      | filename                                                                                     |
+| `expand('%:t:r')`   | `filename`                                                          | filename without extension                                                                   |
+| `expand('%:e')`     | `txt`                                                               | extension                                                                                    |
+| `expand('%:r')`     | `path/filename` (`:set noautochdir`)<br>filename (`:set autochdir`) | `%` without extension                                                                        |
+| `expand('%:p:r')`   | `/Users/marslo/path/filename`                                       | absolute path without extension                                                              |
+| `expand('%:p:h')`   | `/Users/marslo/path`                                                | dirname ( == `dirname` )                                                                     |
+| `expand('%:p:~:h')` | `~/path`                                                            | dirname with `$HOME` shortened to `~` ( == <code>dirname &#124; sed "s:^$HOME/:~/:"</code> ) |
+| `expand('%:h')`     | `path`                                                              | directory name ( == <code>dirname &#124; sed "s:^$cwd/::"</code> )                           |
+| `expand('%:p:h:t')` | `path`                                                              | directory name ( == <code>dirname &#124; sed "s:^$cwd/::"</code> )                           |
+| `expand('%:p:h:h')` | `/Users/marslo`                                                     | parent directory (absolute path) of dirname ( == `dirname $(dirname)` )                      |
+
+
+> [!TIP]
+> `%` == `"${ABSOLUTE_FILE_PATH/#$cwd\//}"` == `ABSOLUTE_FILE_PATH - $cwd/` (`:pwd` print current `$cwd`):
+> - if `$ABSOLUTE_FILE_PATH` starts with `$cwd`, then remove `$cwd/` from `$ABSOLUTE_FILE_PATH`
+> - if `$ABSOLUTE_FILE_PATH` does not start with `$cwd`, then return `$ABSOLUTE_FILE_PATH`
+> way to change `$cwd` in vim/nvim - [Set working directory to the current file](https://vim.fandom.com/wiki/Set_working_directory_to_the_current_file)
+> - `:set autochdir` ( VS. `:set noautochdir` ) changes `$cwd` to the directory of the current file == `:cd %:p:h` == `:cd $(dirname $ABSOLUTE_FILE_PATH)`
+> - `:cd /path/to/dir` change `$cwd` to `/path/to/dir`
+> - `:lcd /path/to/dir` change `$cwd` to `/path/to/dir` for current window only
+> - `:tcd /path/to/dir` change `$cwd` to `/path/to/dir` for current tab only
+
+
+others
+
+| -         | KEYS                           | COMMANDS                       |
+| --------- | ------------------------------ | ------------------------------ |
+| SHORTCUTS | <kbd>ctrl</kbd> + <kbd>g</kbd> | `"viml.md" 1454 lines --47%--` |
+| COMMAND   | `:f`                           | `"viml.md" 1454 lines --47%--` |
+
+
 ```vim
 :echo expand("%:p")
 /Users/marslo/ibook/docs/vim/viml.md
@@ -1319,11 +1346,11 @@ xnoremap *         :<C-u>call VSetSearch()<CR>/<C-R>=@/<CR><CR>:normal! N<CR>
 :echo getcwd()
 /Users/marslo/ibook/docs/vim
 
-:echo fnamemodify('.', ':p:h:t')               " https://stackoverflow.com/a/13940563/2940319
+:echo fnamemodify( '.', ':p:h:t' )               " https://stackoverflow.com/a/13940563/2940319
 vim
-:echo fnamemodify(getcwd(), ':t')              " https://vi.stackexchange.com/a/15047/7389
+:echo fnamemodify( getcwd(), ':t' )              " https://vi.stackexchange.com/a/15047/7389
 vim
-:echo substitute(getcwd(), '^.*/', '', '')
+:echo substitute( getcwd(), '^.*/', '', '' )
 vim
 
 :echo expand("%:t")
@@ -1399,20 +1426,43 @@ viml
   ```
 
 ### theme
-- solarized
-  ```vim
-  """ solarized
-  colorscheme solarized
-  set termguicolors
-  let g:solarized_termcolors      = 256
-  let &t_8f                       = "\<esc>[38;2;%lu;%lu;%lum"
-  let &t_8b                       = "\<esc>[48;2;%lu;%lu;%lum"
-  let g:solarized_termtrans       = 1
-  let g:solarized_extra_hi_groups = 1
-  let g:solarized_visibility      = "high"
-  let g:solarized_contrast        = "high"
-  let s:base03                    = "255"
-  ```
+```vim
+""" solarized
+colorscheme solarized
+set termguicolors
+let g:solarized_termcolors      = 256
+let &t_8f                       = "\<esc>[38;2;%lu;%lu;%lum"
+let &t_8b                       = "\<esc>[48;2;%lu;%lu;%lum"
+let g:solarized_termtrans       = 1
+let g:solarized_extra_hi_groups = 1
+let g:solarized_visibility      = "high"
+let g:solarized_contrast        = "high"
+let s:base03                    = "255"
+
+" dynamic theme settings
+set background=dark
+if exists('$SSH_CONNECTION') || exists('$SSH_TTY') || exists('$SSH_CLIENT')
+  let g:everforest_background = 'hard'
+  colorscheme everforest                                          " sainnhe/everforest
+else
+  let g:gruvbox_material_background = 'hard'
+  let g:gruvbox_material_better_performance = 1
+  colorscheme gruvbox-material                                    " sainnhe/gruvbox-material
+endif
+
+" -- highlight for different colorschemes"
+if get(g:, 'colors_name', '') =~# 'gruvbox'
+  highlight! CursorColumn   ctermbg=236  guibg=#32302F
+  highlight! CursorLine     ctermbg=236  guibg=#32302F
+  highlight! Folded         cterm=italic ctermfg=241  ctermbg=236 gui=italic guifg=#616161 guibg=#2E2D2C
+  highlight! ColorColumn    term=NONE    ctermfg=NONE ctermbg=235 gui=NONE   guifg=NONE    guibg=#2A2A2A
+elseif get(g:, 'colors_name', '') =~# 'everforest'
+  highlight! CursorColumn   ctermbg=237  guibg=#2F393D
+  highlight! CursorLine     ctermbg=237  guibg=#2F393D
+  highlight! Folded         cterm=italic ctermfg=241  ctermbg=237 gui=italic guifg=#616161 guibg=#303A3E
+  highlight! ColorColumn    term=NONE    ctermfg=NONE ctermbg=237 gui=NONE   guifg=NONE    guibg=#353F43
+endif
+```
 
 ## tricky
 
