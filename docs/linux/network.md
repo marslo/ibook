@@ -506,6 +506,65 @@ $ netstat -lantp | grep -i stab | awk -F/ '{print $2}' | sort | uniq
 > [!NOTE|label:references:]
 > - [使用 Nginx 反向代理 HTTPS 网站](https://taoshu.in/unix/nginx-proxy-https.html)
 
+```bash
+$ sudo apt update && sudo apt install -y nginx
+$ mv /etc/nginx/sites-available/default{,.bak}
+
+$ cat > /etc/nginx/sites-available/default <<EOF
+##
+# Static file server for /var/www/html
+# - serves index.html if present
+# - otherwise shows a file/directory listing (autoindex)
+##
+
+server {
+  listen 80 default_server;
+  listen [::]:80 default_server;
+
+  root /var/www/html;
+
+  # index files to try before falling back to directory listing
+  index index.html index.htm;
+
+  server_name _;
+
+  location / {
+    autoindex on;                 # list files/dirs when no index found
+    autoindex_exact_size off;     # human-readable sizes (K/M/G)
+    autoindex_localtime on;       # show local time instead of UTC
+    try_files $uri $uri/ =404;
+  }
+
+  # deny access to hidden files (.git, .htaccess, ...) but keep listing usable
+  location ~ /\.(?!well-known) {
+    deny all;
+  }
+}
+EOF
+
+$ sudo mkdir -p /var/www/backups
+$ sudo mv /var/www/html/index.nginx-debian.html /var/www/backups/
+
+$ sudo nginx -t && sudo systemctl reload nginx
+
+# setup permission
+$ sudo chgrp -R www-data /var/www/html/
+$ sudo chmod -R g+rwX,o+rX /var/www/html
+# -- requires logout and relogin to take effect --
+$ sudo usermod -aG www-data marslo
+
+# test ( without sudo )
+$ unzip -q /tmp/test.zip -d /var/www/html/
+
+# output
+NGINX_ROOT='/var/www/html'
+NGINX_PATH="${NGINX_ROOT}/test"
+INTERFACE="$(/bin/ip -o route get 1.1.1.1 2>/dev/null | sed -rn 's|.*\bdev\s+(\S+).*|\1|p')"
+IPADDRESS=$(/bin/ip -4 a s "${INTERFACE}" | sed -nE 's/^[[:space:]]*inet[[:space:]]+([0-9]{1,3}(\.[0-9]{1,3}){3})\/[0-9]{1,2}.*/\1/p' | paste -sd/ -)
+URL_ROOT="http://${IPADDRESS}/${NGINX_PATH/#$NGINX_ROOT\//}"
+echo "--> visit : ${URL_ROOT}"
+```
+
 ## [nmap](https://nmap.org/)
 {% hint style='tip' %}
 > reference:
