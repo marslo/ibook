@@ -33,7 +33,7 @@ $ curl -fsSL https://github.com/marslo/mytools/raw/main/itool/groovy-libs.sh | b
 $ curl -fsSL https://github.com/marslo/mytools/raw/main/itool/groovy-libs.sh | bash -s -- --clean
 
 # ── to latest install runtime only ──
-$ curl -fsSL https://github.com/marslo/mytools/raw/main/itool/groovy-libs.sh | bash -s -- --runtime --latest
+$ curl -fsSL https://github.com/marslo/mytools/raw/main/itool/groovy-libs.sh | bash -s -- --runtime
 ```
 
 ## jenkins libs setup

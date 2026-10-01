@@ -15,6 +15,7 @@
   - [im-select](#im-select)
   - [macime](#macime)
   - [macism](#macism)
+- [create synthetic symlink](#create-synthetic-symlink)
 - [create app](#create-app)
   - [cleanup icon cache and rebuild](#cleanup-icon-cache-and-rebuild)
   - [groovyConsole](#groovyconsole)
@@ -400,6 +401,47 @@ endif
 ```bash
 $ brew tap laishulu/homebrew
 $ brew install macism
+```
+
+## create synthetic symlink
+
+> [!TIP|label:references:]
+> to create `/mnt` or `/data` in macOS like Linux
+
+```bash
+# create a real directory
+$ sudo mkdir -p /System/Volumes/Data/mnt
+# to prevent permission denied when create folder/file
+$ sudo chown "$(id -un)":staff /System/Volumes/Data/mnt
+
+# edit/create synthetic.conf : `⇥` means tab : using `:set noexpandtab` in nvim/vim to prevent tab to spaces
+$ sudo vim /etc/synthetic.conf
+mnt⇥System/Volumes/Data/mnt
+$ sudo chown root:wheel /etc/synthetic.conf
+$ sudo chmod 644 /etc/synthetic.conf
+# -- verify --
+$ command cat -A /etc/synthetic.conf
+mnt^ISystem/Volumes/Data/mnt$
+$ ls -l /etc/synthetic.conf
+-rw-r--r-- 1 root wheel 28 Sep 30 21:50 /etc/synthetic.conf
+
+# reboot
+$ sudo reboot
+# or reload synthetic.conf without reboot
+$ sudo /System/Library/Filesystems/apfs.fs/Contents/Resources/apfs.util -t
+```
+
+```bash
+# verify
+$ ls -Altrh / | command grep --color=never mnt
+lrwxr-xr-x  1 root   wheel   23 Sep 30 21:55 mnt -> System/Volumes/Data/mnt
+
+# mount with smbfs
+$ mkdir -p /mnt/path
+$ mount -t smbfs -o -d=755,-f=755 //SMB_SERVER:/path /mnt/path
+
+# mount with apfs
+$ sudo mount -t apfs /dev/diskNs1 /mnt/disk1
 ```
 
 ## create app
