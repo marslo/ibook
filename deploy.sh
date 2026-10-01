@@ -134,7 +134,9 @@ function updateBook() {
     git add --all .
 
     targetMsg=$(git --no-pager show remotes/origin/gh-pages --no-color --no-patch --format="%s")
-    local -a cmd=(git commit)
+    # --no-verify: pre-commit already ran explicitly above (line 132); skip the installed
+    # git hook so it cannot re-modify a staged file and abort this commit
+    local -a cmd=(git commit --no-verify)
     git log -1 --format='%(trailers:key=Signed-off-by,valueonly,separator=%x2C)' |
         command grep -q "$(git config user.email)" || cmd+=('--signoff')
 

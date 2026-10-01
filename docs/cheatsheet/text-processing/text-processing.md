@@ -2620,7 +2620,9 @@ $ awk 'BEGIN { srand(); print rand() }'
 > [!TIP|label:references:]
 > - [Vim: word vs WORD](https://stackoverflow.com/a/54588479/2940319)
 >
->   ![WORD VS. word](../screenshot/linux/wordvsword.png)
+>   ![WORD VS. word](../../screenshot/linux/wordvsword.png)
+>
+> - [* iMarslo: password generator](../../devops/adminTools.md#generate)
 
 - [generate via `/dev/urandom`](https://lists.zx2c4.com/pipermail/password-store/2016-November/002429.html)
   ```bash
@@ -2671,10 +2673,10 @@ $ awk 'BEGIN { srand(); print rand() }'
 ## [remove leading & trailing whitespace](https://stackoverflow.com/a/11791508/2940319)
 ```bash
 $ str="    aaaa    bbbb      "
-$ echo "$str" | sed 's:^ *::; s: *$::'
+$ echo "${str}" | sed 's:^ *::; s: *$::'
 
 # i.e.:
-$ echo .$(echo "$str" | sed 's:^ *::; s: *$::').
+$ echo .$(echo "${str}" | sed 's:^ *::; s: *$::').
 .aaaa bbbb.
 ```
 

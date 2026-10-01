@@ -247,7 +247,7 @@ $ command | decolorize
 > - [A cheat-sheet for password crackers](https://www.unix-ninja.com/p/A_cheat-sheet_for_password_crackers)
 
 | CHARACTERS | PERCENT-ENCODED |  | CHARACTERS | PERCENT-ENCODED |  | CHARACTERS | PERCENT-ENCODED |
-|:----------:|:---------------:|--|:----------:|:---------------:|--|:----------:|:---------------:|
+| :--------: | :-------------: |  | :--------: | :-------------: |  | :--------: | :-------------: |
 |      @     |      `%40`      |  |      :     |      `%3A`      |  |      !     |      `%21`      |
 |    &#96;   |      `%60`      |  |      ?     |      `%3F`      |  |      ^     |      `%5E`      |
 |      #     |      `%23`      |  |      %     |      `%25`      |  |      $     |      `%24`      |
@@ -255,7 +255,7 @@ $ command | decolorize
 |      (     |      `%28`      |  |      )     |      `%29`      |  |      "     |      `%22`      |
 |      {     |      `%7B`      |  |      }     |      `%7D`      |  |      '     |      `%27`      |
 |      <     |      `%3C`      |  |      >     |      `%3E`      |  |      :     |      `%3A`      |
-|      /     |      `%2F`      |  |      \     |      `%5C`      |  |     \|     |      `%7C`      |
+|      /     |      `%2F`      |  |      \     |      `%5C`      |  |   &#124;   |      `%7C`      |
 
 - check via jq
   ```bash
@@ -269,7 +269,7 @@ $ command | decolorize
 - check via python
   ```python
   import urllib.parse
-  print( urllib.parse.quote( '!.@.#.$.%.^.&.*.(.)._.+.-.{.}.<.>.:.".\./.|.`', safe="") )
+  print( urllib.parse.quote( '!.@.#.$.%.^.&.*.(.)._.+.-.{.}.<.>.:.".\./.|.`', safe="" ) )
 
   # output:
   %21.%40.%23.%24.%25.%5E.%26.%2A.%28.%29._.%2B.-.%7B.%7D.%3C.%3E.%3A.%22.%5C.%2F.%7C.

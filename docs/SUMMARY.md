@@ -190,6 +190,7 @@
   * [crio](virtualization/crio/crio.md)
   * [podman](virtualization/podman/podman.md)
 * [ai](ai/ai.md)
+  * [mcp](ai/mcp.md)
   * [prompt](ai/prompt.md)
   * [model](ai/models.md)
 * [osx](osx/osx.md)
