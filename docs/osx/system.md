@@ -9,7 +9,7 @@
   - [enable root user](#enable-root-user)
   - [add account](#add-account)
 - [system tools](#system-tools)
-  - [`hostinfo`](#hostinfo)
+  - [hostinfo](#hostinfo)
   - [get human-readable vm_stat](#get-human-readable-vm_stat)
   - [show system info](#show-system-info)
   - [show memory](#show-memory)
@@ -222,7 +222,7 @@ $ sudo defaults write /Library/Preferences/com.apple.loginwindow SHOWOTHERUSERS_
   ```
 
 ## system tools
-### `hostinfo`
+### hostinfo
 ```bash
 $ hostinfo
 Mach kernel version:
@@ -880,7 +880,6 @@ $ sudo profiles show -type configuration
 ```bash
 $ sudo profiles show -type enrollment
 ```
-
 
 ## log
 
