@@ -26,7 +26,7 @@
 $ curl -fsSL https://github.com/marslo/mytools/raw/main/itool/groovy-libs.sh | bash -s -- --jar --with-libs --path /opt/groovy
 
 #                                                                                                     + <name>-sources.jar and <name>-javadoc.jar
-#                                                                                                     v           + <name>.jar
+#                                                                                                     v           + <name>.jar (normally brew install contains this jar)
 $ curl -fsSL https://github.com/marslo/mytools/raw/main/itool/groovy-libs.sh | bash -s -- --jar --with-libs --with-bin --path /opt/groovy
 
 # ── to cleanup ──
