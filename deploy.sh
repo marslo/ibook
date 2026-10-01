@@ -4,12 +4,11 @@
 #   FileName : deploy.sh
 #     Author : marslo
 #    Created : 2020-09-27 22:03:34
-# LastChange : 2026-10-01 01:09:06
+# LastChange : 2026-10-01 03:36:50
 # =============================================================================
 
 # @credit: https://github.com/ppo/bash-colors
-# @usage:  or copy & paste the `c()` function from:
-#          https://github.com/ppo/bash-colors/blob/master/bash-colors.sh#L3
+# @usage:  or copy & paste the `c()` function from: https://github.com/ppo/bash-colors/blob/master/bash-colors.sh#L3
 # shellcheck disable=SC2015
 test -f "${HOME}/.marslo/bin/bash-colors.sh" && source "${HOME}/.marslo/bin/bash-colors.sh" || { c() { :; }; }
 
@@ -19,8 +18,8 @@ modules="${root}/node_modules"
 book="${root}/_book"
 branch='gh-pages'
 # declare remotes=$(git remote -v | sed -n -re 's:^origin\W*(\S+)\W*\(push\)$:\1:gp')
-declare remotes=$(git remote get-url origin)
-declare msg=$(git --no-pager show HEAD --no-patch --format="%s")
+declare remotes="$( git remote get-url origin )"
+declare msg="$( git --no-pager show HEAD --no-patch --format="%s" )"
 usage="NAME
   $(c 0B)deploy.sh - to quickly deploy _book/* into gh-pages branch $(c)
 
@@ -81,8 +80,7 @@ function installModules() {
 
 # to rebuilt for changed file only
 function rebuiltToc() {
-  # xargs doctoc --github --notitle --update-only --maxlevel 3 >/dev/null \
-  #        < <( fd . "$(git rev-parse --show-toplevel)"/docs --type f --extension md --exclude SUMMARY.md --exclude README.md )
+  # xargs doctoc --github --notitle --update-only --maxlevel 3 >/dev/null < <( fd . "$(git rev-parse --show-toplevel)"/docs --type f --extension md --exclude SUMMARY.md --exclude README.md )
   xargs doctoc --github --notitle --update-only --maxlevel 3 >/dev/null < <(git diff --name-only --diff-filter=AMCT 'HEAD..HEAD^')
 }
 
@@ -93,7 +91,7 @@ function rePush(){
 }
 
 function updateRepo() {
-  if [[ """$(git rev-parse remotes/origin/"${branch}")""" != """$(git -C "${target}" rev-parse HEAD)""" ]]; then
+  if test """$(git rev-parse remotes/origin/"${branch}")""" != """$(git -C "${target}" rev-parse HEAD)"""; then
     git -C "${target}" fetch origin --force "${branch}"
     # git -C "${target}" rebase -v refs/remotes/origin/${branch}
     git -C "${target}" reset --hard refs/remotes/origin/${branch}
@@ -121,7 +119,7 @@ function updateBook() {
     command cp -Rf "${book}"/* "${target}"/
     # command cp -f "${root}"/docs/linux/vnc/vnc-runbook.html "${target}"/linux/vnc/vnc-runbook.html
 
-    cd "${target}" || exit
+    cd "${target}" || { echo -e "ERROR: '${target}' not found"; exit 1; }
 
     command -v pre-commit >/dev/null 2>&1 && test -f "$(git rev-parse --show-toplevel)/.pre-commit-config.yaml" && {
       # color.diff=always forces ANSI into pre-commit's piped `git diff`, which activates colormoved+allow-indentation-change and hangs on large diffs:
@@ -134,19 +132,18 @@ function updateBook() {
     git add --all .
 
     targetMsg=$(git --no-pager show remotes/origin/gh-pages --no-color --no-patch --format="%s")
-    # --no-verify: pre-commit already ran explicitly above (line 132); skip the installed
-    # git hook so it cannot re-modify a staged file and abort this commit
-    local -a cmd=(git commit --no-verify)
+    # by pass pre-commit hook run in commit - exit if pre-commit hook fails
+    local -a cmd=( git commit --no-verify )
     git log -1 --format='%(trailers:key=Signed-off-by,valueonly,separator=%x2C)' |
         command grep -q "$(git config user.email)" || cmd+=('--signoff')
 
-    if [[ "${targetMsg}" = "${msg}" ]]; then
+    if test "${targetMsg}" = "${msg}"; then
       local _info='\n~~> force push without create new commit:'
       type -P lolcat >/dev/null 2>&1 && command echo -e "${_info}" | lolcat --force --seed="196" --freq=0.03 --spread=1.1 --truecolor \
                                      || echo -e "$(c 0Ci)${_info}$(c)"
-      cmd+=(--amend --no-edit --allow-empty)
+      cmd+=( --amend --no-edit --allow-empty )
     else
-      cmd+=(-am "${msg}")
+      cmd+=( -am "${msg}" )
     fi
 
     "${cmd[@]}"
