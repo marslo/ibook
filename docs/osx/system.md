@@ -25,8 +25,6 @@
   - [show resolution](#show-resolution)
   - [list printer status](#list-printer-status)
   - [plist file](#plist-file)
-- [show app info](#show-app-info)
-  - [version](#version)
 - [osx installation](#osx-installation)
   - [download older version](#download-older-version)
   - [create osx installer usb](#create-osx-installer-usb)
@@ -516,19 +514,19 @@ $ sysctl kern.osrevision
 kern.osrevision: 199506
 ```
 
-- or
-  ```bash
-  $ uname -a
-  Darwin iMarslo 20.1.0 Darwin Kernel Version 20.1.0: Sat Oct 31 00:07:11 PDT 2020; root:xnu-7195.50.7~2/RELEASE_X86_64 x86_64 i386 MacBookPro15,1 Darwin
+```bash
+# or
+$ uname -a
+Darwin iMarslo 20.1.0 Darwin Kernel Version 20.1.0: Sat Oct 31 00:07:11 PDT 2020; root:xnu-7195.50.7~2/RELEASE_X86_64 x86_64 i386 MacBookPro15,1 Darwin
 
-  # -- kern.version --
-  $ uname -v
-  Darwin Kernel Version 23.6.0: Thu Dec 19 20:47:53 PST 2024; root:xnu-10063.141.1.703.2~1/RELEASE_ARM64_T6030
+# -- kern.version --
+$ uname -v
+Darwin Kernel Version 23.6.0: Thu Dec 19 20:47:53 PST 2024; root:xnu-10063.141.1.703.2~1/RELEASE_ARM64_T6030
 
-  # -- kern.ostype --
-  $ uname -s
-  Darwin
-  ```
+# -- kern.ostype --
+$ uname -s
+Darwin
+```
 
 ### show resolution
 ```bash
@@ -543,50 +541,16 @@ printer-01 accepting requests since Wed Feb  3 16:40:50 2021
 ```
 
 ### plist file
-- read file
-  ```bash
-  $ plutil -p /path/to/file.plist
-  # i.e.:
-  $ plutil -p /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Info.plist
-
-  $ /usr/libexec/PlistBuddy -c print /path/to/file.plist
-  # i.e.:
-  $ /usr/libexec/PlistBuddy -c print /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Info.plist
-  ```
-
-## show app info
-
-### version
 ```bash
-# mdls
-$ mdls -name kMDItemVersion /Applications/iTerm.app
-kMDItemVersion = "3.6.10"
-$ mdls -name kMDItemVersion ~/Applications/iTerm.app
-kMDItemVersion = "3.7.20260512-nightly"
+# read file
 
-# CFBundleShortVersionString
-$ defaults read ~/Applications/iTerm.app/Contents/Info.plist CFBundleShortVersionString
-3.7.20260512-nightly
-$ defaults read /Applications/iTerm.app/Contents/Info.plist CFBundleShortVersionString
-3.6.10
+$ plutil -p /path/to/file.plist
+# i.e.:
+$ plutil -p /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Info.plist
 
-# lsappinfo - current running app
-$ lsappinfo info com.googlecode.iterm2
-"iTerm2" ASN:0x0-0xa30a3: (in front)
-    bundleID="com.googlecode.iterm2"
-    bundle path="/Users/marslo/Applications/iTerm.app"
-    executable path="/Users/marslo/Applications/iTerm.app/Contents/MacOS/iTerm2"
-    pid = 5064 type="Foreground" flavor=3 Version="3.7.20260511-nightly" fileType="APPL" creator="ITRM" Arch=ARM64
-    childASNs: ASN:0x0-0xa90a9:
-    coalition: 1682
-    parentASN="Alfred" ASN:0x0-0x84084:
-    launch time =  2026/05/12 15:10:18 ( 2 hours, 50 minutes, 38.7915 seconds ago )
-    checkin time = 2026/05/12 15:10:18 ( 2 hours, 50 minutes, 38.4025 seconds ago )
-    launch to checkin time: 0.389042 seconds
-
-# osascript - current
-$ osascript -e 'get version of application id "com.googlecode.iterm2"'
-3.7.20260512-nightly
+$ /usr/libexec/PlistBuddy -c print /path/to/file.plist
+# i.e.:
+$ /usr/libexec/PlistBuddy -c print /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Info.plist
 ```
 
 ## osx installation
@@ -639,30 +603,35 @@ $ softwareupdate --fetch-full-installer
 ### [convert a macos installer to iso](https://osxdaily.com/2020/07/20/how-convert-macos-installer-iso/)
 
 - download [MacOS Mojave installer](https://itunes.apple.com/us/app/macos-mojave/id1398502828?mt=12), or the [MacOS Catalina installer](https://itunes.apple.com/us/app/macos-catalina/id1466841314?ls=1&mt=12) (or the installer you wish to turn into an ISO) from the Mac App Store,  until the “Install MacOS Mojave.app” or “Install MacOS Catalina.app” application is fully downloaded and within the /Applications folder, proceed
-- open the Terminal application, create a disk image DMG file via:
-  ```bash
-  $ hdiutil create -o /tmp/Mojave -size 8500m -volname Mojave -layout SPUD -fs HFS+J
-  ```
-- mount the created DMG disk image via:
-  ```bash
-  $ hdiutil attach /tmp/Mojave.dmg -noverify -mountpoint /Volumes/Mojave
-  ```
-- use createinstallmedia to create the macOS installer application on the mounted volume:
-  ```bash
-  $ sudo /Applications/Install\ macOS\ Mojave.app/Contents/Resources/createinstallmedia --volume /Volumes/Mojave --nointeraction
-  ```
-- unmount the volume just created:
-  ```bash
-  $ hdiutil detach /volumes/Install\ macOS\ Mojave
-  ```
-- convert the DMG disk image file to an ISO disk image file (technically a CDR file but it’s the same as an iso)
-  ```bash
-  $ hdiutil convert /tmp/Mojave.dmg -format UDTO -o ~/Desktop/Mojave.cdr
-  ```
-- rename the CDR file extension to ISO to convert the CDR to ISO:
-  ```bash
-  $ mv ~/Desktop/Mojave.cdr ~/Desktop/Mojave.iso
-  ```
+```bash
+# open the Terminal application, create a disk image DMG file
+$ hdiutil create -o /tmp/Mojave -size 8500m -volname Mojave -layout SPUD -fs HFS+J
+```
+
+```bash
+# mount the created DMG disk image
+$ hdiutil attach /tmp/Mojave.dmg -noverify -mountpoint /Volumes/Mojave
+```
+
+```bash
+# use createinstallmedia to create the macOS installer application on the mounted volume
+$ sudo /Applications/Install\ macOS\ Mojave.app/Contents/Resources/createinstallmedia --volume /Volumes/Mojave --nointeraction
+```
+
+```bash
+# unmount the volume just created
+$ hdiutil detach /volumes/Install\ macOS\ Mojave
+```
+
+```bash
+# convert the DMG disk image file to an ISO disk image file (technically a CDR file but it’s the same as an iso)
+$ hdiutil convert /tmp/Mojave.dmg -format UDTO -o ~/Desktop/Mojave.cdr
+```
+
+```bash
+# rename the CDR file extension to ISO to convert the CDR to ISO
+$ mv ~/Desktop/Mojave.cdr ~/Desktop/Mojave.iso
+```
 
 {% hint style='success' %}
 > more info:

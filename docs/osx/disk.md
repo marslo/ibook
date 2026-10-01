@@ -9,6 +9,10 @@
   - [create synthetic symlink](#create-synthetic-symlink)
   - [erase disk](#erase-disk)
   - [check detail diskage usage](#check-detail-diskage-usage)
+- [mount](#mount)
+  - [smb](#smb)
+  - [cifs](#cifs)
+  - [check](#check)
 - [create image](#create-image)
   - [background images](#background-images)
   - [create dmg from app](#create-dmg-from-app)
@@ -171,12 +175,14 @@ lrwxr-xr-x  1 root   wheel   23 Sep 30 21:55 mnt -> System/Volumes/Data/mnt
 # mount with smbfs
 $ mkdir -p /mnt/path
 $ mount -t smbfs -o -d=755,-f=755 //SMB_SERVER:/path /mnt/path
+# or without `:`
+$ mount -t smbfs -o -d=755,-f=755 //SMB_SERVER/path /mnt/path
+# or with USERNAME and PASSWORD
+$ mount -t smbfs -o -d=755,-f=755 //USERNAME:PASSWORD@SMB_SERVER/path /mnt/path
 
 # mount with apfs
 $ sudo mount -t apfs /dev/diskNs1 /mnt/disk1
 ```
-
-
 
 ### erase disk
 
@@ -300,6 +306,125 @@ $ sudo fs_usage
 21:03:47  close        0.000031   privoxy
 21:03:47  select       0.000004   privoxy
 ...
+```
+
+## mount
+
+> [!NOTE|label:references:]
+> - [secure way to mount a password protected cifs share in mac](https://serverfault.com/a/368527/129815)
+>   ```bash
+>   $ sudo security add-internet-password -a "USERNAME" -D "NETWORK_PASSWORD" -r "smb " -l "cifs_share" -s "SMB_SERVER"  -p "cifs_share" -w "PASSWORD" -T "/System/Library/CoreServices/NetAuthAgent.app/Contents/MacOS/NetAuthAgent"
+>   $ sudo security add-internet-password -a "USERNAME" -D "NETWORK_PASSWORD" -r "afp " -l "cifs_share" -s "CIFS_SERVER" -p "cifs_share" -w "PASSWORD" -T "/System/Library/CoreServices/NetAuthAgent.app/Contents/MacOS/NetAuthAgent"
+>   ```
+> - check password
+>   ```bash
+>   $ security find-internet-password -s 'SMB_SERVER' -r 'smb ' -g
+>   ```
+> - [`~/Library/Preferences/nsmb.conf`](https://serverfault.com/a/367956/129815)
+>   ```bash
+>   $ cat ~/Library/Preferences/nsmb.conf
+>   [host.server.com]
+>   username=USERNAME
+>   password=PASSWORD
+>   ```
+
+{% hint style='tip' %}
+> - [* iMarslo: handle special chars in password](../cheatsheet/tricky.md#password-encoding)
+> - [URL Encoded Characters](https://www.degraeve.com/reference/urlencoding.php)
+> - [How to escape password for smb mount](https://apple.stackexchange.com/a/329712/254265)
+{% endhint %}
+
+### smb
+
+{% hint style='tip' %}
+> - [* iMarslo: mount smb in Linux](../linux/disk.md#smb)
+> - [Mounting a Samba share](https://apple.stackexchange.com/a/444568/254265)
+> - [如何在 macOS 中停用 SMB 1 或 NetBIOS](https://support.apple.com/zh-tw/HT211927)
+> - [How can I mount an SMB share from the command line?](https://apple.stackexchange.com/a/699/254265)
+{% endhint %}
+
+#### via GUI
+- **Go** -> **Connect to Server ...** -> `smb://<domain.com>/path`
+
+  ![samba](../screenshot/linux/samba-1.png)
+
+#### via cmd
+
+> [!NOTE|label:references:]
+> - [`mount`](https://apple.stackexchange.com/a/699/254265)
+> - [* iMarslo: create `/mnt` in macOS](#create-synthetic-symlink)
+
+```bash
+$ mkdir -p /Volumes/mount
+$ sudo mkdir -p $(whoami):staff /Volumes/mount
+
+# mount
+$ mount -t smbfs //USERNAME:<PASSWORD>@<domain.com>/share /Volumes/mount
+$ mount -t smbfs -o -d=755,-f=755 //<domain.com>/<path> /Volumes/mount
+# or
+$ mount -o nodev,nosuid -t smbfs //USERNAME:${PASSWORD}@<domain.com>/share /Volumes/mount
+
+# mount_smbfs
+$ mount_smbfs //USERNAME@<domain.com>/share /Volumes/mount
+Password for <domain.com>: <password>
+
+# umount
+$ umount /Volumes/mount
+# force umount
+$ diskutil unmountDisk force "${mount_point}"
+```
+
+#### [`open`](https://apple.stackexchange.com/a/171822/254265)
+```bash
+$ open "smb://USERNAME:<password>@<domain.com>/path"
+```
+
+#### `osascript`
+```bash
+$ /usr/bin/osascript -e "try" -e "mount volume \"smb://guest@${host}\"" -e "end try"
+
+# or with function
+function mymount {
+    osascript <<EOF
+mount volume "smb://user@fqdn1/volume1"
+mount volume "smb://user@fqdn2/volume2"
+EOF
+}
+```
+
+### cifs
+
+> [!NOTE|label:references:]
+> - [* iMarslo: mount cifs in Linux](../linux/disk.md#cifs)
+
+```bash
+# create credential file
+$ echo "username=USERNAME" > ~/.cifs
+$ echo "password=PASSWORD" >> ~/.cifs
+$ chmod 600 ~/.cifscredentials
+```
+
+```bash
+# mount
+$ test -d /mnt/mynfs || mkdir -p /mnt/mynfs
+$ sudo mount -t cifs //domain.com/path/to/target /mnt/mynfs -o credentials=~/.cifs
+```
+
+### check
+```bash
+$ mount
+...
+//USERNAME@<domain.com>/secured on /Volumes/mount (smbfs, nodev, nosuid, mounted by USERNAME)
+
+# get hostname
+#                        handle for both mount format:  //marslo@domain.com/share
+#                                                       //domain.com/share
+#                                                                   v
+#                                                       +----------------------+
+$ mount -t nfs,cifs,smbfs | awk '{print $1}' | sed -rn 's:^//([^@/]*@)?([^/]+).*:\2:p'
+domain.com
+domain.com
+$ mount -t nfs,cifs,smbfs | awk '{print $1}' | sed -rn 's:^//([^@/]*@)?([^/]+).*:\2:p' | paste -sd'|'
 ```
 
 ## create image

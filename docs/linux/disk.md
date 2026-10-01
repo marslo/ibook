@@ -3,10 +3,10 @@
 
 - [check status](#check-status)
 - [mount](#mount)
-  - [mount ios](#mount-ios)
-  - [mount smb](#mount-smb)
-  - [mount cifs](#mount-cifs)
-  - [mount nfs](#mount-nfs)
+  - [ios](#ios)
+  - [smb](#smb)
+  - [cifs](#cifs)
+  - [nfs](#nfs)
   - [mount temporary ram](#mount-temporary-ram)
   - [remount](#remount)
   - [disconnect the mount](#disconnect-the-mount)
@@ -55,9 +55,21 @@
 
 
 ## mount
-### [mount ios](https://www.tecmint.com/how-to-mount-and-unmount-an-iso-image-in-linux/)
+
+> [!TIP|label:create `/mnt` in macOS]
+> - [* iMarslo: create synthetic symlink](../osx/disk.md#create-synthetic-symlink)
+
 ```bash
-$ [[ -z $(findmnt /mnt/tmp) ]] || umount -f /mnt/tmp
+# mount all filesystems defined in /etc/fstab
+$ sudo mount -a -v
+
+# check mount status
+$ mountpoint -q /mnt/mynfs && echo "mounted" || echo "not mounted"
+```
+
+### [ios](https://www.tecmint.com/how-to-mount-and-unmount-an-iso-image-in-linux/)
+```bash
+$ test -z $(findmnt /mnt/tmp) || umount -f /mnt/tmp
 $ mkdir /mnt/tmp
 $ mount -t iso9660 -o loop /vol/builds/os/linux/RHEL-6.6-20140926.0-Server-x86_64-dvd1.iso  /mnt/tmp/
 
@@ -92,106 +104,27 @@ $ mount /path/to/file.iso /mnt/tmp -o loop
   $ dd if=/dev/cdrom of=~/cdrom_image.iso
   ```
 
+### smb
 
-### mount smb
+{% hint style='tip' %}
+> references:
+> - [* iMarslo: mount smb in macOS](../osx/disk.md#smb)
+> - [URL Encoded Characters](https://www.degraeve.com/reference/urlencoding.php)
+> - [How to escape password for smb mount](https://apple.stackexchange.com/a/329712/254265)
+{% endhint %}
 
 > [!NOTE]
 > references:
-> - [Mounting a Samba share](https://apple.stackexchange.com/a/444568/254265)
-> - [如何在 macOS 中停用 SMB 1 或 NetBIOS](https://support.apple.com/zh-tw/HT211927)
 > - [Performance issues with SMB 2 and 3 connections](http://www.centralit-helpdesk.co.uk/index.php?pg=kb.page&id=240)
 > - [Linux系统运维: Samba 应用](https://www.yaolong.net/article/linux-ops-samba/)
-> - [How can I mount an SMB share from the command line?](https://apple.stackexchange.com/a/699/254265)
-> - [How to escape password for smb mount](https://apple.stackexchange.com/a/329712/254265)
-> - [URL Encoded Characters](https://www.degraeve.com/reference/urlencoding.php)
 
-#### macos
-
-> [!NOTE|label:references:]
-> - [Secure way to mount a password protected cifs share in mac](https://serverfault.com/a/368527/129815)
->   ```bash
->   $ sudo security add-internet-password -a "username_here" -D "Network Password" -r "smb " -l "cifs_share" -s "myserver.com" -p "cifs_share" -w "password_here"  -T "/System/Library/CoreServices/NetAuthAgent.app/Contents/MacOS/NetAuthAgent"
->   $ sudo security add-internet-password -a "username_here" -D "Network Password" -r "afp " -l "cifs_share" -s "myserver.com" -p "cifs_share" -w "password_here"  -T "/System/Library/CoreServices/NetAuthAgent.app/Contents/MacOS/NetAuthAgent"
->   ```
->   - [`~/Library/Preferences/nsmb.conf`](https://serverfault.com/a/367956/129815)
->     ```bash
->     $ cat ~/Library/Preferences/nsmb.conf
->     [myserver.com]
->     username=username_here
->     password=password_here
->     ```
-
-- via GUI :
-  - Go -> Connect toServer -> `smb://<domain.com>/secured`
-
-    ![samba](../screenshot/linux/samba-1.png)
-
-- via cmd
-  - [`mount`](https://apple.stackexchange.com/a/699/254265)
-    ```bash
-    $ mkdir -p /Volumes/mount
-    $ sudo mkdir -p $(whoami):staff /Volumes/mount
-
-    # mount
-    $ mount -t smbfs //user1:<password>@<domain.com>/share /Volumes/mount
-    $ mount -t smbfs -o -d=755,-f=755 //<domain.com>/<path> /Volumes/mount
-    # or
-    $ mount -o nodev,nosuid -t smbfs //user:${PASSWORD}@<domain.com>/share /Volumes/mount
-
-    # mount_smbfs
-    $ mount_smbfs //user1@<domain.com>/share /Volumes/mount
-    Password for <domain.com>: <password>
-
-    # umount
-    $ umount /Volumes/mount
-    # force umount
-    $ diskutil unmountDisk force "${mount_point}"
-    ```
-
-  - [`open`](https://apple.stackexchange.com/a/171822/254265)
-    ```bash
-    $ open "smb://user1:<password>@<domain.com>/path"
-    ```
-
-  - `osascript`
-    ```bash
-    $ /usr/bin/osascript -e "try" -e "mount volume \"smb://guest@${host}\"" -e "end try"
-
-    # or with function
-    function mymount {
-        osascript <<EOF
-    mount volume "smb://user@fqdn1/volume1"
-    mount volume "smb://user@fqdn2/volume2"
-    EOF
-    }
-    ```
-
-- check
-  ```bash
-  $ mount
-  ...
-  //user1@<domain.com>/secured on /Volumes/mount (smbfs, nodev, nosuid, mounted by user1)
-
-  # get hostname
-  #                        handle for both mount format:  //marslo@domain.com/share
-  #                                                       //domain.com/share
-  #                                                                   v
-  #                                                       +----------------------+
-  $ mount -t nfs,cifs,smbfs | awk '{print $1}' | sed -rn 's:^//([^@/]*@)?([^/]+).*:\2:p'
-  domain.com
-  domain.com
-  $ mount -t nfs,cifs,smbfs | awk '{print $1}' | sed -rn 's:^//([^@/]*@)?([^/]+).*:\2:p' | paste -sd'|'
-  ```
-
-#### linux
 ```bash
-$ smbclient --user=user1 -L //<domain.com>
-
+$ smbclient --user=USERNAME -L //<domain.com>
 # or
-$ smbclient //<domain.com>/secured -U user1
+$ smbclient //<domain.com>/secured -U USERNAME
 ```
 
-### mount cifs
+### cifs
 
 > [!NOTE|label:references:]
 > - [How do I pass credential file to mount.cifs?](https://serverfault.com/a/367942/129815)
@@ -202,37 +135,39 @@ $ smbclient //<domain.com>/secured -U user1
 > - [How do you provide domain credentials to ansible's mount module?](https://stackoverflow.com/a/30037952/2940319)
 > - [How to access mounted network drive on Windows Linux Subsystem?](https://superuser.com/a/1565523/112396)
 
-- environment setup
-  ```bash
-  # centos
-  $ yum install cifs-utils
+```bash
+# environment setup
+# centos
+$ yum install cifs-utils
+# ubuntu
+$ sudo apt-get install cifs-utils
+```
 
-  # ubuntu
-  $ sudo apt-get install cifs-utils
-  ```
+```bash
+# create credential file
+$ echo "username=USERNAME" > ~/.cifscredentials
+$ echo "password=PASSWORD" >> ~/.cifscredentials
+$ chmod 600 ~/.cifscredentials
+```
 
-- create credential file
-  ```bash
-  $ echo "username=user1" > ~/.cifscredentials
-  $ echo "password=password1" >> ~/.cifscredentials
-  $ chmod 600 ~/.cifscredentials
-  ```
+```bash
+# mount
+$ test -d /mnt/mynfs || mkdir -p /mnt/mynfs
+$ sudo mount -t cifs //domain.com/path/to/source /mnt/cifs -o credentials=~/.cifscredentials
+# or
+$ sudo mount -t cifs //domain.com/path/to/source /mnt/cifs -o username=USERNAME,pass=PASSWORD,iocharset=utf8,file_mode=0777,dir_mode=0777,soft,user,noperm
+$ sudo mount -t cifs //domain.com/path/to/source /mnt/cifs -o username=USERNAME,pass=PASSWORD,iocharset=utf8,vers=2.0,noperm,user,exec
+```
 
-- mount
-  ```bash
-  $ [[ -d /mnt/mynfs ]] || mkdir -p /mnt/mynfs
-  $ sudo mount -t cifs //domain.com/path/to/target /mnt/mynfs -o credentials=~/.cifscredentials
-  ```
+```bash
+# NFS share info
+$ rpcinfo domain.com | egrep "service|nfs"
+1:   program version netid     address             service    owner
+8:    100003    3    udp       domain.com.8.1      nfs
+9:    100003    3    tcp       domain.com.8.1      nfs
+```
 
-- NFS share info
-  ```bash
-  $ rpcinfo domain.com | egrep "service|nfs"
-  1:   program version netid     address             service    owner
-  8:    100003    3    udp       domain.com.8.1      nfs
-  9:    100003    3    tcp       domain.com.8.1      nfs
-  ```
-
-### mount nfs
+### nfs
 
 {% hint style='tip' %}
 > references
@@ -260,17 +195,17 @@ $ sudo mount -o rw,vers=3 -t nfs domain.com:/path/to/target /mnt/mynfs -vvv
   $ showmount -e domain.com | grep '/path/to/target'
   ```
 
-- environment setup
-  ```bash
-  # centos
-  $ yum install nfs-utils nfs-utils-lib
-  $ yum install portmap (not required with NFSv4)
-  # ubuntu
-  $ sudo apt-get install nfs-common
+```bash
+# environment setup
+# centos
+$ yum install nfs-utils nfs-utils-lib
+$ yum install portmap (not required with NFSv4)
+# ubuntu
+$ sudo apt-get install nfs-common
 
-  # for nfs4
-  $ sudo apt-get install nfs-utils nfs-utils-lib
-  ```
+# for nfs4
+$ sudo apt-get install nfs-utils nfs-utils-lib
+```
 
 #### check mount
 ```bash
@@ -278,7 +213,7 @@ $ cat /etc/mtab | grep /folder_name
 /dev/sdb1 /folder_name ext4 rw,seclabel,relatime,stripe=64 0 0
 ```
 
-##### [Check if folder is a mounted remote filesystem](https://unix.stackexchange.com/a/72224/29178)
+##### [check if folder is a mounted remote filesystem](https://unix.stackexchange.com/a/72224/29178)
 ```bash
 $ df -P -T /folder_name
 Filesystem     Type 1024-blocks     Used  Available Capacity Mounted on
@@ -317,57 +252,64 @@ $ findmnt /mnt/mynfs
 ```
 
 #### check mount version
+
 {% hint style='tip' %}
 - [`nfsstat -c` will show you the NFS version actually being used](https://unix.stackexchange.com/a/185831/29178)
 - [`nfsstat -m` will show statistics on mounted NFS filesystems](https://unix.stackexchange.com/a/138999/29178)
 - `grep nfs /proc/mounts` equals `nfsstat -m`
 {% endhint %}
 
-- local
-  ```bash
-  $ rpcinfo -p localhost
-    program vers proto   port  service
-     100000    4   tcp    111  portmapper
-     100000    3   tcp    111  portmapper
-     100000    2   tcp    111  portmapper
-     100000    4   udp    111  portmapper
-     100000    3   udp    111  portmapper
-     100000    2   udp    111  portmapper
-     100024    1   udp  38978  status
-     100024    1   tcp  36415  status
-     100021    1   udp  51669  nlockmgr
-     100021    3   udp  51669  nlockmgr
-     100021    4   udp  51669  nlockmgr
-     100021    1   tcp  42699  nlockmgr
-     100021    3   tcp  42699  nlockmgr
-     100021    4   tcp  42699  nlockmgr
-  ```
+```bash
+# local
+$ rpcinfo -p localhost
+  program vers proto   port  service
+   100000    4   tcp    111  portmapper
+   100000    3   tcp    111  portmapper
+   100000    2   tcp    111  portmapper
+   100000    4   udp    111  portmapper
+   100000    3   udp    111  portmapper
+   100000    2   udp    111  portmapper
+   100024    1   udp  38978  status
+   100024    1   tcp  36415  status
+   100021    1   udp  51669  nlockmgr
+   100021    3   udp  51669  nlockmgr
+   100021    4   udp  51669  nlockmgr
+   100021    1   tcp  42699  nlockmgr
+   100021    3   tcp  42699  nlockmgr
+   100021    4   tcp  42699  nlockmgr
+```
 
-- [remote](https://unix.stackexchange.com/a/205736/29178)
-  ```bash
-  $ rpcinfo domain.com | egrep "service|nfs"
-     program version netid     address             service    owner
-      100003    3    udp       domain.com.8.1      nfs
-      100003    3    tcp       domain.com.8.1      nfs
-  ```
+```bash
+# remote - https://unix.stackexchange.com/a/205736/29178
+$ rpcinfo domain.com | egrep "service|nfs"
+   program version netid     address             service    owner
+    100003    3    udp       domain.com.8.1      nfs
+    100003    3    tcp       domain.com.8.1      nfs
+```
 
 #### setup nfs mount by default server boot
 ```bash
 $ sudo bash -c "cat > /etc/fstab" << EOF
-domain.com:/path/to/target    /mnt/mynfs nfs defaults 0 0
+domain.com:/path/to/smb       /mnt/mysmb nfs  defaults 0 0
+//domain.com/path/to/cifs     /mnt/cifs  cifs credentials=/home/user/.cifs,iocharset=utf8,vers=2.0,noperm,sec=ntlmssp,user,exec 0 0
 EOF
 
-# i.e.:
+# check
 $ cat /etc/fstab | grep -v '^#' | column -t
 /dev/mapper/cl-root                             /               xfs   defaults                    0  0
 UUID=18c35fe1-36ad-4d7e-aeb6-88bdb6b145af       /boot           ext4  defaults                    1  2
 UUID=6C3A-C81A                                  /boot/efi       vfat  umask=0077,shortname=winnt  0  2
 /dev/mapper/cl-home                             /home           xfs   defaults                    0  0
 /dev/mapper/cl-swap                             swap            swap  defaults                    0  0
-domain.com:/path/to/target                      /path/to/mount  nfs   defaults                    0  0
+domain.com:/path/to/smb                         /path/to/smb    nfs   defaults                    0  0
+//domain.com/path/to/cifs                       /path/to/cifs   cifs  credentials=/home/user/.cifs,iocharset=utf8,vers=2.0,noperm,sec=ntlmssp,user,exec 0 0
+
+# mount
+$ sudo mount -a -v
 ```
 
 #### related configure
+
 - `/etc/fstab`
 - `/etc/nsswitch.conf`
 - `/etc/nfsmount.conf`

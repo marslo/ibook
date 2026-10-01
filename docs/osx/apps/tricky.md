@@ -9,6 +9,8 @@
   - [groovyConsole](#groovyconsole)
   - [python3 IDLE](#python3-idle)
   - [create dmg](#create-dmg)
+- [show app info](#show-app-info)
+  - [version](#version)
 - [check appstore version](#check-appstore-version)
   - [fix false alarm](#fix-false-alarm)
 - [input method auto switch](#input-method-auto-switch)
@@ -595,6 +597,42 @@ $ brew link --force python@3.12
 # or
 $ brew link --force --overwrite python@3.12
 ```
+
+## show app info
+
+### version
+```bash
+# mdls
+$ mdls -name kMDItemVersion /Applications/iTerm.app
+kMDItemVersion = "3.6.10"
+$ mdls -name kMDItemVersion ~/Applications/iTerm.app
+kMDItemVersion = "3.7.20260512-nightly"
+
+# CFBundleShortVersionString
+$ defaults read ~/Applications/iTerm.app/Contents/Info.plist CFBundleShortVersionString
+3.7.20260512-nightly
+$ defaults read /Applications/iTerm.app/Contents/Info.plist CFBundleShortVersionString
+3.6.10
+
+# lsappinfo - current running app
+$ lsappinfo info com.googlecode.iterm2
+"iTerm2" ASN:0x0-0xa30a3: (in front)
+    bundleID="com.googlecode.iterm2"
+    bundle path="/Users/marslo/Applications/iTerm.app"
+    executable path="/Users/marslo/Applications/iTerm.app/Contents/MacOS/iTerm2"
+    pid = 5064 type="Foreground" flavor=3 Version="3.7.20260511-nightly" fileType="APPL" creator="ITRM" Arch=ARM64
+    childASNs: ASN:0x0-0xa90a9:
+    coalition: 1682
+    parentASN="Alfred" ASN:0x0-0x84084:
+    launch time =  2026/05/12 15:10:18 ( 2 hours, 50 minutes, 38.7915 seconds ago )
+    checkin time = 2026/05/12 15:10:18 ( 2 hours, 50 minutes, 38.4025 seconds ago )
+    launch to checkin time: 0.389042 seconds
+
+# osascript - current
+$ osascript -e 'get version of application id "com.googlecode.iterm2"'
+3.7.20260512-nightly
+```
+
 
 ## check appstore version
 
