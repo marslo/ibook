@@ -1,8 +1,6 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [install dmg](#install-dmg)
-  - [install pkg inside dmg](#install-pkg-inside-dmg)
 - [system settings](#system-settings)
 - [list formula](#list-formula)
   - [list all](#list-all)
@@ -26,8 +24,6 @@
   - [mac cli](#mac-cli)
   - [screensaver](#screensaver)
   - [others](#others)
-- [check appstore version](#check-appstore-version)
-  - [fix false alarm](#fix-false-alarm)
 - [troubleshooting](#troubleshooting)
   - [`failed to connect to raw.githubusercontent.com port 443: connection refused`](#failed-to-connect-to-rawgithubusercontentcom-port-443-connection-refused)
   - [failure in `brew search` for cask formula](#failure-in-brew-search-for-cask-formula)
@@ -35,42 +31,18 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-
-## install dmg
-
-> [!NOTE|label:referenees:]
-> - [install docker desktop on mac](https://docs.docker.com/desktop/install/mac-install/)
-> - [MacOS/hdiutil](https://en.wikiversity.org/wiki/MacOS/hdiutil)
-> - [hdiutil](https://ss64.com/osx/hdiutil.html)
-> - [Can a Mac mount a Debian install CD?](https://unix.stackexchange.com/a/298785/29178)
-
-```bash
-$ curl -O https://desktop.docker.com/mac/main/amd64/Docker.dmg
-
-$ sudo hdiutil attach Docker.dmg
-$ sudo /Volumes/Docker/Docker.app/Contents/MacOS/install
-$ sudo hdiutil detach /Volumes/Docker
-```
-
-### install pkg inside dmg
-```bash
-$ curl -fsSL -O https://download.oracle.com/java/21/latest/jdk-21_macos-x64_bin.dmg
-$ hdiutil attach jdk-21_macos-x64_bin.dmg
-$ sudo installer -pkg /Volumes/JDK\ 21.0.1/JDK\ 21.0.1.pkg -target /
-$ sudo hdiutil detach /Volumes/JDK\ 21.0.1/
-```
-
 ## system settings
 
 #### [GNU Coreutils](http://en.wikipedia.org/wiki/GNU_Core_Utilities)
 ```bash
 $ brew install coreutils
 ```
-- GNU Command Line Tools
-  ```bash
-  $ cat /etc/bashrc
-  export PATH="$(brew --prefix coreutils)/libexec/gnubin:/usr/local/bin:$PATH"
-  ```
+
+```bash
+# GNU Command Line Tools
+$ cat /etc/bashrc
+export PATH="$(brew --prefix coreutils)/libexec/gnubin:/usr/local/bin:$PATH"
+```
 
 #### bash
 ```bash
@@ -233,7 +205,7 @@ vitorgalvao/tiny-scripts
 ```
 <!--endsec-->
 
-#### App store outdated
+#### app store outdated
 ```bash
 $ mas outdated
 1611347086  iShot Pro  (2.6.6  -> 2.6.7)
@@ -1037,76 +1009,19 @@ $ export PATH="${RUBY_GEM_HOME}/bin"
   $ istats all
   ```
 
-## check appstore version
-
-```bash
-app="$HOME/Applications/Bob.app"
-bundleId=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "${app}/Contents/Info.plist")
-trackId=$(curl -s "https://itunes.apple.com/lookup?bundleId=${bundleId}&country=cn" | jq -r '.results[0].trackId')
-latestVersion=$(curl -s "https://itunes.apple.com/lookup?id=${trackId}&country=cn" | jq -r '.results[0].version')
-
-# or search via bundleId
-trackId=$(curl -s "https://itunes.apple.com/lookup?bundleId=${bundleId}&country=cn" | jq -r '.results[] | select(.kind=="mac-software") | .version')
-```
-
-```bash
-app='/Applications/iShot Pro.app'
-bundleId=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "${app}/Contents/Info.plist")
-local="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "${app}/Contents/Info.plist" 2>/dev/null)"
-online="$(curl -fsG 'https://itunes.apple.com/lookup' --data-urlencode "bundleId=${bundleId}" --data-urlencode 'country=cn' | plutil -extract results.0.version raw -o - - )"
-echo "${bundleId}: local=${local}  online=${online}"
-# cn.better365.iShotPro: local=2.6.8  online=2.6.8
-```
-
-### fix false alarm
-
-```bash
-$ db="${HOME}/Library/Caches/com.apple.appstoreagent/storeSystem.db"
-$ sqlite3 "${db}" "SELECT bundle_id, update_state, store_software_version_id FROM mapi_app_update;"
-# ╭───────────────────────┬──────────────┬──────────────────────╮
-# │       bundle_id       │ update_state │ store_software_ve... │
-# ╞═══════════════════════╪══════════════╪══════════════════════╡
-# │ cn.better365.iShotPro │            1 │            888549430 │
-# │ com.moleskine.overlap │            0 │            889377307 │
-# ╰───────────────────────┴──────────────┴──────────────────────╯
-
-# or
-$ mapfile -t staleIds < <( sqlite3 "${db}" "SELECT bundle_id FROM mapi_app_update WHERE update_state=1;" )
-$ printf "%s\n" "${staleIds[@]}"
-cn.better365.iShotPro
-```
-
-```bash
-$ bundleId='cn.better365.iShotPro'
-$ db="$HOME/Library/Caches/com.apple.appstoreagent/storeSystem.db"
-$ killall appstored appstoreagent 2>/dev/null
-
-# ── force reset with bundle_id ──
-$ sqlite3  "UPDATE mapi_app_update SET update_state=0 WHERE bundle_id='${bundleId}';"
-# ── force reset all ──
-$ for bundleId in "${staleIds[@]}"; do
-    sqlite3 "${db}" "UPDATE mapi_app_update SET update_state=0 WHERE bundle_id='${bundleId}';"
-  done
-```
-
-```bash
-# clean the badge count
-$ defaults write com.apple.appstored BadgeCount -int 0
-$ defaults delete com.apple.appstored BadgeCount 2>/dev/null
-killall appstored appstoreagent 2>/dev/null
-```
-
 ## troubleshooting
 ### [`failed to connect to raw.githubusercontent.com port 443: connection refused`](https://www.cnblogs.com/Dylansuns/p/12309847.html)
-- issue
-  ```bash
-  failed to connect to raw.githubusercontent.com port 443: connection refused
-  ```
-- solution
-  ```bash
-  $ sudo bash -c " echo '199.232.28.133 raw.githubusercontent.com' >> /etc/hosts"
-  ```
-  - checking host IP address via [https://www.ipaddress.com/](https://www.ipaddress.com/)
+
+> [!NOTE|label:issue]
+> ```bash
+> failed to connect to raw.githubusercontent.com port 443: connection refused
+> ```
+
+```bash
+# solution
+$ sudo bash -c " echo '199.232.28.133 raw.githubusercontent.com' >> /etc/hosts"
+```
+and then checking host IP address via [https://www.ipaddress.com/](https://www.ipaddress.com/)
 
 - additional
   > reference:
@@ -1114,62 +1029,63 @@ killall appstored appstoreagent 2>/dev/null
   > - [iP或域名查询](https://site.ip138.com/)
   > flush DNS via `sudo killall -HUP mDNSResponder`
 
-```bash
-sudo bash -c cat >> /etc/hosts << EOF
-# GitHub Start
-52.74.223.119     github.com
-192.30.253.119    gist.github.com
-54.169.195.247    api.github.com
-185.199.111.153   assets-cdn.github.com
-199.232.28.133    raw.githubusercontent.com
-# 199.232.96.133  raw.githubusercontent.com
-# 151.101.76.133  raw.githubusercontent.com
-151.101.76.133    gist.githubusercontent.com
-151.101.76.133    cloud.githubusercontent.com
-151.101.76.133    camo.githubusercontent.com
-151.101.76.133    avatars0.githubusercontent.com
-151.101.76.133    avatars1.githubusercontent.com
-151.101.76.133    avatars2.githubusercontent.com
-151.101.76.133    avatars3.githubusercontent.com
-151.101.76.133    avatars4.githubusercontent.com
-151.101.76.133    avatars5.githubusercontent.com
-151.101.76.133    avatars6.githubusercontent.com
-151.101.76.133    avatars7.githubusercontent.com
-151.101.76.133    avatars8.githubusercontent.com
-# GitHub End
-EOF
-```
+  ```bash
+  $ sudo bash -c cat >> /etc/hosts << EOF
+  # GitHub Start
+  52.74.223.119     github.com
+  192.30.253.119    gist.github.com
+  54.169.195.247    api.github.com
+  185.199.111.153   assets-cdn.github.com
+  199.232.28.133    raw.githubusercontent.com
+  # 199.232.96.133  raw.githubusercontent.com
+  # 151.101.76.133  raw.githubusercontent.com
+  151.101.76.133    gist.githubusercontent.com
+  151.101.76.133    cloud.githubusercontent.com
+  151.101.76.133    camo.githubusercontent.com
+  151.101.76.133    avatars0.githubusercontent.com
+  151.101.76.133    avatars1.githubusercontent.com
+  151.101.76.133    avatars2.githubusercontent.com
+  151.101.76.133    avatars3.githubusercontent.com
+  151.101.76.133    avatars4.githubusercontent.com
+  151.101.76.133    avatars5.githubusercontent.com
+  151.101.76.133    avatars6.githubusercontent.com
+  151.101.76.133    avatars7.githubusercontent.com
+  151.101.76.133    avatars8.githubusercontent.com
+  # GitHub End
+  EOF
+  ```
 
 ### failure in `brew search` for cask formula
-- issue
-  ```bash
-  $ brew install --cask firefox-developer-edition
-  Error: Cask 'firefox-developer-edition' is unavailable: No Cask with this name exists.
 
-  $ brew search firefox
-  ==> Casks
-  firefox                                                                     multifirefox
-  ```
+> [!NOTE|label:issue:]
+> ```bash
+> $ brew install --cask firefox-developer-edition
+> Error: Cask 'firefox-developer-edition' is unavailable: No Cask with this name exists.
+>
+> $ brew search firefox
+> ==> Casks
+> firefox                                                                     multifirefox
+> ```
 
-- solution
-  ```bash
-  $ git -C $(brew --repo homebrew/cask-versions) st
-  On branch master
-  Your branch is up to date with 'origin/master'.
+```bash
+# solution
+$ git -C $(brew --repo homebrew/cask-versions) st
+On branch master
+Your branch is up to date with 'origin/master'.
 
-  Changes not staged for commit:
-    (use "git add/rm <file>..." to update what will be committed)
-    (use "git restore <file>..." to discard changes in working directory)
-    deleted:    Casks/firefox-beta.rb
-    deleted:    Casks/firefox-developer-edition.rb
-    deleted:    Casks/firefox-esr.rb
-    deleted:    Casks/firefox-nightly.rb
+Changes not staged for commit:
+  (use "git add/rm <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+  deleted:    Casks/firefox-beta.rb
+  deleted:    Casks/firefox-developer-edition.rb
+  deleted:    Casks/firefox-esr.rb
+  deleted:    Casks/firefox-nightly.rb
 
-  no changes added to commit (use "git add" and/or "git commit -a")
+no changes added to commit (use "git add" and/or "git commit -a")
 
-  $ git -C $(brew --repo homebrew/cask-versions) reset --hard
-  HEAD is now at 67d487bd6 Update dotnet-preview from 6.0.0-preview.4.21253.7,bab80210-ac54-44fa-bf41-7474c6371cf2:eadcd657b93e347d08bc33c59bd60835 to 6.0.0-preview.5.21301.5,c326f2e1-10ee-482e-9871-5fb8de7f7777:dda8203d3b58e56efeca4a7248cdea67 (#11293)
-  ```
+$ git -C $(brew --repo homebrew/cask-versions) reset --hard
+HEAD is now at 67d487bd6 Update dotnet-preview from 6.0.0-preview.4.21253.7,bab80210-ac54-44fa-bf41-7474c6371cf2:eadcd657b93e347d08bc33c59bd60835 to 6.0.0-preview.5.21301.5,c326f2e1-10ee-482e-9871-5fb8de7f7777:dda8203d3b58e56efeca4a7248cdea67 (#11293)
+```
 
 ### A fatal error has been detected by the Java Runtime Environment : `SIGILL (0x4)`
 

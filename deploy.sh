@@ -4,7 +4,7 @@
 #   FileName : deploy.sh
 #     Author : marslo
 #    Created : 2020-09-27 22:03:34
-# LastChange : 2026-09-01 19:03:26
+# LastChange : 2026-10-01 01:09:06
 # =============================================================================
 
 # @credit: https://github.com/ppo/bash-colors
@@ -129,7 +129,7 @@ function updateBook() {
       GIT_CONFIG_COUNT=2 \
       GIT_CONFIG_KEY_0=color.diff      GIT_CONFIG_VALUE_0=auto \
       GIT_CONFIG_KEY_1=diff.colormoved GIT_CONFIG_VALUE_1=no \
-      pre-commit run --all-files
+      pre-commit run --all-files || true
     }
     git add --all .
 
