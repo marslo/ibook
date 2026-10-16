@@ -37,6 +37,8 @@
 # ── with ditto ────────────────────
 # source server
 $ ditto -c -k --keepParent ~/Applications/<APP>.app <APP>.zip
+# or
+$ ditto -c -k --sequesterRsrc --keepParent ~/Applications/<APP>.app <APP>.zip
 # target server
 $ scp <source>:/path/to/<APP>.zip .
 $ ditto -x -k ./<APP>.zip ~/Applications/

@@ -50,6 +50,7 @@ git command study and practice
   - [automatic edit by `git rebase -i`](#automatic-edit-by-git-rebase--i)
   - [auto rebaes](#auto-rebaes)
   - [fix typo in commits](#fix-typo-in-commits)
+  - [fixup for a multi-commit branch](#fixup-for-a-multi-commit-branch)
 - [undo](#undo)
   - [delete after push](#delete-after-push)
   - [change latest comments in local](#change-latest-comments-in-local)
@@ -1163,8 +1164,65 @@ $ EDITOR="sed -i -e 's/borken/broken/g'" GIT_SEQUENCE_EDITOR="sed -i -e 's/pick/
 $ VISUAL="sed -i -e '/^[[:blank:]]*Change-Id/ d'" GIT_SEQUENCE_EDITOR="sed -i -e 's/pick/reword/g'" git rebase -i --root
 
 # or
-
 $ GIT_EDITOR="sed -i -e 's/kyewrod/keyword/g'" GIT_SEQUENCE_EDITOR="sed -i -e 's/pick/reword/g'" git rebase -i --root
+```
+
+### fixup for a multi-commit branch
+
+> [!TIP]
+> - `--fixup` - **Prefer a SHA** accepts any commit-ish — `HEAD^`, `HEAD~2`, a branch or tag, fine for a quick one-off, but `HEAD~n` is positional (counts from the current HEAD, shifts by one with every fixup you add, and follows first-parent across merges).
+> - `--autosquash` moves each `fixup!` directly **below** its target and marks it `fixup`, then squashes
+> - `<base>` - **ancestor of the target** takes any commit-ish, so a SHA works and is equivalent to `origin/main` / `HEAD~3` / the merge-base (often literally the same commit, e.g. `7dd80eec`)
+> - `GIT_SEQUENCE_EDITOR=:` runs it without opening an editor; drop it to review the todo interactively
+
+to locate the commit
+
+| NEED                          | COMMAND                                                     |
+| ----------------------------- | ----------------------------------------------------------- |
+| which commit owns a line      | `git blame -L 42,42 -- path/to/file`                        |
+| which commits touched a file  | `git --no-pager log --oneline <base>..HEAD -- path/to/file` |
+| commits unique to this branch | `git --no-pager log --oneline <base>..HEAD`                 |
+
+```bash
+# locate: which commit last touched this line ( optional )
+$ git blame -L <line>,<line> -- <file>
+
+# make the change, then stage it
+$ git add path/to/file path/to/other/file
+
+# create a fixup! commit targeting that commit - <target-sha> or <HEAD^>/<HEAD~n>
+$ git commit --fixup=<target-sha>
+
+# squash it in (non-interactive, auto-reordered by autosquash) - <base> can be also `<target-sha>^` or `<target-sha>~1`
+$ GIT_SEQUENCE_EDITOR=: git rebase -i --autosquash <base>
+```
+
+```bash
+# e.g.:
+$ git --no-pager log --oneline -4
+#   781e1645  feat: C
+#   31a1c22c  feat: B
+#   09cc934f  feat: A             <-- review asks for a change inside A
+#   7dd80eec  feat: base          <-- base can be `<target-sha>^` / `<target-sha>~1`
+
+# edit src/a.py to fix the issue
+$ git add src/a.py
+$ git commit --fixup=09cc934f
+
+$ git --no-pager log --oneline -4
+#   cbed1330  fixup! feat: A      <-- fixup commit ( same commit message as <target-sha> )
+#   781e1645  feat: C
+#   31a1c22c  feat: B
+#   09cc934f  feat: A
+
+# squash (c1 absorbs the fixup; c2/c3 replay automatically)
+$ GIT_SEQUENCE_EDITOR=: git rebase -i --autosquash 09cc934f^
+# same as below
+$ GIT_SEQUENCE_EDITOR=: git rebase -i --autosquash 7dd80eec
+
+# verify + push
+$ git --no-pager log --oneline <base>..HEAD   # still 3 commits
+$ git push --force-with-lease
 ```
 
 ## undo
