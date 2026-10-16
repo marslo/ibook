@@ -22,6 +22,7 @@
   - [identity an image](#identity-an-image)
   - [convert svg to png](#convert-svg-to-png)
   - [convert HEIC/HEIF to PNG](#convert-heicheif-to-png)
+  - [convert HEIC/HEIF to JPG or WebP](#convert-heicheif-to-jpg-or-webp)
   - [sed command to batch change fill and stroke of an SVG](#sed-command-to-batch-change-fill-and-stroke-of-an-svg)
 - [animation flow chart](#animation-flow-chart)
   - [create animation flow](#create-animation-flow)
@@ -405,6 +406,11 @@ $ identify arms009.jpg | grep -o "[[:digit:]]*x[[:digit:]]*" | tail -1
 
 ### convert HEIC/HEIF to PNG
 
+> [!NOTE]
+> - `depth 8`: force 8-bit depth to reduce file size (default is 16-bit)
+> - `define png:compression-level=9`: set the compression level to 9 (maximum compression) to reduce file size
+> - `define png:compression-filter=5`: set the compression filter to 5 (adaptive filtering) to improve compression efficiency
+
 ![magick](../screenshot/osx/heic-1.gif)
 
 ```bash
@@ -413,8 +419,25 @@ $ brew install imagemagick --with-libheif
 # for single convert
 $ magick convert [-monitor] <name>.HEIC <new-name>.png
 
-# for batch convert
-$ magick mogrify [-monitor] -format png *.HEIC.
+# for bulk convert
+$ magick mogrify -monitor -format png *.HEIC.
+
+# force 8-bit depth and maximum compression
+$ magick mogrify -monitor -format png -depth 8 -define png:compression-level=9 -define png:compression-filter=5 *.HEIC
+
+# resize to 50% or 1920px width + force 8-bit depth
+$ magick mogrify -monitor -format png -depth 8 -resize 50% *.HEIC
+$ magick mogrify -monitor -format png -depth 8 -resize 1920x *.HEIC
+```
+
+### convert HEIC/HEIF to JPG or WebP
+
+> [!NOTE]
+> - `-quality 85`/`--quality 80` : set the quality of the output JPEG/WebP image to 85/80 ( to reduce file size )
+
+```bash
+$ magick mogrify -monitor -format jpg -quality 85 *.HEIC
+$ magick mogrify -monitor -format webp -quality 80 *.HEIC
 ```
 
 ### [sed command to batch change fill and stroke of an SVG](https://stackoverflow.com/a/60123629/2940319)
