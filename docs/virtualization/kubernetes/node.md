@@ -23,6 +23,8 @@
   - [copy label](#copy-label)
 - [sort](#sort)
   - [sort via kubelet version](#sort-via-kubelet-version)
+- [troubleshooting](#troubleshooting)
+  - [swap partition is still active even after commenting out fstab](#swap-partition-is-still-active-even-after-commenting-out-fstab)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -574,3 +576,93 @@ $ kubectl get node --sort-by={.status.nodeInfo.kubeletVersion}
   ```bash
   $ kubectl get nodes --sort-by={.metadata.labels."kubernetes\.io\/role"}
   ```
+
+## troubleshooting
+
+### swap partition is still active even after commenting out fstab
+
+> [!NOTE|label:status:]
+> the swap line in `/etc/fstab` is **already commented out**, yet `/proc/swaps` still shows `/dev/sda3` as an active swap
+> ```bash
+> $ command grep -v '^#' /etc/fstab | command grep -i swap
+> ```
+> **Root cause**: `systemd-gpt-auto-generator` activates the swap partition automatically based on its **GPT partition-type GUID**, **bypassing fstab entirely**.
+
+```bash
+# ——— check node status ———
+$ systemctl list-unit-files --type=swap
+UNIT FILE     STATE     VENDOR PRESET
+dev-sda3.swap generated enabled
+
+1 unit files listed.
+
+$ systemctl list-units --type=swap --all
+  UNIT                                                                                          LOAD   ACTIVE SUB    DESCRIPTION                                                                  >
+  dev-disk-by\x2did-scsi\x2d362cea7f0bc4ad7002896f96781601eda\x2dpart3.swap                     loaded active active /dev/disk/by-id/scsi-362cea7f0bc4ad7002896f96781601eda-part3                 >
+  dev-disk-by\x2did-scsi\x2dSDELL_PERC_H740P_Adp_00da1e608167f9962800d74abcf0a7ce\x2dpart3.swap loaded active active /dev/disk/by-id/scsi-SDELL_PERC_H740P_Adp_00da1e608167f9962800d74abcf0a7ce-pa>
+  dev-disk-by\x2did-wwn\x2d0x62cea7f0bc4ad7002896f96781601eda\x2dpart3.swap                     loaded active active /dev/disk/by-id/wwn-0x62cea7f0bc4ad7002896f96781601eda-part3                 >
+  dev-disk-by\x2dpartuuid-511f20b9\x2d22f1\x2d4bdd\x2d8914\x2d3b343319382e.swap                 loaded active active /dev/disk/by-partuuid/511f20b9-22f1-4bdd-8914-3b343319382e                   >
+  dev-disk-by\x2dpath-pci\x2d0000:af:00.0\x2dscsi\x2d0:2:0:0\x2dpart3.swap                      loaded active active /dev/disk/by-path/pci-0000:af:00.0-scsi-0:2:0:0-part3                        >
+  dev-disk-by\x2duuid-a2af5388\x2d74c8\x2d4d20\x2db8e0\x2dd0644b1d7d80.swap                     loaded active active /dev/disk/by-uuid/a2af5388-74c8-4d20-b8e0-d0644b1d7d80                       >
+  dev-sda3.swap                                                                                 loaded active active Swap Partition                                                               >
+
+LOAD   = Reflects whether the unit definition was properly loaded.
+ACTIVE = The high-level unit activation state, i.e. generalization of SUB.
+SUB    = The low-level unit activation state, values depend on unit type.
+
+7 loaded units listed.
+To show all installed unit files use 'systemctl list-unit-files'.
+
+$ command cat /proc/swaps
+Filename        Type    Size  Used  Priority
+/dev/sda3                               partition 31250428  0 -2
+
+$ free -h
+              total        used        free      shared  buff/cache   available
+Mem:          187Gi       2.7Gi       170Gi       2.0Mi        13Gi       183Gi
+Swap:          29Gi          0B        29Gi
+```
+
+```bash
+# ——— solution ———
+# disable swap manually
+$ sudo swapoff -a
+
+# disable swap permanently
+$ sudo systemctl mask dev-sda3.swap
+Created symlink /etc/systemd/system/dev-sda3.swap → /dev/null.
+$ sudo systemctl daemon-reload
+
+# restart kubelet
+$ sudo systemctl restart kubelet
+
+# check status
+$ systemctl is-enabled dev-sda3.swap
+masked
+$ sudo systemctl show dev-sda3.swap -p UnitFileState -p UnitFilePreset
+UnitFileState=masked
+UnitFilePreset=enabled
+$ command cat /proc/swaps
+Filename        Type    Size  Used  Priority
+$ systemctl list-unit-files --type=swap
+UNIT FILE     STATE  VENDOR PRESET
+dev-sda3.swap masked enabled
+
+1 unit files listed.
+$ free -h
+              total        used        free      shared  buff/cache   available
+Mem:          187Gi       2.9Gi       170Gi       2.0Mi        14Gi       183Gi
+Swap:            0B          0B          0B
+```
+
+```bash
+# more
+$ sudo blkid /dev/sda3
+/dev/sda3: UUID="a2af5388-74c8-4d20-b8e0-d0644b1d7d80" TYPE="swap" PARTUUID="511f20b9-22f1-4bdd-8914-3b343319382e"
+
+$ sudo wipefs -a /dev/sda3
+/dev/sda3: 10 bytes were erased at offset 0x00000ff6 (swap): 53 57 41 50 53 50 41 43 45 32
+
+$ sudo blkid /dev/sda3
+/dev/sda3: PARTUUID="511f20b9-22f1-4bdd-8914-3b343319382e"
+```
