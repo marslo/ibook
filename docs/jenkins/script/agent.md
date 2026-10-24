@@ -627,26 +627,60 @@ rows.collect { it.last() }.unique().sort().each { println( "  ${it}" ) }
 ![KubernetesCloud templates and images](../../screenshot/jenkins/jenkins-cloud-template.png)
 
 ```groovy
-// without tabular format
-List<String> rows = []
-jenkins.model.Jenkins.get().clouds.findAll { 'KubernetesCloud' == it.class.simpleName }.each { cloud ->
-  cloud.templates.each { tpl ->
-    String base = [ cloud.name, tpl.name, tpl.label ?: '-', tpl.namespace ?: '-', tpl.inheritFrom ?: '-' ].join( '\t' )
+import org.csanchez.jenkins.plugins.kubernetes.KubernetesCloud
+import org.csanchez.jenkins.plugins.kubernetes.PodTemplate
+import org.csanchez.jenkins.plugins.kubernetes.volumes.PodVolume
+
+/**
+ * render rows as a space-padded table with a header separator.
+ *
+ * @param header    column titles
+ * @param rows      table rows, one {@code List<String>} per row
+ * @return          the table as a single string
+**/
+String tabular( List<String> header, List<List<String>> rows ) {
+  List<Integer> widths = header.indices.collect { int i -> ( [ header ] + rows ).collect { it[i].size() }.max() }
+  Closure<String> line = { List<String> cells -> cells.withIndex().collect { String c, int i -> c.padRight( widths[i] ) }.join( '  ' ).replaceAll( /\s+$/, '' ) }
+  ( [ line( header ), widths.collect { '-' * it }.join( '  ' ) ] + rows.collect { line( it ) } ).join( '\n' )
+}
+
+/**
+ * the source of a pod volume: host path, PVC, NFS export, config map or secret.
+ *
+ * @param vol       a {@code PodVolume} ( {@code HostPathVolume}, {@code PersistentVolumeClaim}, {@code NfsVolume}, … )
+ * @return          the source, or {@code -} for {@code emptyDir} / unknown types
+**/
+String volumeSource( PodVolume vol ) {
+  if ( vol.hasProperty( 'serverAddress' ) ) return "${vol.serverAddress}:${vol.serverPath}"
+  [ 'hostPath', 'claimName', 'configMapName', 'secretName' ].findResult { String p -> vol.hasProperty( p ) ? vol."${p}" : null } ?: '-'
+}
+
+List<List<String>> rows    = []
+List<List<String>> volumes = []
+List<String> bypass        = [ 'deprecated' ]
+jenkins.model.Jenkins.get().clouds.getAll( KubernetesCloud ).each { KubernetesCloud cloud ->
+  cloud.templates.findAll { ! bypass.any{ b -> it.name.contains(b) } }.each { PodTemplate tpl ->
+    List<String> base = [ cloud.name, tpl.name, tpl.label ?: '-', tpl.namespace ?: '-', tpl.nodeSelector ?: '-', tpl.inheritFrom ?: '-' ]
+    tpl.volumes.each { PodVolume vol ->
+      volumes << [ cloud.name, tpl.name, vol.class.simpleName - ~/Volume$/, volumeSource( vol ), vol.mountPath ?: '-' ]
+    }
     tpl.containers.each { ctr ->
-      rows << [ base, 'container', ctr.name, ctr.image ].join( '\t' )
+      rows << base + [ 'container', ctr.name, ctr.image ]
     }
     ( tpl.yamls ?: [] ).each { String yaml ->
       ( yaml =~ /(?m)^\s*-?\s*image:\s*['"]?([^'"\s]+)/ ).each { m ->
-        rows << [ base, 'yaml', '-', m[1] ].join( '\t' )
+        rows << base + [ 'yaml', '-', m[1] ]
       }
     }
   }
 }
 
-println( [ 'cloud', 'template', 'label', 'namespace', 'inheritFrom', 'source', 'container', 'image' ].join( '\t' ) )
-rows.sort().each { println( it ) }
-println( "\nunique images:" )
-rows.collect { it.tokenize( '\t' ).last() }.unique().sort().each { println( "  ${it}" ) }
+List<String> header = [ 'CLOUD', 'TEMPLATE', 'LABEL', 'NAMESPACE', 'SELECTOR', 'INHERIT FROM', 'SOURCE', 'CONTAINER', 'IMAGE' ]
+println( tabular( header, rows.sort { it.join( '\t' ) } ) )
+println( '\nUNIQUE IMAGES:' )
+rows.collect { it.last() }.unique().sort().each { println( "  ${it}" ) }
+println( '\nVOLUMES:' )
+println( tabular( [ 'CLOUD', 'TEMPLATE', 'TYPE', 'SOURCE', 'MOUNT PATH' ], volumes.sort { it.join( '\t' ) } ) )
 ```
 
 ## executor
