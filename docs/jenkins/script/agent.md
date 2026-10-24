@@ -13,6 +13,7 @@
 - [cloud agents](#cloud-agents)
   - [check how many cloud agent running](#check-how-many-cloud-agent-running)
   - [KubernetesComputer](#kubernetescomputer)
+  - [KubernetesCloud](#kubernetescloud)
 - [executor](#executor)
   - [basic usage](#basic-usage)
   - [get executor status](#get-executor-status)
@@ -579,6 +580,74 @@ jenkins.model.Jenkins.instance.computers.findAll{ it instanceof KubernetesComput
   isLaunching : false
      isOnline : true
   ```
+
+### KubernetesCloud
+
+> [!NOTE]
+> to list all KubernetesCloud templates and images with tabular format
+
+```groovy
+import org.csanchez.jenkins.plugins.kubernetes.KubernetesCloud
+
+/**
+ * render rows as a space-padded table with a header separator.
+ *
+ * @param header    column titles
+ * @param rows      table rows, one {@code List<String>} per row
+ * @return          the table as a single string
+**/
+String tabular( List<String> header, List<List<String>> rows ) {
+  List<Integer> widths = header.indices.collect { int i -> ( [ header ] + rows ).collect { it[i].size() }.max() }
+  Closure<String> line = { List<String> cells -> cells.withIndex().collect { String c, int i -> c.padRight( widths[i] ) }.join( '  ' ).replaceAll( /\s+$/, '' ) }
+  ( [ line( header ), widths.collect { '-' * it }.join( '  ' ) ] + rows.collect { line( it ) } ).join( '\n' )
+}
+
+List<List<String>> rows = []
+List<String> bypass     = [ 'deprecated' ]
+jenkins.model.Jenkins.get().clouds.getAll( KubernetesCloud ).each { KubernetesCloud cloud ->
+  cloud.templates.findAll { ! bypass.any{ b -> it.name.contains(b) } }.each { tpl ->
+    List<String> base = [ cloud.name, tpl.name, tpl.label ?: '-', tpl.namespace ?: '-', tpl.inheritFrom ?: '-' ]
+    tpl.containers.each { ctr ->
+      rows << base + [ 'container', ctr.name, ctr.image ]
+    }
+    ( tpl.yamls ?: [] ).each { String yaml ->
+      ( yaml =~ /(?m)^\s*-?\s*image:\s*['"]?([^'"\s]+)/ ).each { m ->
+        rows << base + [ 'yaml', '-', m[1] ]
+      }
+    }
+  }
+}
+
+List<String> header = [ 'CLOUD', 'TEMPLATE', 'LABEL', 'NAMESPACE', 'INHERIT FROM', 'SOURCE', 'CONTAINER', 'IMAGE' ]
+println( tabular( header, rows.sort { it.join( '\t' ) } ) )
+println( '\nUNIQUE IMAGES:' )
+rows.collect { it.last() }.unique().sort().each { println( "  ${it}" ) }
+```
+
+![KubernetesCloud templates and images](../../screenshot/jenkins/jenkins-cloud-template.png)
+
+```groovy
+// without tabular format
+List<String> rows = []
+jenkins.model.Jenkins.get().clouds.findAll { 'KubernetesCloud' == it.class.simpleName }.each { cloud ->
+  cloud.templates.each { tpl ->
+    String base = [ cloud.name, tpl.name, tpl.label ?: '-', tpl.namespace ?: '-', tpl.inheritFrom ?: '-' ].join( '\t' )
+    tpl.containers.each { ctr ->
+      rows << [ base, 'container', ctr.name, ctr.image ].join( '\t' )
+    }
+    ( tpl.yamls ?: [] ).each { String yaml ->
+      ( yaml =~ /(?m)^\s*-?\s*image:\s*['"]?([^'"\s]+)/ ).each { m ->
+        rows << [ base, 'yaml', '-', m[1] ].join( '\t' )
+      }
+    }
+  }
+}
+
+println( [ 'cloud', 'template', 'label', 'namespace', 'inheritFrom', 'source', 'container', 'image' ].join( '\t' ) )
+rows.sort().each { println( it ) }
+println( "\nunique images:" )
+rows.collect { it.tokenize( '\t' ).last() }.unique().sort().each { println( "  ${it}" ) }
+```
 
 ## executor
 
