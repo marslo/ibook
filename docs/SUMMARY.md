@@ -224,6 +224,7 @@
     * [vnc](linux/vnc/vnc-runbook.md)
   * [ubuntu](linux/ubuntu/ubuntu.md)
     * [init](linux/ubuntu/init.md)
+    * [upgrade](linux/ubuntu/upgrade.md)
     * [file system](linux/ubuntu/fileserver.md)
     * [systemctl](linux/ubuntu/systemctl.md)
     * [x](linux/ubuntu/x.md)
