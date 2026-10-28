@@ -90,9 +90,7 @@ devops-jenkins-659f4c6d44-d2w76   1/1     Running   0          2d22h   **.***.*.
 
 - filter all pods running in particular node
   ```bash
-  $ kubectl --all-namespaces get po \
-      [-o wide] \
-      --field-selector spec.nodeName=<node_name>
+  $ kubectl --all-namespaces get po [-o wide] --field-selector spec.nodeName=<node_name>
   ```
 
 - filter all pods running in particular node via `--template`
@@ -131,9 +129,9 @@ done
 
 ### sorting pods by nodeName
 ```bash
-$ kubectl -n <namespace> get po \
-    -o wide \
-    --sort-by="{.spec.nodeName}"
+$ kubectl -n <namespace> get po -o wide --sort-by="{.spec.nodeName}"
+# or
+$ kubectl --all-namespace get po -o wide --sort-by=.spec.nodeName
 ```
 
 ### sort pods by restartCount

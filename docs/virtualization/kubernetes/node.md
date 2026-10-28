@@ -631,6 +631,13 @@ $ sudo swapoff -a
 # disable swap permanently
 $ sudo systemctl mask dev-sda3.swap
 Created symlink /etc/systemd/system/dev-sda3.swap → /dev/null.
+# -- or --
+$ systemctl list-unit-files --type=swap --no-legend --plain | awk '{print $1}' | xargs -r sudo systemctl mask
+# -- or --
+$ systemctl list-unit-files --type=swap --no-legend --plain | awk '"masked" != $2 {print $1}' | xargs -r sudo systemctl mask
+# -- or --
+$ swapon --show=NAME --noheadings | xargs -r -I{} systemd-escape -p --suffix=swap {} | xargs -r sudo systemctl mask
+
 $ sudo systemctl daemon-reload
 
 # restart kubelet

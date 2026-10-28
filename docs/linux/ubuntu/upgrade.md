@@ -92,3 +92,28 @@ $ sudo apt install -y git-delta
 $ npm outdated -g
 $ npm update -g
 ```
+
+```bash
+# ── nvim ──
+# ruby gem
+$ sudo rm /usr/local/bin/neovim-ruby-host && sudo gem install neovim && hash -r && head -1 "$( type -P neovim-ruby-host )"
+# ...
+# 3 gems installed
+# #!/usr/bin/ruby3.3
+$ test -d /var/lib/gems/3.2.0 && sudo rm -rf /var/lib/gems/3.2.0
+# verify
+$ nvim --headless '+checkhealth vim.provider' '+w! /tmp/health.txt' '+qa' >/dev/null 2>&1; command grep -A6 'Ruby provider' /tmp/health.txt
+
+# pip pynvim
+$ /usr/bin/python3 --version; /usr/bin/python3 -c 'import pynvim; print(pynvim.__version__, pynvim.__file__)'
+# Python 3.14.4
+# Traceback (most recent call last):
+#   File "<string>", line 1, in <module>
+#     import pynvim; print(pynvim.__version__, pynvim.__file__)
+#     ^^^^^^^^^^^^^
+# ModuleNotFoundError: No module named 'pynvim'
+$ sudo apt install -y python3-pynvim
+$ /usr/bin/python3 --version; /usr/bin/python3 -c 'import pynvim; print(pynvim.__version__, pynvim.__file__)'
+# Python 3.14.4
+# 0.6.0 /usr/lib/python3/dist-packages/pynvim/__init__.py
+```
