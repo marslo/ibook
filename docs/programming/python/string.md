@@ -6,6 +6,7 @@
   - [right](#right)
   - [center](#center)
 - [f-strings](#f-strings)
+- [string module](#string-module)
 - [cheatsheet](#cheatsheet)
   - [uppercase and lowercase](#uppercase-and-lowercase)
   - [pad and fill](#pad-and-fill)
@@ -124,6 +125,30 @@ print( f'{one_third}' )
 
 print( f'{one_third = }' )
 # 'one_third = Fraction(1, 3)'
+```
+
+## string module
+
+```python
+import string
+
+string.ascii_lowercase
+# 'abcdefghijklmnopqrstuvwxyz'
+
+string.ascii_uppercase
+# 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+
+string.ascii_letters          # a-z + A-Z
+# 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+
+string.digits
+# '0123456789'
+
+string.hexdigits
+# '0123456789abcdefABCDEF'
+
+string.punctuation
+# '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~'
 ```
 
 ## cheatsheet
