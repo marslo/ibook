@@ -247,6 +247,7 @@
     * [config](programming/python/config.md)
     * [basic](programming/python/basic.md)
     * [pep8](programming/python/pep8.md)
+    * [string](programming/python/string.md)
     * [list](programming/python/list.md)
     * [pip](programming/python/pip.md)
     * [q&a](programming/python/qa.md)

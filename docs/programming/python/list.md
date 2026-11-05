@@ -94,7 +94,7 @@ list( map(int, sample_list) )
 # or zip to a map
 >>> x = ['1', '2', '3', '4']
 >>> y = ['one', 'two', 'three', 'four']
->>> print( {key: value for key, value in zip_longest(x, y)} )
+>>> print({ k: v for k, v in zip_longest(x, y) })
 {'1': 'one', '2': 'two', '3': 'three', '4': 'four'}
 ```
 
@@ -103,6 +103,15 @@ list( map(int, sample_list) )
 # sum
 >>> n = ['1', '2', '3', '4']
 >>> print( sum( list( map(int, n) ) ) )
+10
+
+# or
+>>> n = ['1', '2', '3', '4']
+>>> print( sum( int(i) for i in n ) )
+10
+
+# or even robust
+>>> sum([ int(i) for i in n if i.isdigit() ])
 10
 ```
 
