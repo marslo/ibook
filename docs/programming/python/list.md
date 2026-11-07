@@ -10,6 +10,8 @@
 - [list initialization](#list-initialization)
   - [range](#range)
   - [string](#string)
+- [convert](#convert)
+  - [dict](#dict)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -141,4 +143,18 @@ list( string.digits )
 # 0-9A-F (hex)
 list( string.hexdigits )
 # ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'A', 'B', 'C', 'D', 'E', 'F']
+```
+
+## convert
+
+### dict
+
+```python
+days: list[str] = [ 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday' ]
+
+print({ k: v for k, v in enumerate(days, start=1) })
+# {1: 'monday', 2: 'tuesday', 3: 'wednesday', 4: 'thursday', 5: 'friday', 6: 'saturday', 7: 'sunday'}
+
+print({ k: v.title() for k, v in enumerate(days, start=1) if v.startswith('t') })
+# {2: 'Tuesday', 4: 'Thursday'}
 ```

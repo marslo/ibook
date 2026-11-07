@@ -360,6 +360,11 @@ $ find . -type f -print0 | perl -0nE 'say if -f and -s _ and -T _' | grep -a -E 
 - [sort disk usage](https://www.commandlinefu.com/commands/view/10/outputs-a-sorted-list-of-disk-usage-to-a-text-file)
   ```bash
   $ du | sort -gr
+
+  # sort with numeric value and convert to human readable format
+  $ du -k --max-depth=1 ~/.npm/ | sort -nr | numfmt --from-unit=1024 --to=iec --field=1
+  # sort with human readable format
+  $ du -k --max-depth=1 ~/.npm/ | sort -hr
   ```
 
 - [32bit or 64bit](https://www.commandlinefu.com/commands/view/2940/32-bits-or-64-bits)
