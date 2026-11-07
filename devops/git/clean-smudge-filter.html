@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Git clean / smudge filter runbook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+
+<style>
+  :root{
+    --bg:#f1f4f4; --surface:#ffffff; --surface-2:#eaefef; --border:#dde4e4;
+    --ink:#182028; --muted:#586268; --faint:#8b969b;
+    --accent:#0e7c74; --accent-ink:#0a5b54; --accent-soft:#e0efed;
+    --warn:#9c5407; --warn-soft:#f8ecdc; --warn-bd:#e6c79b;
+    --danger:#ad2b23; --danger-soft:#f8e6e4; --danger-bd:#e8bab6;
+    --good:#1c7d4d;
+    --term-bg:#0f1620; --term-panel:#0b111a; --term-ink:#ccd7e2; --term-muted:#6f7f8e;
+    --term-prompt:#54ccbe; --term-comment:#63788a; --term-bar:#1a2530;
+    --shadow:0 1px 2px rgba(16,32,40,.04), 0 6px 24px -12px rgba(16,32,40,.18);
+    --radius:12px;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --bg:#0d1116; --surface:#151b22; --surface-2:#1a222b; --border:#28323d;
+      --ink:#e7edf2; --muted:#98a5b1; --faint:#6b7883;
+      --accent:#2fc7b8; --accent-ink:#63d6ca; --accent-soft:#123531;
+      --warn:#d99a3c; --warn-soft:#2b2417; --warn-bd:#4a3d22;
+      --danger:#e78b84; --danger-soft:#2c1a19; --danger-bd:#4c2f2c;
+      --good:#4cbd82;
+      --term-bg:#0c1218; --term-panel:#080d13; --term-ink:#ccd7e2; --term-muted:#6f7f8e;
+      --term-prompt:#54ccbe; --term-comment:#5f7486; --term-bar:#141d26;
+      --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 30px -14px rgba(0,0,0,.6);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0d1116; --surface:#151b22; --surface-2:#1a222b; --border:#28323d;
+    --ink:#e7edf2; --muted:#98a5b1; --faint:#6b7883;
+    --accent:#2fc7b8; --accent-ink:#63d6ca; --accent-soft:#123531;
+    --warn:#d99a3c; --warn-soft:#2b2417; --warn-bd:#4a3d22;
+    --danger:#e78b84; --danger-soft:#2c1a19; --danger-bd:#4c2f2c;
+    --good:#4cbd82;
+    --term-bg:#0c1218; --term-panel:#080d13; --term-ink:#ccd7e2; --term-muted:#6f7f8e;
+    --term-prompt:#54ccbe; --term-comment:#5f7486; --term-bar:#141d26;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 30px -14px rgba(0,0,0,.6);
+  }
+
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:"IBM Plex Sans",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    font-size:16px; line-height:1.65;
+    -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+  }
+  .wrap{max-width:920px; margin:0 auto; padding:clamp(1.4rem,4vw,3.5rem) clamp(1rem,4vw,2rem) 5rem}
+
+  a{color:var(--accent-ink); text-decoration:none; border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+  a:hover{border-bottom-color:var(--accent)}
+  :focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:3px}
+
+  .mono{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  .eyebrow{font-family:"IBM Plex Mono",monospace; font-size:.72rem; letter-spacing:.16em; text-transform:uppercase; color:var(--accent-ink); font-weight:600}
+
+  header.doc{border-bottom:1px solid var(--border); padding-bottom:1.8rem; margin-bottom:2.4rem}
+  header.doc .kick{display:flex; align-items:center; gap:.6rem; margin-bottom:1rem}
+  header.doc .kick .dot{width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
+  h1{
+    font-family:"IBM Plex Mono",monospace; font-weight:700;
+    font-size:clamp(1.9rem,5.2vw,2.9rem); line-height:1.05; letter-spacing:-.02em;
+    margin:.2rem 0 .5rem; text-wrap:balance;
+  }
+  h1 .caret{color:var(--accent)}
+  .lede{font-size:1.075rem; color:var(--muted); max-width:62ch; margin:.4rem 0 1.4rem}
+  .meta{display:flex; flex-wrap:wrap; gap:.5rem}
+  .meta span{
+    font-family:"IBM Plex Mono",monospace; font-size:.76rem; color:var(--muted);
+    background:var(--surface-2); border:1px solid var(--border); border-radius:999px; padding:.24rem .7rem;
+  }
+  .meta b{color:var(--ink); font-weight:600}
+
+  nav.toc{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+    padding:1.1rem 1.3rem; margin-bottom:2.8rem; box-shadow:var(--shadow);
+  }
+  nav.toc p{margin:0 0 .7rem; font-family:"IBM Plex Mono",monospace; font-size:.72rem; letter-spacing:.14em; text-transform:uppercase; color:var(--faint)}
+  nav.toc ol{margin:0; padding:0; list-style:none; display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:.35rem .9rem; counter-reset:toc}
+  nav.toc li{counter-increment:toc}
+  nav.toc a{display:flex; gap:.6rem; align-items:baseline; border:0; color:var(--ink); font-size:.94rem; padding:.15rem 0}
+  nav.toc a::before{content:counter(toc,decimal-leading-zero); font-family:"IBM Plex Mono",monospace; font-size:.76rem; color:var(--accent-ink); font-weight:600}
+  nav.toc a:hover{color:var(--accent-ink)}
+
+  section{margin:0 0 3rem; scroll-margin-top:1.5rem}
+  h2{
+    font-size:1.5rem; font-weight:600; letter-spacing:-.01em; line-height:1.2;
+    margin:0 0 .3rem; padding-top:1.2rem; display:flex; align-items:baseline; gap:.7rem; text-wrap:balance;
+  }
+  h2 .num{font-family:"IBM Plex Mono",monospace; font-size:.9rem; font-weight:600; color:var(--accent-ink); background:var(--accent-soft); border-radius:6px; padding:.15rem .5rem; line-height:1; transform:translateY(-2px)}
+  h3{font-size:1.08rem; font-weight:600; margin:1.8rem 0 .4rem; color:var(--ink)}
+  .sub{color:var(--muted); margin:.1rem 0 1.1rem; max-width:64ch}
+  p{margin:.7rem 0; max-width:66ch}
+  ul,ol.steps{max-width:66ch; padding-left:1.2rem; margin:.7rem 0}
+  li{margin:.3rem 0}
+  strong{font-weight:600}
+  hr{border:0; border-top:1px solid var(--border); margin:2.5rem 0}
+
+  code.inl{
+    font-family:"IBM Plex Mono",monospace; font-size:.86em;
+    background:var(--surface-2); border:1px solid var(--border); border-radius:5px;
+    padding:.08em .38em; color:var(--ink); word-break:break-word;
+  }
+
+  .term{
+    background:var(--term-bg); border:1px solid var(--border); border-radius:10px;
+    margin:1.1rem 0; overflow:hidden; box-shadow:var(--shadow);
+  }
+  .term .bar{
+    display:flex; align-items:center; gap:.55rem; padding:.5rem .85rem;
+    background:var(--term-bar); border-bottom:1px solid rgba(255,255,255,.05);
+  }
+  .term .bar i{width:9px;height:9px;border-radius:50%;background:#3a4653;opacity:.55}
+  .term .bar .d1{background:#e06c5b}.term .bar .d2{background:#e0b23f}.term .bar .d3{background:#59b871}
+  .term .bar span{margin-left:.3rem; font-family:"IBM Plex Mono",monospace; font-size:.7rem; letter-spacing:.06em; color:var(--term-muted); text-transform:lowercase}
+  .term pre{
+    margin:0; padding:.95rem 1.1rem; overflow-x:auto;
+    font-family:"IBM Plex Mono",monospace; font-size:.855rem; line-height:1.7; color:var(--term-ink);
+    -webkit-overflow-scrolling:touch;
+  }
+  .term pre .p{color:var(--term-prompt); user-select:none}
+  .term pre .c{color:var(--term-comment); font-style:italic}
+  .term pre b{color:#fff; font-weight:600}
+
+  .box{
+    border:1px solid var(--border); border-left:3px solid var(--accent);
+    background:var(--accent-soft); border-radius:8px; padding:.85rem 1.05rem; margin:1.2rem 0;
+  }
+  .box .lbl{font-family:"IBM Plex Mono",monospace; font-size:.68rem; letter-spacing:.14em; text-transform:uppercase; font-weight:700; color:var(--accent-ink); display:block; margin-bottom:.25rem}
+  .box p{margin:.3rem 0; max-width:64ch}
+  .box.warn{border-left-color:var(--warn); background:var(--warn-soft); border-color:var(--warn-bd)}
+  .box.warn .lbl{color:var(--warn)}
+  .box.danger{border-left-color:var(--danger); background:var(--danger-soft); border-color:var(--danger-bd)}
+  .box.danger .lbl{color:var(--danger)}
+  .box.good{border-left-color:var(--good); background:color-mix(in srgb,var(--good) 12%,transparent); border-color:color-mix(in srgb,var(--good) 30%,var(--border))}
+  .box.good .lbl{color:var(--good)}
+  .box code.inl{background:color-mix(in srgb,var(--ink) 6%,transparent)}
+
+  .tablewrap{overflow-x:auto; margin:1.2rem 0; border:1px solid var(--border); border-radius:10px; box-shadow:var(--shadow)}
+  table{border-collapse:collapse; width:100%; font-size:.9rem; min-width:520px}
+  thead th{
+    text-align:left; font-family:"IBM Plex Mono",monospace; font-size:.68rem; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--muted); font-weight:600; background:var(--surface-2); padding:.7rem .9rem; border-bottom:1px solid var(--border); white-space:nowrap;
+  }
+  tbody td{padding:.7rem .9rem; border-bottom:1px solid var(--border); vertical-align:top; background:var(--surface)}
+  tbody tr:last-child td{border-bottom:0}
+  td .mono,th .mono{font-size:.86em}
+  .tag{font-family:"IBM Plex Mono",monospace; font-size:.74rem; padding:.12rem .5rem; border-radius:5px; white-space:nowrap; display:inline-block}
+  .tag.me{background:var(--accent-soft); color:var(--accent-ink)}
+  .tag.other{background:var(--surface-2); color:var(--muted); border:1px solid var(--border)}
+
+  footer{margin-top:3.5rem; padding-top:1.5rem; border-top:1px solid var(--border); color:var(--faint); font-size:.82rem; font-family:"IBM Plex Mono",monospace}
+  footer b{color:var(--muted); font-weight:500}
+
+  @media (max-width:560px){
+    body{font-size:15px}
+    h2 .num{transform:none}
+  }
+  @media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+
+  /* clean / smudge flow diagram */
+  .flow{display:grid; grid-template-columns:1fr minmax(210px,auto) 1fr; align-items:center; gap:1rem; margin:1.2rem 0; padding:1.1rem; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow)}
+  .flow .node{background:var(--surface-2); border:1px solid var(--border); border-radius:10px; padding:.9rem; text-align:center}
+  .flow .node b{display:block; font-family:"IBM Plex Mono",monospace; font-size:.9rem}
+  .flow .node span{display:block; color:var(--muted); font-size:.85rem; margin-top:.15rem}
+  .flow .arrows{display:flex; flex-direction:column; gap:.55rem}
+  .flow .arrow{font-family:"IBM Plex Mono",monospace; font-size:.76rem; border-radius:6px; padding:.4rem .6rem; text-align:center}
+  .flow .arrow small{display:block; color:var(--muted); font-size:.7rem}
+  .flow .arrow.clean{background:var(--accent-soft); color:var(--accent-ink)}
+  .flow .arrow.smudge{background:var(--warn-soft); color:var(--warn)}
+  .tag.warn{background:var(--warn-soft); color:var(--warn)}
+  @media (max-width:640px){ .flow{grid-template-columns:1fr} }
+
+  /* page width */
+  .wrap{max-width:none; width:90vw}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header class="doc">
+    <div class="kick"><span class="dot"></span><span class="eyebrow">Git Runbook</span></div>
+    <h1><span class="caret">▸</span> Invisible local patches</h1>
+    <p class="lede">Keep a permanent local edit in a repo you don't own — a vim plugin, a vendored lib, a shared config — while <code class="inl">git status</code> stays clean, so <code class="inl">git pull</code> and <code class="inl">git merge --ff-only</code> ( e.g. <code class="inl">:PlugUpdate</code> ) keep working. Built on git's clean / smudge filter.</p>
+    <div class="meta">
+      <span><b>Mechanism</b>&nbsp; gitattributes filter</span>
+      <span><b>Scope</b>&nbsp; local .git/ only</span>
+      <span><b>Git</b>&nbsp; 2.54.0</span>
+      <span><b>Live case</b>&nbsp; coc.nvim pathRe</span>
+      <span><b>Updated</b>&nbsp; 2026-11-05</span>
+    </div>
+  </header>
+
+  <nav class="toc" aria-label="Contents">
+    <p>Contents</p>
+    <ol>
+      <li><a href="#how">How it works</a></li>
+      <li><a href="#runbook">Runbook</a></li>
+      <li><a href="#verify">Verify</a></li>
+      <li><a href="#rollback">Rollback</a></li>
+      <li><a href="#gotchas">Gotchas</a></li>
+      <li><a href="#upstream">When upstream ships the fix</a></li>
+      <li><a href="#ex-conf">Example · local log_level</a></li>
+      <li><a href="#ex-coc">Example · coc.nvim pathRe</a></li>
+      <li><a href="#ref">Reference</a></li>
+    </ol>
+  </nav>
+
+  <!-- 1 -->
+  <section id="how">
+    <h2><span class="num">01</span> How it works</h2>
+    <p class="sub">Git never compares the file on disk directly: content passes through <code class="inl">clean</code> on the way in and <code class="inl">smudge</code> on the way out. The repo stores upstream as-is; the disk holds the patched copy.</p>
+    <div class="flow">
+      <div class="node"><b>worktree</b><span>patched: <code class="inl">\w.@</code></span></div>
+      <div class="arrows">
+        <div class="arrow clean">clean →<small>strip the patch</small></div>
+        <div class="arrow smudge">← smudge<small>apply the patch</small></div>
+      </div>
+      <div class="node"><b>index / objects</b><span>upstream: <code class="inl">\w .@</code></span></div>
+    </div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Filter</th><th>Direction</th><th>Runs on</th><th>Result</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">clean</td><td>worktree → git</td><td><code class="inl">git add</code>, <code class="inl">git commit -a</code>, <code class="inl">git stash</code>, content compare in <code class="inl">git status</code> / <code class="inl">git diff</code></td><td>git only ever sees upstream</td></tr>
+          <tr><td class="mono">smudge</td><td>git → worktree</td><td><code class="inl">git checkout</code>, <code class="inl">git merge</code>, <code class="inl">git pull</code>, <code class="inl">git reset --hard</code>, <code class="inl">git clone</code></td><td>every file write lands patched</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Piece</th><th>Location</th><th>Role</th></tr></thead>
+        <tbody>
+          <tr><td>attribute</td><td class="mono">.git/info/attributes</td><td><code class="inl">&lt;path&gt; filter=&lt;name&gt;</code> — which file uses which filter</td></tr>
+          <tr><td>filter</td><td class="mono">.git/config → [filter "&lt;name&gt;"]</td><td><code class="inl">clean</code> / <code class="inl">smudge</code> commands, stdin → stdout</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="box">
+      <span class="lbl">Local only</span>
+      <p>Both pieces live under <code class="inl">.git/</code>: never committed, never pushed, untouched by <code class="inl">fetch</code> / <code class="inl">merge</code>.</p>
+    </div>
+  </section>
+
+  <!-- 2 -->
+  <section id="runbook">
+    <h2><span class="num">02</span> Runbook</h2>
+    <p class="sub">Three steps: bind the file to a filter name, define the filter, then patch the current file and refresh the index stat.</p>
+    <div class="term">
+      <div class="bar"><i class="d1"></i><i class="d2"></i><i class="d3"></i><span>1 · attribute</span></div>
+      <pre><span class="c"># .git/info/ may not exist, depending on the init template</span>
+<span class="p">$</span> mkdir -p .git/info
+<span class="p">$</span> echo '&lt;path&gt; filter=&lt;name&gt;' &gt;&gt; .git/info/attributes
+<span class="p">$</span> git check-attr filter &lt;path&gt;      <span class="c"># &lt;path&gt;: filter: &lt;name&gt;</span></pre>
+    </div>
+    <div class="term">
+      <div class="bar"><i class="d1"></i><i class="d2"></i><i class="d3"></i><span>2 · filter: clean un-patches, smudge patches</span></div>
+      <pre><span class="p">$</span> git config filter.&lt;name&gt;.clean    '<b>&lt;cmd: patched -&gt; upstream&gt;</b>'
+<span class="p">$</span> git config filter.&lt;name&gt;.smudge   '<b>&lt;cmd: upstream -&gt; patched&gt;</b>'
+<span class="p">$</span> git config filter.&lt;name&gt;.required true   <span class="c"># fail loudly instead of passing through</span></pre>
+    </div>
+    <div class="term">
+      <div class="bar"><i class="d1"></i><i class="d2"></i><i class="d3"></i><span>3 · patch + refresh the index stat</span></div>
+      <pre><span class="c"># apply &lt;cmd: upstream -&gt; patched&gt; in place to &lt;path&gt;, then:</span>
+<span class="p">$</span> git add &lt;path&gt;   <span class="c"># stages nothing; only the cached size / mtime update</span></pre>
+    </div>
+    <div class="box warn">
+      <span class="lbl">Step 3 is not optional</span>
+      <p>Git flags a size mismatch as modified <em>without</em> running <code class="inl">clean</code>. Until <code class="inl">git add</code> refreshes the index stat, <code class="inl">git status</code> shows <code class="inl">M</code>.</p>
+    </div>
+  </section>
+
+  <!-- 3 -->
+  <section id="verify">
+    <h2><span class="num">03</span> Verify</h2>
+    <p class="sub">The first two print nothing; the third bypasses the filter and shows the patch on disk.</p>
+    <div class="term">
+      <div class="bar"><i class="d1"></i><i class="d2"></i><i class="d3"></i><span>git sees upstream, disk holds the patch</span></div>
+      <pre><span class="p">$</span> git status --short                     <span class="c"># empty</span>
+<span class="p">$</span> git diff --cached --name-only          <span class="c"># empty</span>
+<span class="p">$</span> git show HEAD:&lt;path&gt; | diff - &lt;path&gt;   <span class="c"># raw compare → shows the patch</span></pre>
+    </div>
+  </section>
+
+  <!-- 4 -->
+  <section id="rollback">
+    <h2><span class="num">04</span> Rollback</h2>
+    <p class="sub">Remove both pieces, then restore the upstream file.</p>
+    <div class="term">
+      <div class="bar"><i class="d1"></i><i class="d2"></i><i class="d3"></i><span>remove the filter</span></div>
+      <pre><span class="p">$</span> git config --remove-section filter.&lt;name&gt;
+<span class="p">$</span> sed -i '/filter=&lt;name&gt;/d' .git/info/attributes   <span class="c"># or rm it if it holds only this rule</span>
+<span class="p">$</span> git checkout -- &lt;path&gt;                            <span class="c"># restore upstream content</span></pre>
+    </div>
+  </section>
+
+  <!-- 5 -->
+  <section id="gotchas">
+    <h2><span class="num">05</span> Gotchas</h2>
+    <p class="sub">The filter hides one exact text change from git; everything else behaves normally.</p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Gotcha</th><th>Detail</th></tr></thead>
+        <tbody>
+          <tr><td>clean must invert smudge</td><td><code class="inl">clean( smudge( upstream ) ) == upstream</code>; breaks if upstream already contains the patched text <span class="tag warn">§06</span></td></tr>
+          <tr><td>hidden from git only</td><td><code class="inl">grep</code>, the editor, <code class="inl">git hash-object --no-filters</code>, sign-column plugins comparing raw buffer vs blob still see the patch</td></tr>
+          <tr><td>real edits stay visible</td><td>only the filtered text is hidden; any other change still shows in <code class="inl">git status</code> / <code class="inl">git diff</code></td></tr>
+          <tr><td><code class="inl">.git/info/</code> may be missing</td><td>a custom <code class="inl">init.templateDir</code> skips it → <code class="inl">mkdir -p .git/info</code></td></tr>
+          <tr><td>re-clone drops the setup</td><td><code class="inl">.git/</code> is recreated; re-run the runbook, or automate it from a post-install hook <span class="tag me">§08</span></td></tr>
+          <tr><td>large files</td><td><code class="inl">clean</code> reads the whole file, but only when size / mtime changed</td></tr>
+          <tr><td>any command works</td><td><code class="inl">sed</code>, <code class="inl">perl</code>, <code class="inl">jq</code>, a script — anything reading stdin and writing stdout</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 6 -->
+  <section id="upstream">
+    <h2><span class="num">06</span> When upstream ships the fix</h2>
+    <p class="sub"><code class="inl">smudge</code> stops matching and becomes a no-op — but <code class="inl">clean</code> still matches the fixed text and reverts it in git's view. The file on disk stays correct; git's picture does not.</p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Stage</th><th>Result ( measured in a sandbox repo )</th></tr></thead>
+        <tbody>
+          <tr><td>merge brings the fix</td><td><code class="inl">M &lt;path&gt;</code> right away <span class="tag warn">dirty</span></td></tr>
+          <tr><td>a <code class="inl">git add</code> ( e.g. a post-update hook )</td><td>stages the <em>reverted</em> text into the index</td></tr>
+          <tr><td>next <code class="inl">merge --ff-only</code></td><td><code class="inl">Please commit your changes ... Aborting</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="box">
+      <span class="lbl">Guard</span>
+      <p>Before setting up, ask <code class="inl">HEAD</code> whether the unpatched text is still there. <code class="inl">git grep</code> exits <code class="inl">1</code> when it is gone — tear the filter down instead.</p>
+    </div>
+    <div class="term">
+      <div class="bar"><i class="d1"></i><i class="d2"></i><i class="d3"></i><span>self-remove once upstream is fixed</span></div>
+      <pre><span class="p">$</span> if ! git grep -qF '<b>&lt;unpatched&gt;</b>' HEAD -- &lt;path&gt;; then   <span class="c"># exit 1: upstream fixed</span>
+    git config --remove-section filter.&lt;name&gt;
+    sed -i '/filter=&lt;name&gt;/d' .git/info/attributes
+    git checkout HEAD -- &lt;path&gt;
+  fi</pre>
+    </div>
+  </section>
+
+  <!-- 7 -->
+  <section id="ex-conf">
+    <h2><span class="num">07</span> Example · local log_level</h2>
+    <p class="sub"><code class="inl">app.conf</code> upstream has <code class="inl">log_level = info</code>; locally it should always be <code class="inl">debug</code>.</p>
+    <div class="term">
+      <div class="bar"><i class="d1"></i><i class="d2"></i><i class="d3"></i><span>localdebug filter</span></div>
+      <pre><span class="p">$</span> mkdir -p .git/info &amp;&amp; echo 'app.conf filter=localdebug' &gt;&gt; .git/info/attributes
+<span class="p">$</span> git config filter.localdebug.clean  "sed -e 's/^log_level = debug\$/log_level = info/'"
+<span class="p">$</span> git config filter.localdebug.smudge "sed -e 's/^log_level = info\$/log_level = debug/'"
+<span class="p">$</span> git config filter.localdebug.required true
+
+<span class="p">$</span> sed -i 's/^log_level = info$/log_level = debug/' app.conf
+<span class="p">$</span> git status --short   <span class="c"># M app.conf   ← size changed, stat not refreshed</span>
+<span class="p">$</span> git add app.conf
+<span class="p">$</span> git status --short   <span class="c"># ( empty )</span></pre>
+    </div>
+    <h3>Measured in a sandbox repo</h3>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Action</th><th>Result</th></tr></thead>
+        <tbody>
+          <tr><td><code class="inl">git diff</code></td><td>empty</td></tr>
+          <tr><td><code class="inl">git show HEAD:app.conf | diff - app.conf</code></td><td><code class="inl">&lt; log_level = info</code> / <code class="inl">&gt; log_level = debug</code></td></tr>
+          <tr><td>upstream bumps <code class="inl">port</code>, then <code class="inl">git pull --ff-only</code></td><td>fast-forwards; clean; <code class="inl">debug</code> kept, <code class="inl">port = 9090</code> pulled <span class="tag me">ok</span></td></tr>
+          <tr><td><code class="inl">rm app.conf &amp;&amp; git checkout -- app.conf</code></td><td>comes back patched</td></tr>
+          <tr><td>append <code class="inl">timeout = 30</code></td><td><code class="inl">M app.conf</code>, diff shows only <code class="inl">+timeout = 30</code></td></tr>
+          <tr><td>failing <code class="inl">clean</code> with <code class="inl">required = true</code></td><td><code class="inl">error: external filter 'false' failed</code></td></tr>
+          <tr><td>rollback</td><td><code class="inl">M</code> until <code class="inl">git checkout -- app.conf</code> restores <code class="inl">info</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 8 -->
+  <section id="ex-coc">
+    <h2><span class="num">08</span> Example · coc.nvim pathRe</h2>
+    <p class="sub"><code class="inl">build/index.js</code> gets <code class="inl">\w .@</code> → <code class="inl">\w.@</code>, dropping the space from the path-completion char class. Without the filter, vim-plug's <code class="inl">git merge --ff-only origin/release</code> aborts with <code class="inl">Your local changes ... would be overwritten</code>.</p>
+    <div class="term">
+      <div class="bar"><i class="d1"></i><i class="d2"></i><i class="d3"></i><span>cocpatch filter</span></div>
+      <pre><span class="p">$</span> cd ~/.vim/plugged/coc.nvim
+<span class="p">$</span> mkdir -p .git/info &amp;&amp; echo 'build/index.js filter=cocpatch' &gt;&gt; .git/info/attributes
+<span class="p">$</span> git config filter.cocpatch.clean  'perl -pe '\''s/\\w\.@/\\w .@/g'\'''
+<span class="p">$</span> git config filter.cocpatch.smudge 'perl -pe '\''s/\\w \.@/\\w.@/g'\'''
+<span class="p">$</span> perl -i -pe 's/\\w \.@/\\w.@/g' build/index.js &amp;&amp; git add build/index.js</pre>
+    </div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Piece</th><th>Where</th></tr></thead>
+        <tbody>
+          <tr><td>setup + guard</td><td><code class="inl">s:PlugCocRePatch()</code> in <code class="inl">~/.marslo/vimrc.d/functions</code>, exposed as <code class="inl">:PlugCocRePatch</code></td></tr>
+          <tr><td>re-install hook</td><td><code class="inl">Plug 'neoclide/coc.nvim', { 'do': ':PlugCocRePatch' }</code> in <code class="inl">vimrc.d/extension</code></td></tr>
+          <tr><td>day-to-day</td><td>just <code class="inl">:PlugUpdate</code></td></tr>
+          <tr><td>check the patch</td><td><code class="inl">grep -cF '\w.@' ~/.vim/plugged/coc.nvim/build/index.js</code> → <code class="inl">1</code></td></tr>
+          <tr><td>upstream fixed</td><td>self-removes the filter + attribute, restores upstream, warns to drop the <code class="inl">do</code> hook</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 9 -->
+  <section id="ref">
+    <h2><span class="num">09</span> Reference</h2>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Source</th><th>Covers</th></tr></thead>
+        <tbody>
+          <tr><td><a href="https://git-scm.com/docs/gitattributes#_filter">gitattributes — filter</a></td><td>clean / smudge / required / process</td></tr>
+          <tr><td><a href="https://git-scm.com/book/en/v2/Customizing-Git-Git-Attributes#_keyword_expansion">Pro Git — keyword expansion</a></td><td>worked clean / smudge walkthrough</td></tr>
+          <tr><td>git-lfs · git-crypt</td><td>same mechanism: pointer ↔ blob, encrypt ↔ decrypt</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>
+    <b>Git clean / smudge runbook</b> · marslo/dotfiles · .marslo/gitconfig.d/clean-smudge-filter.md · git 2.54.0
+  </footer>
+
+</div>
+
+</body></html>
