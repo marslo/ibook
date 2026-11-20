@@ -1,0 +1,218 @@
+---
+name: release
+run-name: Release · ${{ github.ref_name }} · @${{ github.actor }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'dry-run'
+        required: false
+        default: false
+        type: boolean
+      revision:
+        description: 'revision'
+        required: false
+        default: ''
+        type: string
+
+# serialize releases per branch; never cancel a release in flight
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write    # allow to create tag / push commit
+  pull-requests: write
+  issues: write
+
+jobs:
+  prepare:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: release pre-requisites
+        env:
+          RELEASE_TOKEN: ${{ secrets.SEMANTIC_RELEASE_TOKEN }}
+          REVISION: ${{ inputs.revision }}
+        run: |
+          if [ -z "${RELEASE_TOKEN}" ]; then
+            echo "::error title=Verify::SEMANTIC_RELEASE_TOKEN is not set"
+            exit 1
+          fi
+          tip="${REVISION:-HEAD}"
+          if ! git rev-parse --verify --quiet "${tip}^{commit}" >/dev/null; then
+            echo "::error title=Verify::revision '${tip}' not found"
+            exit 1
+          fi
+          # show everything since the previous release tag rather than a fixed count
+          last_tag="$(git describe --tags --abbrev=0 "${tip}" 2>/dev/null || true)"
+          if [ -n "${last_tag}" ]; then
+            range="${last_tag}..${tip}"
+            heading="Commits on \`${tip}\` since \`${last_tag}\`:"
+          else
+            range="${tip}"
+            heading="Commits on \`${tip}\` (no previous tag):"
+          fi
+          {
+            echo "### Verify"
+            echo ""
+            echo "${heading}"
+            echo '```'
+            git log "${range}" --pretty='%h %s'
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  release:
+    needs: prepare
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    outputs:
+      version: ${{ steps.release.outputs.version }}
+      published: ${{ steps.release.outputs.published }}
+      branch: ${{ steps.release.outputs.branch }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0                   # semantic-release required full history
+          persist-credentials: false       # semantic-release pushes with GH_TOKEN (PAT), not the default GITHUB_TOKEN
+
+      # release an arbitrary revision: branch it off into release/<sha7>, which semantic-release then treats as the release branch (tag, CHANGELOG commit and GitHub release all land on that revision)
+      - name: Checkout revision
+        if: inputs.revision != ''
+        env:
+          REVISION: ${{ inputs.revision }}
+          WORKFLOW_SHA: ${{ github.sha }}
+          GH_TOKEN: ${{ secrets.SEMANTIC_RELEASE_TOKEN }}
+        run: |
+          sha="$(git rev-parse --verify --quiet "${REVISION}^{commit}")" || {
+            echo "::error title=Revision::'${REVISION}' not found"
+            exit 1
+          }
+          if ! git merge-base --is-ancestor "${sha}" "${WORKFLOW_SHA}"; then
+            echo "::error title=Revision::${sha} is not an ancestor of ${GITHUB_REF_NAME}"
+            exit 1
+          fi
+          branch="release/${sha:0:7}"
+          git checkout -B "${branch}" "${sha}"
+          # semantic-release requires every configured release branch to exist on the remote
+          git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "${branch}:refs/heads/${branch}"
+          # config lives on the dispatched ref; the revision may predate it
+          git show "${WORKFLOW_SHA}:.releaserc.js" > .releaserc.js
+          echo "REL_BRANCH=${branch}" >> "${GITHUB_ENV}"
+
+      # `prepareCmd` in .releaserc.js runs pre-commit on CHANGELOG.md
+      - name: Setup Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+
+      - name: Install pre-commit
+        env:
+          HOOKS_TOKEN: ${{ secrets.SEMANTIC_RELEASE_TOKEN }}
+        run: |
+          pip install pre-commit
+          # private hook repos (Marvell-Lab/cr-manager)
+          git config --global url."https://x-access-token:${HOOKS_TOKEN}@github.com/".insteadOf 'https://github.com/'
+
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          package-manager-cache: false
+
+      - name: Install semantic-release globally
+        run: |
+          npm install -g \
+            semantic-release \
+            @semantic-release/commit-analyzer \
+            @semantic-release/release-notes-generator \
+            @semantic-release/changelog \
+            @semantic-release/exec \
+            @semantic-release/git \
+            @semantic-release/github \
+            conventional-changelog-conventionalcommits
+
+      # config: .releaserc.js
+      - name: Run semantic-release
+        id: release
+        env:
+          GH_TOKEN: ${{ secrets.SEMANTIC_RELEASE_TOKEN }}
+          CI: 'true'
+          DRY_RUN: ${{ inputs.dry_run }}
+          # attribute the chore(release) commit + tag to the workflow triggerer
+          GIT_AUTHOR_NAME: ${{ github.actor }}
+          GIT_AUTHOR_EMAIL: ${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com
+          GIT_COMMITTER_NAME: ${{ github.actor }}
+          GIT_COMMITTER_EMAIL: ${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com
+        run: |
+          echo 'published=false' >> "${GITHUB_OUTPUT}"
+          echo "branch=${REL_BRANCH:-${GITHUB_REF_NAME}}" >> "${GITHUB_OUTPUT}"
+          declare -a args=( --verbose )
+          if [ -n "${REL_BRANCH}" ]; then
+            args+=( --branches "${REL_BRANCH}" )
+            # semantic-release (env-ci) takes the current branch from GITHUB_REF, not from git HEAD
+            export GITHUB_REF="refs/heads/${REL_BRANCH}"
+          fi
+          if [ 'true' = "${DRY_RUN}" ]; then args+=( --dry-run ); fi
+          semantic-release "${args[@]}"
+
+      # a dry-run must leave nothing behind: drop the temp branch pushed above
+      - name: Delete temp branch (dry-run)
+        if: always() && inputs.revision != '' && inputs.dry_run
+        env:
+          GH_TOKEN: ${{ secrets.SEMANTIC_RELEASE_TOKEN }}
+        run: |
+          if [ -n "${REL_BRANCH}" ]; then
+            git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" --delete "${REL_BRANCH}"
+          fi
+
+  summary:
+    needs: release
+    if: always()
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Release summary
+        env:
+          RESULT: ${{ needs.release.result }}
+          VERSION: ${{ needs.release.outputs.version }}
+          PUBLISHED: ${{ needs.release.outputs.published }}
+          BRANCH: ${{ needs.release.outputs.branch }}
+          REVISION: ${{ inputs.revision }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          if [ 'success' != "${RESULT}" ]; then
+            echo "::error title=Release::Release job ${RESULT}"
+            echo "## Release ${RESULT}" >> "${GITHUB_STEP_SUMMARY}"
+          elif [ 'true' = "${PUBLISHED}" ] && [ -n "${VERSION}" ]; then
+            echo "::notice title=Release::Released v${VERSION} on ${BRANCH} by @${GITHUB_ACTOR}"
+            {
+              echo "## Release v${VERSION}"
+              echo ""
+              echo "| | |"
+              echo "|---|---|"
+              echo "| Version      | \`v${VERSION}\` |"
+              echo "| Branch       | \`${BRANCH}\` |"
+              test -z "${REVISION}" || echo "| Revision     | \`${REVISION}\` (rebase \`CHANGELOG.md\` commit from \`${BRANCH}\` onto \`${GITHUB_REF_NAME}\`) |"
+              echo "| Triggered by | @${GITHUB_ACTOR} |"
+              echo "| Release      | ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/releases/tag/v${VERSION} |"
+            } >> "${GITHUB_STEP_SUMMARY}"
+          elif [ 'true' = "${DRY_RUN}" ] && [ -n "${VERSION}" ]; then
+            echo "::notice title=Release::Dry-run: next version would be v${VERSION}"
+            echo "## Dry-run: next version \`v${VERSION}\`" >> "${GITHUB_STEP_SUMMARY}"
+          else
+            echo '::notice title=Release::No new release (no version bump, or not a release branch)'
+            {
+              echo "## No new release"
+              echo ""
+              echo "_No commits triggered a version bump (or \`${GITHUB_REF_NAME}\` is not a release branch)._"
+            } >> "${GITHUB_STEP_SUMMARY}"
+          fi
