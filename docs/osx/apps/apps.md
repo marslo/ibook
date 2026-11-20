@@ -871,6 +871,18 @@ $ xxd -l 64 config.bobconfig
 $ unzip -p config.bobconfig config.json | jq
 ```
 
+> [!NOTE]
+> - system translation : `/System/Library/AssetsV2/com_apple_MobileAsset_UAF_Translation_Assets/purpose_auto/`
+
+```bash
+# check system translation shortcut
+$ printf '{"detectFrom":"en_US","detectTo":"zh_CN","text":"hello"}' | /usr/bin/shortcuts run "Bob.Translate.v2" | command cat
+你好
+
+$ osascript -e 'tell application "Shortcuts Events" to run the shortcut named "Bob.Translate.v2" with input "{\"detectFrom\":\"en_US\",\"detectTo\":\"zh_CN\",\"text\":\"hello\"}"'
+你好
+```
+
 #### [markdown-toc](https://github.com/jonschlinkert/markdown-toc)
 ```bash
 $ npm i -g --save markdown-toc --verbose

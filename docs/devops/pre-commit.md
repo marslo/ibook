@@ -14,7 +14,13 @@
   - [copyright manager](#copyright-manager)
   - [checker and fixer](#checker-and-fixer)
   - [convert tab to spaces](#convert-tab-to-spaces)
+  - [check-json5](#check-json5)
+  - [ruff-pre-commit](#ruff-pre-commit)
   - [typos](#typos)
+  - [gitleaks](#gitleaks)
+  - [shellcheck](#shellcheck)
+  - [conventional-commit-msg](#conventional-commit-msg)
+  - [git-identify](#git-identify)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -315,6 +321,49 @@ repos:
           pass_filenames: true
   ```
 
+### check-json5
+
+```yaml
+# yamllint disable rule:indentation
+---
+
+default_install_hook_types: [pre-commit]
+default_stages: [pre-commit]
+
+repos:
+  - repo: https://gitlab.com/bmares/check-json5
+    rev: v1.0.1
+    hooks:
+      - id: check-json5
+        name: Check JSONC
+        files: (?x)(
+            .*rc.*\.json|
+            .*config.*\.json|
+            .*[Ss]ettings.*\.json|
+            .*keybindings\.json|
+            .*\.code-workspace|
+            \.vscode/.*\.json
+          )$
+```
+
+### ruff-pre-commit
+
+```yaml
+# yamllint disable rule:indentation
+---
+
+default_install_hook_types: [pre-commit]
+default_stages: [pre-commit]
+
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.17.5
+    hooks:
+      - id: ruff-check
+        name: Ruff Linter
+        args: [--fix]
+```
+
 ### typos
 
 > [!NOTE|labels:reference:]
@@ -323,12 +372,156 @@ repos:
 ```yaml
 # yamllint disable rule:indentation
 ---
+
+default_install_hook_types: [pre-commit, commit-msg]
+default_stages: [pre-commit]
+
 repos:
   - repo: https://github.com/crate-ci/typos
-    rev: v1.45.1
+    rev: v1.52.2
     hooks:
-        - id: typos
-          name: Typos
-          description: Finds and corrects spelling mistakes among source code.
-          exclude: \.git
+      - id: typos
+        name: Typos
+        args: ['--force-exclude']
+      - id: typos
+        name: Typos (commit msg)
+        alias: typos-commit-msg
+        stages: [commit-msg]
+        # commit-msg is checked via a temp file outside the repo, where typos cannot auto-discover .typos.toml; point it at the config explicitly.
+        args: ['--no-check-filenames', '--force-exclude', '--config', '.typos.toml']
+```
+
+### gitleaks
+
+> [!NOTE|labels:reference:]
+> - secret detection on staged changes ( PR / repo scans run in gitleaks-pr.yml / gitleaks-repo.yml )
+> - ignores global / system git config: custom `log.date` / diff settings make gitleaks scan nothing
+
+```yaml
+# yamllint disable rule:indentation
+---
+
+default_install_hook_types: [pre-commit]
+default_stages: [pre-commit]
+
+repos:
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.30.1
+    hooks:
+      - id: gitleaks
+        name: Gitleaks (staged secrets)
+        entry: env GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_NOSYSTEM=1 gitleaks git --pre-commit --redact --staged --verbose
+        stages: [pre-commit]
+```
+
+### shellcheck
+
+```yaml
+# yamllint disable rule:indentation
+---
+
+default_install_hook_types: [pre-commit]
+default_stages: [pre-commit]
+
+repos:
+  - repo: local
+    hooks:
+      - id: shellcheck
+        name: ShellCheck (bundled)
+        language: python
+        additional_dependencies: [shellcheck-py]
+        entry: shellcheck
+        types: [shell]
+        args: ["--severity=warning"]
+        files: '\.sh$'
+```
+
+### conventional-commit-msg
+
+```yaml
+# yamllint disable rule:indentation
+---
+
+default_install_hook_types: [pre-commit, commit-msg]
+default_stages: [pre-commit]
+
+repos:
+  - repo: local
+    hooks:
+      # conventional commit subject; same regex as the GitHub ruleset "Restrict commit metadata" + local fixup!/squash!/amend!
+      - id: conventional-commit-msg
+        name: 'Conventional Commit (commit msg)'
+        language: pygrep
+        stages: [commit-msg]
+        entry: '\A((feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\([A-Za-z0-9._/-]+(, ?[A-Za-z0-9._/-]+)*\))?!?: \S.*|Merge .+|Revert ".+"|(fixup|squash|amend)! .+)'
+        args: [--multiline, --negate]
+```
+
+### git-identify
+
+```yaml
+# yamllint disable rule:indentation
+---
+
+default_install_hook_types: [pre-commit]
+default_stages: [pre-commit]
+
+repos:
+  - repo: local
+    hooks:
+      # allow commits only from the listed email domains ( catches a stray personal `user.email` in .git/config )
+      - id: check-git-identity
+        name: 'Git identity (allowed domains)'
+        language: script
+        entry: scripts/git-identity.sh
+        args: [domain.com]
+        pass_filenames: false
+        always_run: true
+        stages: [pre-commit]
+```
+
+```bash
+#!/usr/bin/env bash
+
+# scripts/git-identity.sh
+# allow a commit only when the author and committer emails are on an allowed domain ( pre-commit hook )
+#   usage : check-git-identity.sh [ <domain>... ]      # default: domain.com; exact domain match, case-insensitive
+#   e.g.  : check-git-identity.sh domain.com           # user@domain.com ✓  user@gmail.com ✗  user@domain.com.cn ✗
+#   skips : CI runs ( `CI` set ), where the runner has no user identity
+#   note  : reads the identity git will use ( `git var` → env + config ); a one-off `git commit --author=…` is not seen
+
+set -euo pipefail
+
+declare -a ALLOWED=( "${@}" )
+(( ${#ALLOWED[@]} )) || ALLOWED=( 'domain.com' )
+declare -ra ALLOWED
+
+test -n "${CI:-}" && exit 0
+
+# true if <email> ends with `@<domain>` for one of ALLOWED ( case-insensitive )
+function isAllowed() {
+  local email="${1,,}" domain
+  for domain in "${ALLOWED[@]}"; do
+    test "${email}" != "${email%@"${domain,,}"}" && return 0
+  done
+  return 1
+}
+
+declare rc=0 kind ident email
+for kind in AUTHOR COMMITTER; do
+  ident="$( git var "GIT_${kind}_IDENT" )"
+  email="${ident#*<}"; email="${email%%>*}"
+  if ! isAllowed "${email}"; then
+    echo "error: ${kind,,} email '${email}' is not allowed in this repo ( allowed: ${ALLOWED[*]/#/@} )" >&2
+    rc=1
+  fi
+done
+
+if test 0 -ne "${rc}"; then
+  echo 'hint: identity comes from:' >&2
+  git config --show-origin --get-regexp '^user\.(name|email)$' >&2 || true
+  env | command grep -E '^GIT_(AUTHOR|COMMITTER)_(NAME|EMAIL)=' >&2 || true
+  echo 'hint: drop a local override with: git config --local --unset user.email; git config --local --unset user.name' >&2
+fi
+exit "${rc}"
 ```
